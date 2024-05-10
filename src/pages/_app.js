@@ -1,5 +1,10 @@
-import "@/styles/globals.css";
+import { SocketContext, socket } from '@/context/socket';
+import '@/styles/globals.css';
 
 export default function App({ Component, pageProps }) {
-  return <Component {...pageProps} />;
+  return (
+    <SocketContext.Provider value={socket}>
+      <Component {...pageProps} />;
+    </SocketContext.Provider>
+  );
 }
