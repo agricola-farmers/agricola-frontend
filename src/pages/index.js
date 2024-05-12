@@ -1,6 +1,8 @@
-import { useContext, useEffect } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { SocketContext } from '@/context/socket';
 import styles from '../styles/Home.module.css';
+import RoomManager from '@/components/room_manager';
+import JoinToGame from '@/components/join_to_game';
 
 export default function Home() {
   // const socket = useContext(SocketContext);
@@ -14,6 +16,20 @@ export default function Home() {
   // const onChange = () => {
   //   socket.emit('dataFromClient', 'Hello, world!');
   // };
+
+  const [showRoomManager, setShowRoomManager] = useState(false);
+  const [showJoinToGame, setShowJoinToGame] = useState(false);
+
+  const CreateRoom = () => {
+    setShowRoomManager(true);
+    setShowJoinToGame(false); 
+  };
+
+  const JoinGame = () => {
+    setShowJoinToGame(true);
+    setShowRoomManager(false);
+  };
+
 
   return (
     <div className={styles.container}>
@@ -30,6 +46,11 @@ export default function Home() {
           aliginItems: 'center',
         }}
       >
+        {showRoomManager && <RoomManager onClose={() => setShowRoomManager(false)} />}
+        {showJoinToGame && <JoinToGame onClose={() => setShowJoinToGame(false)} />}
+
+        {!showRoomManager && !showJoinToGame && (
+          <>
         {/* Create Room */}
         <button
           style={{
@@ -38,7 +59,7 @@ export default function Home() {
             position: 'relative',
             cursor: 'pointer',
           }}
-          onClick={() => console.log('Click!')}
+          onClick={CreateRoom}
         >
           <img
             src="/Wood_Button.svg"
@@ -68,7 +89,7 @@ export default function Home() {
             position: 'relative',
             cursor: 'pointer',
           }}
-          onClick={() => console.log('Click!')}
+          onClick={JoinGame}
         >
           <img
             src="/Wood_Button.svg"
@@ -89,6 +110,8 @@ export default function Home() {
             참여하기
           </div>
         </button>
+        </>
+        )}
       </div>
     </div>
   );
