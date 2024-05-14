@@ -22,14 +22,13 @@ export default function Home() {
 
   const CreateRoom = () => {
     setShowRoomManager(true);
-    setShowJoinToGame(false); 
+    setShowJoinToGame(false);
   };
 
   const JoinGame = () => {
     setShowJoinToGame(true);
     setShowRoomManager(false);
   };
-
 
   return (
     <div className={styles.container}>
@@ -46,71 +45,75 @@ export default function Home() {
           aliginItems: 'center',
         }}
       >
-        {showRoomManager && <RoomManager onClose={() => setShowRoomManager(false)} />}
-        {showJoinToGame && <JoinToGame onClose={() => setShowJoinToGame(false)} />}
+        {showRoomManager && (
+          <RoomManager onClose={() => setShowRoomManager(false)} />
+        )}
+        {showJoinToGame && (
+          <JoinToGame onClose={() => setShowJoinToGame(false)} />
+        )}
 
         {!showRoomManager && !showJoinToGame && (
           <>
-        {/* Create Room */}
-        <button
-          style={{
-            backgroundColor: 'transparent',
-            border: 'none',
-            position: 'relative',
-            cursor: 'pointer',
-          }}
-          onClick={CreateRoom}
-        >
-          <img
-            src="/Wood_Button.svg"
-            alt="Create Room"
-            style={{ height: '80px', display: 'block', margin: 'auto' }}
-          />
-          <div
-            style={{
-              position: 'absolute',
-              top: '50%',
-              left: '50%',
-              transform: 'translate(-50%, -50%)',
-              fontSize: '28px',
-              fontWeight: 'bold',
-              bottom: '14px',
-            }}
-          >
-            방 만들기
-          </div>
-        </button>
-        <div style={{ height: 16 }} />
-        {/* Join Room */}
-        <button
-          style={{
-            backgroundColor: 'transparent',
-            border: 'none',
-            position: 'relative',
-            cursor: 'pointer',
-          }}
-          onClick={JoinGame}
-        >
-          <img
-            src="/Wood_Button.svg"
-            alt="Create Room"
-            style={{ height: '80px', display: 'block', margin: 'auto' }}
-          />
-          <div
-            style={{
-              position: 'absolute',
-              top: '50%',
-              left: '50%',
-              transform: 'translate(-50%, -50%)',
-              fontSize: '28px',
-              fontWeight: 'bold',
-              bottom: '14px',
-            }}
-          >
-            참여하기
-          </div>
-        </button>
-        </>
+            {/* Create Room */}
+            <button
+              style={{
+                backgroundColor: 'transparent',
+                border: 'none',
+                position: 'relative',
+                cursor: 'pointer',
+              }}
+              onClick={CreateRoom}
+            >
+              <img
+                src="/Wood_Button.svg"
+                alt="Create Room"
+                style={{ height: '80px', display: 'block', margin: 'auto' }}
+              />
+              <div
+                style={{
+                  position: 'absolute',
+                  top: '50%',
+                  left: '50%',
+                  transform: 'translate(-50%, -50%)',
+                  fontSize: '28px',
+                  fontWeight: 'bold',
+                  bottom: '14px',
+                }}
+              >
+                방 만들기
+              </div>
+            </button>
+            <div style={{ height: 16 }} />
+            {/* Join Room */}
+            <button
+              style={{
+                backgroundColor: 'transparent',
+                border: 'none',
+                position: 'relative',
+                cursor: 'pointer',
+              }}
+              onClick={JoinGame}
+            >
+              <img
+                src="/Wood_Button.svg"
+                alt="Create Room"
+                style={{ height: '80px', display: 'block', margin: 'auto' }}
+              />
+              <div
+                style={{
+                  position: 'absolute',
+                  top: '50%',
+                  left: '50%',
+                  transform: 'translate(-50%, -50%)',
+                  fontSize: '28px',
+                  fontWeight: 'bold',
+                  bottom: '14px',
+                }}
+              >
+                참여하기
+              </div>
+            </button>
+          </>
         )}
       </div>
     </div>
