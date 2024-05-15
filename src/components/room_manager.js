@@ -1,9 +1,16 @@
-import { React, useState } from 'react';
+import { React, useState, useContext, useEffect } from 'react';
 import RoomManagerWait from '@/components/room_manager_wait';
+import { SocketContext } from '@/context/socket';
 
 const RoomManager = ({ onClose }) => {
   const [nickname, setNickname] = useState('');
   const [showRoomManagerWait, setRoomManagerWait] = useState(false);
+  const socket = useContext(SocketContext);
+  const [randomNumber, setRandomNumber] = useState(0);
+
+  useEffect(() => {
+    setRandomNumber(Math.floor(10000 + Math.random() * 90000));
+  }, []);
 
   const handleArrowClick = () => {
     onClose();
@@ -13,6 +20,7 @@ const RoomManager = ({ onClose }) => {
     if (nickname.trim() === '') {
       alert('닉네임을 입력해주세요.');
     } else {
+      socket.emit('manager', randomNumber);
       setRoomManagerWait(true);
     }
   };
@@ -21,17 +29,26 @@ const RoomManager = ({ onClose }) => {
     setNickname(event.target.value);
   };
 
-
   return (
     <>
       {showRoomManagerWait ? (
-        <RoomManagerWait nicknamevalue={nickname} onClose={() => setRoomManagerWait(false)} />
+        <RoomManagerWait
+          nicknamevalue={nickname}
+          roomCode={randomNumber}
+          isManager={true}
+          onClose={() => setRoomManagerWait(false)}
+        />
       ) : (
         <div style={{ position: 'relative' }}>
           <img
             src="/board.svg"
             alt="Create Room"
-            style={{ weight: '350px', height: '420px', display: 'block', margin: 'auto' }}
+            style={{
+              weight: '350px',
+              height: '420px',
+              display: 'block',
+              margin: 'auto',
+            }}
           />
           <div
             style={{
@@ -134,11 +151,22 @@ const RoomManager = ({ onClose }) => {
               cursor: 'pointer',
             }}
           >
-            <img src="/Roommake_Button.svg" alt="Return index" style={{ width: '110px', height: '110px' }} />
+            <img
+              src="/Roommake_Button.svg"
+              alt="Return index"
+              style={{ width: '110px', height: '110px' }}
+            />
             <img
               src="/arrow.svg"
               alt="Close"
-              style={{ weight: '55px', height: '55px', position: 'absolute', top: 25, left: 35, zIndex: 1 }}
+              style={{
+                weight: '55px',
+                height: '55px',
+                position: 'absolute',
+                top: 25,
+                left: 35,
+                zIndex: 1,
+              }}
               onClick={handleArrowClick}
             />
           </button>
@@ -153,11 +181,22 @@ const RoomManager = ({ onClose }) => {
               cursor: 'pointer',
             }}
           >
-            <img src="/Roommake_Button.svg" alt="Make Room" style={{ width: '110px', height: '110px' }} />
+            <img
+              src="/Roommake_Button.svg"
+              alt="Make Room"
+              style={{ width: '110px', height: '110px' }}
+            />
             <img
               src="/check.svg"
               alt="Create Room"
-              style={{ weight: '50px', height: '50px', position: 'absolute', top: 30, left: 40, zIndex: 1 }}
+              style={{
+                weight: '50px',
+                height: '50px',
+                position: 'absolute',
+                top: 30,
+                left: 40,
+                zIndex: 1,
+              }}
               onClick={handleCheckClick}
             />
           </button>
