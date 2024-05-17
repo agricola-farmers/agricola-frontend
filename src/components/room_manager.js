@@ -20,7 +20,7 @@ const RoomManager = ({ onClose }) => {
     if (nickname.trim() === '') {
       alert('닉네임을 입력해주세요.');
     } else {
-      socket.emit('manager', randomNumber);
+      socket.emit('manager', randomNumber, nickname);
       setRoomManagerWait(true);
     }
   };
@@ -34,7 +34,6 @@ const RoomManager = ({ onClose }) => {
       {showRoomManagerWait ? (
         <RoomManagerWait
           nicknamevalue={nickname}
-          roomCode={randomNumber}
           isManager={true}
           onClose={() => setRoomManagerWait(false)}
         />
