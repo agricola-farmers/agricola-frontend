@@ -8,7 +8,6 @@ const JoinToGame = ({ onClose }) => {
   const [EnterCode, setenterCode] = useState('');
   const [showRoomManagerWait, setRoomManagerWait] = useState(false);
   const socket = useContext(SocketContext);
-  const router = useRouter();
 
   const handleArrowClick = () => {
     onClose();
@@ -18,7 +17,8 @@ const JoinToGame = ({ onClose }) => {
     if (nickname.trim() === '') {
       alert('닉네임을 입력해주세요.');
     } else {
-      socket.emit('player', EnterCode);
+      console.log(nickname);
+      socket.emit('player', EnterCode, nickname);
 
       socket.on('success', (data) => {
         setRoomManagerWait(true);
@@ -26,7 +26,15 @@ const JoinToGame = ({ onClose }) => {
       });
 
       socket.on('fail', (data) => {
-        console.alert();
+        alert('입장코드가 잘못되었습니다.');
+      });
+
+      socket.on('fail_size', (data) => {
+        alert('방이 이미 다 찼습니다.');
+      });
+
+      socket.on('fail_nickname', (data) => {
+        alert('중복된 닉네임이 있습니다. 다른 닉네임을 사용해 주세요.');
       });
     }
   };
@@ -44,7 +52,6 @@ const JoinToGame = ({ onClose }) => {
       {showRoomManagerWait ? (
         <RoomManagerWait
           nicknamevalue={nickname}
-          roomCode={EnterCode}
           isManager={false}
           onClose={() => setRoomManagerWait(false)}
         />
