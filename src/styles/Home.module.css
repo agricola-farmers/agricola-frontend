@@ -20,3 +20,10 @@
 .rotate {
   animation: rotate 2s linear infinite;
 }
+
+.hidden {
+  display: none;
+}
+.visible {
+  display: block;
+}
