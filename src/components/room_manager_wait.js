@@ -15,13 +15,34 @@ const RoomManagerWait = ({ nicknamevalue, isManager, onClose }) => {
     });
 
     socket.on('game_start', () => {
-      socket.emit('remove_room', roomInfo.roomNumber);
-      router.push(`/game/${roomInfo.roomNumber}`);
+      console.log("방에 들어갑니다");
+      // roomInfo가 비어있는지 확인
+      if (roomInfo.roomNumber && roomInfo.nickname && roomInfo.players && roomInfo.players.length === 3) {
+        socket.emit('remove_room', roomInfo.roomNumber);
+        router.push({
+          pathname: `/play/${roomInfo.roomNumber}`,
+          query: { nicknames: [roomInfo.nickname, ...roomInfo.players].join(',') }
+        });
+      } else {
+        console.log("방 정보가 아직 로드되지 않았습니다.");
+      }
     });
 
     socket.on('room_info', (roomData) => {
       setRoomInfo(roomData);
     });
+
+    const handleBeforeUnload = (event) => {
+      event.preventDefault();
+      handleArrowClick();
+      return (event.returnValue = '정말 떠나시겠습니까?');
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+    };
   }, [roomInfo]);
 
 
@@ -40,7 +61,8 @@ const RoomManagerWait = ({ nicknamevalue, isManager, onClose }) => {
       console.log(roomInfo.players.length);
       alert('아직 방이 차지 않았습니다.');
     } else {
-      socket.emit('start_game', roomInfo.roomNumber);
+      console.log('게임 시작');
+      socket.emit('game_start', roomInfo.roomNumber);
     }
   };
 

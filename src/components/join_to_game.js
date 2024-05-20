@@ -1,6 +1,6 @@
 import { SocketContext } from '@/context/socket';
 import { useRouter } from 'next/router';
-import { React, useState, useContext } from 'react';
+import { React, useState, useContext, useEffect } from 'react';
 import RoomManagerWait from './room_manager_wait';
 
 const JoinToGame = ({ onClose }) => {
@@ -8,6 +8,38 @@ const JoinToGame = ({ onClose }) => {
   const [EnterCode, setenterCode] = useState('');
   const [showRoomManagerWait, setRoomManagerWait] = useState(false);
   const socket = useContext(SocketContext);
+
+
+  useEffect(() => {
+    const handleSuccess = (data) => {
+      setRoomManagerWait(true);
+      console.log(data);
+    };
+
+    const handleFail = (data) => {
+      alert('입장코드가 잘못되었습니다.');
+    };
+
+    const handleFailSize = (data) => {
+      alert('방이 이미 다 찼습니다.');
+    };
+
+    const handleFailNickname = (data) => {
+      alert('중복된 닉네임이 있습니다. 다른 닉네임을 사용해 주세요.');
+    };
+
+    socket.on('success', handleSuccess);
+    socket.on('fail', handleFail);
+    socket.on('fail_size', handleFailSize);
+    socket.on('fail_nickname', handleFailNickname);
+
+    return () => {
+      socket.off('success', handleSuccess);
+      socket.off('fail', handleFail);
+      socket.off('fail_size', handleFailSize);
+      socket.off('fail_nickname', handleFailNickname);
+    };
+  }, [socket]);
 
   const handleArrowClick = () => {
     onClose();
@@ -19,23 +51,6 @@ const JoinToGame = ({ onClose }) => {
     } else {
       console.log(nickname);
       socket.emit('player', EnterCode, nickname);
-
-      socket.on('success', (data) => {
-        setRoomManagerWait(true);
-        console.log(data);
-      });
-
-      socket.on('fail', (data) => {
-        alert('입장코드가 잘못되었습니다.');
-      });
-
-      socket.on('fail_size', (data) => {
-        alert('방이 이미 다 찼습니다.');
-      });
-
-      socket.on('fail_nickname', (data) => {
-        alert('중복된 닉네임이 있습니다. 다른 닉네임을 사용해 주세요.');
-      });
     }
   };
 
