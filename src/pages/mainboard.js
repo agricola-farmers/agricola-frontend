@@ -1,98 +1,267 @@
-import React from "react";
+import React from 'react';
 import styles from '../styles/MainBoard.module.css';
+import Image from 'next/image';
 
-const MainBoard = () => {
-    const handleBush1Click = () => {
-        alert('bush1 클릭');
-    }
-    const handleBush2Click = () => {
-        alert('bush2 클릭');
-    }
-    const handleResourceMarketClick = () => {
-        alert('Resource Market 클릭');
-    }
-    const handleClayMineClick = () => {
-        alert('Clay Mine 클릭');
-    }
-    const handleTeachingClick = () => {
-        alert('Teaching 클릭');
-    }
-    const handleTroupeClick = () => {
-        alert('Troupe 클릭');
-    }
-    const handleFarmLandClick = () => {
-        alert('Farm Land 클릭');
-    }
-    const handleExpandFarmClick = () => {
-        alert('Expand Farm 클릭');
-    }
-    const handleMeetingRoomClick = () => {
-        alert('Meeting Room 클릭');
-    }
-    const handleGrainSeedClick = () => {
-        alert('Grain Seed 클릭');
-    }
-    const handleDayLaborerClick = () => {
-        alert('Day Laborer 클릭');
-    }
-    const handleForestClick = () => {
-        alert('Forest 클릭');
-    }
-    const handleDirtMineClick = () => {
-        alert('Dirt Mine 클릭');
-    }
-    const handleReedFieldClick = () => {
-        alert('Reed Field 클릭');
-    }
-    const handleFishingClick = () => {
-        alert('Fishing 클릭');
-    }
-    const handleMainFacilityClick = () => {
-        alert('Main Facility 클릭');
-    }
-
-
-
-    return (
-        <div className={styles.fullScreen}>
-            <div className={styles.backgroundContainer}>
-                <svg viewBox="0 0 1728 1117" preserveAspectRatio="xMidYMid meet" style={{ width: '100%', height: '100%' }}>
-                    {/* 덤불 */}
-                    <image xlinkHref="/" x="5" y="20" width="180" height="110" onClick={handleBush1Click} />
-                     {/* 수풀 */}
-                    <image xlinkHref="/" x="5" y="150" width="180" height="110" onClick={handleBush2Click} fill="transparent" />
-                    {/* 자원시장 */}
-                    <image xlinkHref="/" x="5" y="283" width="180" height="80" onClick={handleResourceMarketClick} fill="transparent" />
-                    {/* 점토 채굴장 */}
-                    <image xlinkHref="/" x="5" y="373" width="180" height="80" onClick={handleClayMineClick} fill="transparent" />
-                    {/* 유랑극단 */}
-                    <image xlinkHref="/" x="5" y="463" width="180" height="80" onClick={handleTroupeClick} fill="transparent" />
-                    {/* 교습 */}
-                    <image xlinkHref="/" x="5" y="566" width="180" height="155" onClick={handleTeachingClick} fill="transparent" />
-                    {/* 농지 */}
-                    <image xlinkHref="/" x="5" y="731" width="180" height="80" onClick={handleFarmLandClick} fill="transparent" />
-                    {/* 농장 확장 */}
-                    <image xlinkHref="/" x="203" y="15" width="180" height="260" onClick={handleExpandFarmClick} fill="transparent" />
-                    {/* 흙 채굴장 */}
-                    <image xlinkHref="/" x="203" y="283" width="180" height="80" onClick={handleDirtMineClick} fill="transparent" />
-                    {/* 날품팔이 */}
-                    <image xlinkHref="/" x="203" y="373" width="180" height="80" onClick={handleDayLaborerClick} fill="transparent" />
-                    {/* 곡식 종자 */}
-                    <image xlinkHref="/" x="203" y="463" width="180" height="80" onClick={handleGrainSeedClick} fill="transparent" />
-                    {/* 회합 장소 */}
-                    <image xlinkHref="/" x="203" y="566" width="180" height="110" onClick={handleMeetingRoomClick} fill="transparent" />
-                    {/* 숲 */}
-                    <image xlinkHref="/" x="203" y="696" width="180" height="110" onClick={handleForestClick} fill="transparent" />
-                    {/* 갈대밭 */}
-                    <image xlinkHref="/" x="401" y="10" width="180" height="60" onClick={handleReedFieldClick} fill="transparent" />
-                    {/* 낚시 */}
-                    <image xlinkHref="/" x="401" y="110" width="180" height="60" onClick={handleFishingClick} fill="transparent" />
-                    {/* 주요설비 */}
-                    <image xlinkHref="/" x="401" y="190" width="180" height="80" onClick={handleMainFacilityClick} fill="transparent" />
-                </svg>
+export default function MainBoard() {
+  return (
+    <div
+      style={{
+        width: '100vw',
+        height: '100vh',
+        display: 'flex',
+        flexDirection: 'row',
+        minWidth: '1280px',
+        minHeight: '800px',
+        padding: '8px',
+      }}
+    >
+      {/* left */}
+      <div style={{ width: '80%' }}>
+        <div
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(7, 1fr)',
+            gridAutoRows: '1fr',
+            height: '80%',
+            backgroundColor: '#B0DC8A',
+            padding: '8px',
+            borderRadius: 16,
+          }}
+        >
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '8px',
+              padding: 4,
+            }}
+          >
+            <div style={{ position: 'relative', height: '50%' }}>
+              <Image src="/images/bush.png" alt="Bush" fill />
             </div>
+            <div style={{ position: 'relative', height: '50%' }}>
+              <Image src="/images/boscage.png" alt="Boscage" fill />
+            </div>
+          </div>
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              padding: 4,
+            }}
+          >
+            <div style={{ position: 'relative', height: '100%' }}>
+              <Image
+                src="/images/farm_expansion.png"
+                alt="Farm_expansion"
+                fill
+              />
+            </div>
+          </div>
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '4px',
+              padding: 4,
+            }}
+          >
+            <div style={{ position: 'relative', height: '33%' }}>
+              <Image src="/images/reed_field.png" alt="Reed_field" fill />
+            </div>
+            <div style={{ position: 'relative', height: '33%' }}>
+              <Image src="/images/fishing.png" alt="Fishing" fill />
+            </div>
+            <div style={{ position: 'relative', height: '33%' }}>
+              <Image src="/images/main_facility.png" alt="Main_facility" fill />
+            </div>
+          </div>
+          <div style={{ padding: 4 }}>
+            <div style={{ position: 'relative', height: '100%' }}>
+              <Image src="/images/round1.png" alt="Round1" fill />
+            </div>
+          </div>
+          <div style={{ padding: 4 }}>
+            <div style={{ position: 'relative', height: '100%' }}>
+              <Image src="/images/round2.png" alt="Round2" fill />
+            </div>
+          </div>
+          <div style={{ padding: 4 }}>
+            <div style={{ position: 'relative', height: '100%' }}>
+              <Image src="/images/round3.png" alt="Round3" fill />
+            </div>
+          </div>
+          <div style={{ padding: 4 }}>
+            <div style={{ position: 'relative', height: '100%' }}>
+              <Image src="/images/round4.png" alt="Round4" fill />
+            </div>
+          </div>
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '4px',
+              padding: 4,
+            }}
+          >
+            <div style={{ position: 'relative', height: '33%' }}>
+              <Image
+                src="/images/resource_market.png"
+                alt="Resource_market"
+                fill
+              />
+            </div>
+            <div style={{ position: 'relative', height: '33%' }}>
+              <Image src="/images/clay_mine.png" alt="Clay_mine" fill />
+            </div>
+            <div style={{ position: 'relative', height: '33%' }}>
+              <Image
+                src="/images/traveling_theater.png"
+                alt="Traveling_theater"
+                fill
+              />
+            </div>
+          </div>
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '4px',
+              padding: 4,
+            }}
+          >
+            <div style={{ position: 'relative', height: '33%' }}>
+              <Image src="/images/dirt_mine.png" alt="Dirt_mine" fill />
+            </div>
+            <div style={{ position: 'relative', height: '33%' }}>
+              <Image
+                src="/images/delivery_seller.png"
+                alt="Delivery_seller"
+                fill
+              />
+            </div>
+            <div style={{ position: 'relative', height: '33%' }}>
+              <Image src="/images/grain_seed.png" alt="Grain_seed" fill />
+            </div>
+          </div>
+          <div style={{ padding: 4 }}>
+            <div style={{ position: 'relative', height: '100%' }}>
+              <Image src="/images/round5.png" alt="Round5" fill />
+            </div>
+          </div>
+          <div style={{ padding: 4 }}>
+            <div style={{ position: 'relative', height: '100%' }}>
+              <Image src="/images/round6.png" alt="Round6" fill />
+            </div>
+          </div>
+          <div style={{ padding: 4 }}>
+            <div style={{ position: 'relative', height: '100%' }}>
+              <Image src="/images/round7.png" alt="Round7" fill />
+            </div>
+          </div>
+          <div style={{ padding: 4 }}>
+            <div style={{ position: 'relative', height: '100%' }}>
+              <Image src="/images/round8.png" alt="Round8" fill />
+            </div>
+          </div>
+          <div style={{ padding: 4 }}>
+            <div style={{ position: 'relative', height: '100%' }}>
+              <Image src="/images/round9.png" alt="Round9" fill />
+            </div>
+          </div>
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '4px',
+              padding: 4,
+            }}
+          >
+            <div style={{ position: 'relative', height: '33%' }}>
+              <Image src="/images/tutoring1.png" alt="Tutoring1" fill />
+            </div>
+            <div style={{ position: 'relative', height: '33%' }}>
+              <Image src="/images/tutoring2.png" alt="Tutoring2" fill />
+            </div>
+            <div style={{ position: 'relative', height: '33%' }}>
+              <Image src="/images/farmland.png" alt="Farmland" fill />
+            </div>
+          </div>
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '8px',
+              padding: 4,
+            }}
+          >
+            <div style={{ position: 'relative', height: '50%' }}>
+              <Image src="/images/meeting_place.png" alt="Meeting_place" fill />
+            </div>
+            <div style={{ position: 'relative', height: '50%' }}>
+              <Image src="/images/forest.png" alt="Forest" fill />
+            </div>
+          </div>
+          <div style={{ padding: 4 }}>
+            <div style={{ position: 'relative', height: '100%' }}>
+              <Image src="/images/round10.png" alt="Round10" fill />
+            </div>
+          </div>
+          <div style={{ padding: 4 }}>
+            <div style={{ position: 'relative', height: '100%' }}>
+              <Image src="/images/round11.png" alt="Round11" fill />
+            </div>
+          </div>
+          <div style={{ padding: 4 }}>
+            <div style={{ position: 'relative', height: '100%' }}>
+              <Image src="/images/round12.png" alt="Round12" fill />
+            </div>
+          </div>
+          <div style={{ padding: 4 }}>
+            <div style={{ position: 'relative', height: '100%' }}>
+              <Image src="/images/round13.png" alt="Round13" fill />
+            </div>
+          </div>
+          <div style={{ padding: 4 }}>
+            <div style={{ position: 'relative', height: '100%' }}>
+              <Image src="/images/round14.png" alt="Round14" fill />
+            </div>
+          </div>
         </div>
-    );
-};
-
-export default MainBoard;
+        {/* bottom */}
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            height: '20%',
+            paddingTop: 16,
+            gap: 16,
+          }}
+        >
+          {/* 직업 카드 */}
+          <div
+            style={{
+              width: '50%',
+              backgroundColor: ' #B0DC8A',
+              borderRadius: 16,
+            }}
+          >
+            <div>직업 카드</div>
+          </div>
+          {/* 보조 설비 */}
+          <div
+            style={{
+              width: '50%',
+              backgroundColor: ' #B0DC8A',
+              borderRadius: 16,
+            }}
+          >
+            <div>보조 설비</div>
+          </div>
+        </div>
+      </div>
+      {/* right */}
+      <div style={{ width: '20%' }}>right</div>
+    </div>
+  );
+}

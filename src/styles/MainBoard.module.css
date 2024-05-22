@@ -1,19 +1,4 @@
-.fullScreen {
-  width: 100vw;
-  height: 100vh;
-  overflow: auto; 
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  position: relative;
-  background-color: #71b743;
-}
-
-.backgroundContainer {
-  position: relative;
-  width: 1728px; 
-  height: 1117px; 
-  background-image: url('/mainboard/BackGround.png'); 
-  background-size: cover;
-  background-position: center;
+.one > div {
+  width: calc(100% / 7);
+  box-sizing: border-box;
 }
