@@ -1,19 +1,101 @@
 .fullScreen {
   width: 100vw;
   height: 100vh;
-  overflow: auto; 
   display: flex;
   justify-content: center;
   align-items: flex-start;
-  position: relative;
   background-color: #71b743;
 }
 
 .backgroundContainer {
+  width: 100vw;
+  height: 100vh;
+  background-image: url('/mainboard/BackGround.png');
+  background-size: 100% 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000; /* Ensure the overlay is on top */
+}
+
+.modal {
   position: relative;
-  width: 1728px; 
-  height: 1117px; 
-  background-image: url('/mainboard/BackGround.png'); 
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 20px;
+  overflow: hidden;
+  z-index: 1001; /* Ensure the modal is above the overlay */
+}
+
+.modalBackground {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 20px; /* Ensure the background image also has rounded corners */
+  overflow: hidden;
+  z-index: 1002; /* Ensure the modal background is above the overlay */
+}
+
+.backgroundImage {
+  width: 100%;
+  height: 100%;
+  background-size: cover; /* Maintain aspect ratio and cover the container */
+  background-position: center;
+  background-repeat: no-repeat;
+  z-index: 1003; /* Ensure the background image is above the modal */
+}
+
+.modalContent {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-start;
+  z-index: 1004; /* Ensure the modal content is above the background image */
+}
+
+.closeButton {
+  position: absolute;
+  top: 68%;
+  right: 15%;
+  width: auto; /* modal 요소의 너비에 비례한 크기 */
+  height: 8.4vh; /* 비율을 유지하면서 높이 조정 */
+  aspect-ratio: 3.8; /* 너비와 높이의 비율을 1:1로 설정 */
+  background-image: url('/images/popup/popup_end.png');
   background-size: cover;
   background-position: center;
+  cursor: pointer;
+  z-index: 1005; /* Ensure the close button is on top */
+}
+
+.chooseButton {
+  position: absolute;
+  bottom: 18%;
+  left: 27%;
+  width: auto;
+  height: 8.4vh;
+  aspect-ratio: 3.8;
+  background-image: url('/images/popup/popup_confirm.png'); /* 이미지 경로 설정 */
+  background-size: cover;
+  background-position: center;
+  border:none;
+  border-radius: 20px;
+  cursor: pointer;
+  z-index: 1005; /* Ensure the choose button is on top */
 }
