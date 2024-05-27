@@ -1,9 +1,12 @@
 import { React, useState, useContext, useEffect } from 'react';
 import RoomManagerWait from '@/components/room_manager_wait';
 import { SocketContext } from '@/context/socket';
+import { useRecoilState } from 'recoil';
+import { myNicknameState } from '@/utils/atoms';
 
 const RoomManager = ({ onClose }) => {
   const [nickname, setNickname] = useState('');
+  const [myNickname, setMyNickname] = useRecoilState(myNicknameState);
   const [showRoomManagerWait, setRoomManagerWait] = useState(false);
   const socket = useContext(SocketContext);
   const [randomNumber, setRandomNumber] = useState(0);
@@ -21,6 +24,7 @@ const RoomManager = ({ onClose }) => {
       alert('닉네임을 입력해주세요.');
     } else {
       socket.emit('manager', randomNumber, nickname);
+      setMyNickname(nickname);
       setRoomManagerWait(true);
     }
   };
