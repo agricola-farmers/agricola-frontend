@@ -1,0 +1,28 @@
+.container {
+  width: 20%;
+  padding-left: 8px;
+}
+
+.logo {
+  position: relative;
+  height: 10%;
+  border: 1px solid black;
+}
+
+.player {
+  height: 60%;
+  border: 1px solid red;
+}
+
+.timer {
+  height: 20%;
+  border: 1px solid blue;
+}
+
+.gameInfo {
+  display: flex;
+  flex-direction: row;
+  height: 10%;
+  border: 1px solid white;
+  justify-content: space-between;
+}
