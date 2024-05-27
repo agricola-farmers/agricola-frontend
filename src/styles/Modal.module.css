@@ -1,0 +1,78 @@
+.modalOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.3);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
+  
+.modalContent {
+    background-color: #F2DFC2;
+    padding: 20px;
+    border-radius: 16px;
+    position: relative;
+    width: 946px;
+    height: 460px;
+    text-align: center;
+}
+  
+.modalBody {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+  
+.speechBubble {
+    background-color: white;
+    border-radius: 100px;
+    width: 722px;
+    height: 221px;
+    position: relative;
+    top: 51px;
+    left: 45px;
+    font-size: 44px;
+}
+  
+.speechBubble:after {
+    content: '';
+    position: absolute;
+    left: 39px; 
+    bottom: -20px; 
+    width: 0;
+    height: 0;
+    border-width: 20px;
+    border-style: solid;
+    border-color: white transparent transparent white;
+}
+  
+.itemImage {
+    width: 50px;
+    height: auto;
+    display: inline-block;
+    margin-left: 10px;
+}
+  
+.buttonContainer {
+    position: absolute;
+    bottom: 72px;
+    right: 145px;
+    display: flex;
+    justify-content: space-between;
+    width: 540px;
+}
+  
+.selectButton,
+.backButton {
+    background-color: #E7B376;
+    border: none;
+    border-radius: 8px;
+    width: 240px; 
+    height: 65px; 
+    font-size: 40px;
+    cursor: pointer;
+}
