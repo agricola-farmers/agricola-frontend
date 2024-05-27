@@ -1,4 +1,4 @@
-import { React, useContext, useEffect, useState } from 'react';
+import {React, useContext, useEffect, useState } from 'react';
 import styles from '../styles/Home.module.css';
 import { SocketContext } from '@/context/socket';
 import { useRouter } from 'next/router';
@@ -18,10 +18,8 @@ const RoomManagerWait = ({ nicknamevalue, isManager, onClose }) => {
       console.log("방에 들어갑니다");
       // roomInfo가 비어있는지 확인
       if (roomInfo.roomNumber && roomInfo.nickname && roomInfo.players && roomInfo.players.length === 3) {
-        socket.emit('remove_room', roomInfo.roomNumber);
         router.push({
           pathname: `/play/${roomInfo.roomNumber}`,
-          query: { nicknames: [roomInfo.nickname, ...roomInfo.players].join(',') }
         });
       } else {
         console.log("방 정보가 아직 로드되지 않았습니다.");

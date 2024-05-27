@@ -1,3 +1,15 @@
+.container {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: row;
+  min-width: 1280px;
+  min-height: 800px;
+  padding: 8px;
+  background-image: url('/images/board_background.png');
+  background-size: 100% 100%;
+}
+
 .one > div {
   width: calc(100% / 7);
   box-sizing: border-box;

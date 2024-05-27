@@ -2,13 +2,15 @@ import { SocketContext } from '@/context/socket';
 import { useRouter } from 'next/router';
 import { React, useState, useContext, useEffect } from 'react';
 import RoomManagerWait from './room_manager_wait';
+import { useRecoilState } from 'recoil';
+import { myNicknameState } from '@/utils/atoms';
 
 const JoinToGame = ({ onClose }) => {
   const [nickname, setNickname] = useState('');
+  const [myNickname, setMyNickname] = useRecoilState(myNicknameState);
   const [EnterCode, setenterCode] = useState('');
   const [showRoomManagerWait, setRoomManagerWait] = useState(false);
   const socket = useContext(SocketContext);
-
 
   useEffect(() => {
     const handleSuccess = (data) => {
@@ -51,6 +53,7 @@ const JoinToGame = ({ onClose }) => {
     } else {
       console.log(nickname);
       socket.emit('player', EnterCode, nickname);
+      setMyNickname(nickname);
     }
   };
 
