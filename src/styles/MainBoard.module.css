@@ -9,8 +9,3 @@
   background-image: url('/images/board_background.png');
   background-size: 100% 100%;
 }
-
-.one > div {
-  width: calc(100% / 7);
-  box-sizing: border-box;
-}
