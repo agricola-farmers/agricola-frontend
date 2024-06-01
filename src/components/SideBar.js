@@ -1,11 +1,19 @@
+// components/SideBar.js
 import Image from 'next/image';
 import styles from '../styles/SideBar.module.css';
 import { HelpManager } from './help_manager';
 import { ScoreManager } from './score_manager';
 
-export const SideBar = ({ ShowPrivate, nicknames }) => {
+export const SideBar = ({ ShowPrivate, nicknames, timer }) => {
   const { showHelp, toggleHelp, HelpModalComponent } = HelpManager();
   const { showScore, toggleScore, ScoreModalComponent } = ScoreManager();
+
+  const playerImages = [
+    "/private_board_images/red_player.svg",
+    "/private_board_images/blue_player.svg",
+    "/private_board_images/green_player.svg",
+    "/private_board_images/orange_player.svg"
+  ];
 
   return (
     <div className={styles.container}>
@@ -30,17 +38,24 @@ export const SideBar = ({ ShowPrivate, nicknames }) => {
               <div
                 className={styles.circle}
                 style={{
-                  backgroundColor: ['#DB9485', '#D8F2C7', '#ABC7FF', '#E7BF72'][
+                  backgroundColor: ['#DB9485', '#ABC7FF', '#D8F2C7', '#E7BF72'][
                     index % 4
                   ],
+                  zIndex: 3,
                 }}
-              ></div>
+              ><img
+              src={playerImages[index % 4]}
+              alt="player"
+              className = {styles.playerImage}
+              style={{zIndex: 4}}
+            /></div>
               <div
                 className={styles.rectangle}
                 style={{
-                  backgroundColor: ['#DB9485', '#D8F2C7', '#ABC7FF', '#E7BF72'][
+                  backgroundColor: ['#DB9485', '#ABC7FF', '#D8F2C7', '#E7BF72'][
                     index % 4
                   ],
+                  zIndex: 1,
                 }}
               >
                 <div className={styles.userName}>{name}</div>
@@ -50,7 +65,7 @@ export const SideBar = ({ ShowPrivate, nicknames }) => {
         ))}
       </div>
       {/* Timer */}
-      <div className={styles.timer}>Timer</div>
+      <div className={styles.timer}>Time remaining: {timer}s</div>
       {/* Help & Score */}
       <div className={styles.gameInfo}>
         <div style={{ width: '50%', position: 'relative' }}>
