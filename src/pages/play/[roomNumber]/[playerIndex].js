@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import styles from '../../styles/Play.module.css';
+import styles from '../../../styles/Play.module.css';
 import PrivateBoard from '@/components/private_board';
 import { SocketContext } from '@/context/socket';
 import { useRouter } from 'next/router';

@@ -70,3 +70,8 @@
   font-weight: bold;
   justify-content: center;
 }
+
+.playerImage{
+  width: 90%;
+  height: 90%;
+}

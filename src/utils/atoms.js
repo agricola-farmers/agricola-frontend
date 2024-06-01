@@ -1,4 +1,9 @@
-import { atom, atomFamily } from 'recoil';
+import { atom } from 'recoil';
+
+export const playersState = atom({
+  key: 'playersState',
+  default: [],
+});
 
 export const player1State = atom({
   key: 'player1State',
@@ -6,7 +11,7 @@ export const player1State = atom({
     isActive: false,
     family_member: 2,
     stables: 0,
-    fences: [], // 위치, 어디 있는지
+    fences: [],
     wood: 0,
     clay: 0,
     reed: 0,
@@ -16,12 +21,12 @@ export const player1State = atom({
     sheep: 0,
     wild_boar: 0,
     cattle: 0,
-    house: [{}], // field, stone / 위치, 어디 있는지
-    hut: [{}], // wood, clay / 위치, 어디 있는지
+    house: [{}],
+    hut: [{}],
     food: 2,
     major_facilities: [],
-    minor_facilities: [],
-    job: [],
+    job: Array.from({ length: 7 }, (_, i) => `../../../images/player1_jobcard/jobcard_${i + 1}.png`),
+    facility: Array.from({ length: 7 }, (_, i) => `../../../images/player1_facilitycard/facilitycard_${i + 1}.png`),
   },
 });
 
@@ -31,7 +36,7 @@ export const player2State = atom({
     isActive: false,
     family_member: 2,
     stables: 0,
-    fences: [], // 위치, 어디 있는지
+    fences: [],
     wood: 0,
     clay: 0,
     reed: 0,
@@ -41,12 +46,12 @@ export const player2State = atom({
     sheep: 0,
     wild_boar: 0,
     cattle: 0,
-    house: [{}], // field, stone / 위치, 어디 있는지
-    hut: [{}], // wood, clay / 위치, 어디 있는지
+    house: [{}],
+    hut: [{}],
     food: 2,
     major_facilities: [],
-    minor_facilities: [],
-    job: [],
+    job: Array.from({ length: 7 }, (_, i) => `../../../images/player2_jobcard/jobcard_${i + 1}.png`),
+    facility: Array.from({ length: 7 }, (_, i) => `../../../images/player2_facilitycard/facilitycard_${i + 1}.png`),
   },
 });
 
@@ -56,7 +61,7 @@ export const player3State = atom({
     isActive: false,
     family_member: 2,
     stables: 0,
-    fences: [], // 위치, 어디 있는지
+    fences: [],
     wood: 0,
     clay: 0,
     reed: 0,
@@ -66,12 +71,12 @@ export const player3State = atom({
     sheep: 0,
     wild_boar: 0,
     cattle: 0,
-    house: [{}], // field, stone / 위치, 어디 있는지
-    hut: [{}], // wood, clay / 위치, 어디 있는지
+    house: [{}],
+    hut: [{}],
     food: 2,
     major_facilities: [],
-    minor_facilities: [],
-    job: [],
+    job: Array.from({ length: 7 }, (_, i) => `../../../images/player3_jobcard/jobcard_${i + 1}.png`),
+    facility: Array.from({ length: 7 }, (_, i) => `../../../images/player3_facilitycard/facilitycard_${i + 1}.png`),
   },
 });
 
@@ -81,7 +86,7 @@ export const player4State = atom({
     isActive: false,
     family_member: 2,
     stables: 0,
-    fences: [], // 위치, 어디 있는지
+    fences: [],
     wood: 0,
     clay: 0,
     reed: 0,
@@ -91,12 +96,12 @@ export const player4State = atom({
     sheep: 0,
     wild_boar: 0,
     cattle: 0,
-    house: [{}], // field, stone / 위치, 어디 있는지
-    hut: [{}], // wood, clay / 위치, 어디 있는지
+    house: [{}],
+    hut: [{}],
     food: 2,
     major_facilities: [],
-    minor_facilities: [],
-    job: [],
+    job: Array.from({ length: 7 }, (_, i) => `../../../images/player4_jobcard/jobcard_${i + 1}.png`),
+    facility: Array.from({ length: 7 }, (_, i) => `../../../images/player4_facilitycard/facilitycard_${i + 1}.png`),
   },
 });
 
