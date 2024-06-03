@@ -17,7 +17,8 @@ export default function Play() {
   const [IsChange, setisChange] = useState(false);
   const [selectedNickname, setSelectedNickname] = useState('');
   const [currentTurnIndex, setCurrentTurnIndex] = useState(2);
-  const [timer, setTimer] = useState(60); // 타이머 상태 추가
+  const [timer, setTimer] = useState(60);
+  const [turnCount, setTurnCount] = useState(0);
 
   useEffect(() => {
     if (roomNumber && socket) {
@@ -48,6 +49,11 @@ export default function Play() {
             const nextIndex = (prevIndex + 1) % turnOrder.length;
             return nextIndex;
           });
+          setTurnCount((prevCount) => {
+            const newCount = prevCount + 1;
+            console.log(`Turn Count: ${newCount}`);
+            return newCount;
+          });
           return 60; // 타이머 리셋
         }
         return prevTimer - 1;
@@ -64,6 +70,19 @@ export default function Play() {
     setShowPrivateBoard(true);
   };
 
+  const handleEndTurn = () => {
+    setCurrentTurnIndex((prevIndex) => {
+      const nextIndex = (prevIndex + 1) % players.length;
+      return nextIndex;
+    });
+    setTurnCount((prevCount) => {
+      const newCount = prevCount + 1;
+      console.log(`Turn Count: ${newCount}`);
+      return newCount;
+    });
+    setTimer(60); // 타이머 리셋
+  };
+
 
   return (
     <div className={styles.container}>
@@ -77,7 +96,7 @@ export default function Play() {
       ) : (
         <>
           <Board playerIndex={parseInt(playerIndex, 10)} isClickable={parseInt(playerIndex, 10) === currentTurnIndex} ShowPrivate={ShowPrivate} nicknames={players}/>
-          <SideBar ShowPrivate={ShowPrivate} nicknames={players} timer={timer} currentTurn={currentTurnIndex}/>
+          <SideBar ShowPrivate={ShowPrivate} nicknames={players} timer={timer} currentTurn={currentTurnIndex} onEndTurn={handleEndTurn}/>
         </>
       )}
     </div>

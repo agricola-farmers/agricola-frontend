@@ -9,7 +9,6 @@ const PrivateBoard = ({ onClose, nickname, index, isChange }) => {
   const router = useRouter();
   const { playerIndex } = router.query;
   const [isJobModalOpen, setIsJobModalOpen] = useState(false);
-  const [isField, setIsField] = useState(false);
   const [isFacilityModalOpen, setIsFacilityModalOpen] = useState(false);
   const playerStates = [player1State, player2State, player3State, player4State];
   const [playerState, setPlayerState] = useRecoilState(playerStates[index]);
@@ -42,7 +41,6 @@ const PrivateBoard = ({ onClose, nickname, index, isChange }) => {
   };
 
   const handleJobModalClick = () => {
-    console.log("aaa")
     setIsJobModalOpen(true);
   };
 
@@ -72,12 +70,37 @@ const PrivateBoard = ({ onClose, nickname, index, isChange }) => {
     setIsFacilityModalOpen(false);
   };
 
-  const handleImageClick = () => {
-    console.log("Image clicked");
-    console.log("isChange:", isChange);
-    if(isChange || cardchange){
-      setIsField(true);
+  const handleImageClick = (forest_index) => {
+    if (cardchange) {
+      setPlayerState(prevState => {
+        const newFieldState = [...prevState.fieldState];
+        newFieldState[forest_index] = true;
+        return {
+          ...prevState,
+          fieldState: newFieldState
+        };
+      });
+      setcardchange(false);
     }
+  };
+
+  const renderForestOrField = (forest_index) => {
+    return (
+      <div
+        style={{
+          position: "relative",
+          width: "100%",
+          height: "100%",
+        }}
+        onClick={() => handleImageClick(forest_index)}
+      >
+        <img
+          src={playerState.fieldState[forest_index] ? "/private_board_images/field.svg" : "/private_board_images/forest.svg"}
+          alt={playerState.fieldState[forest_index] ? `field_${forest_index}` : `forest_${forest_index}`}
+          style={{ width: "100%", height: "100%" }}
+        />
+      </div>
+    );
   };
 
   return (
@@ -95,13 +118,13 @@ const PrivateBoard = ({ onClose, nickname, index, isChange }) => {
       <JobCardModal
         isOpen={isJobModalOpen}
         onClose={handleCloseJobModal}
-        cards={playerState.job}
+        cards={playerState.job_active}
         onCardClick={handleJobCardClick}
       />
       <FacilityCardModal
         isOpen={isFacilityModalOpen}
         onClose={handleCloseFacilityModal}
-        cards={playerState.facility}
+        cards={playerState.facility_active}
         onCardClick={handleFacilityCardClick}
       />
       {/* Blurred background div */}
@@ -191,72 +214,11 @@ const PrivateBoard = ({ onClose, nickname, index, isChange }) => {
                 padding: 10,
               }}
             >
-              <div
-                style={{
-                  position: "relative",
-                  width: "100%",
-                  height: "100%",
-                }}
-                onClick={handleImageClick}
-              >
-                <img
-                  src={isField ? "/private_board_images/field.svg" : "/private_board_images/forest.svg"}
-                  alt={isField ? "field" : "forest"}
-                  style={{ width: "100%", height: "100%" }}
-                />
-              </div>
-              <div
-                style={{
-                  position: "relative",
-                  width: "100%",
-                  height: "100%",
-                }}
-              >
-                <img
-                  src="/private_board_images/forest.svg"
-                  alt="forest"
-                  style={{ width: "100%", height: "100%" }}
-                />
-              </div>
-              <div
-                style={{
-                  position: "relative",
-                  width: "100%",
-                  height: "100%",
-                }}
-              >
-                <img
-                  src="/private_board_images/forest.svg"
-                  alt="forest"
-                  style={{ width: "100%", height: "100%" }}
-                />
-              </div>
-              <div
-                style={{
-                  position: "relative",
-                  width: "100%",
-                  height: "100%",
-                }}
-              >
-                <img
-                  src="/private_board_images/forest.svg"
-                  alt="forest"
-                  style={{ width: "100%", height: "100%" }}
-                />
-              </div>
-              <div
-                style={{
-                  position: "relative",
-                  width: "100%",
-                  height: "100%",
-                }}
-              >
-                <img
-                  src="/private_board_images/forest.svg"
-                  alt="forest"
-                  style={{ width: "100%", height: "100%" }}
-                />
-              </div>
+              {renderForestOrField(0)}
+              {renderForestOrField(1)}
+              {renderForestOrField(2)}
+              {renderForestOrField(3)}
+              {renderForestOrField(4)}
               <div
                 style={{
                   position: "relative",
@@ -270,58 +232,10 @@ const PrivateBoard = ({ onClose, nickname, index, isChange }) => {
                   style={{ width: "100%", height: "100%" }}
                 />
               </div>
-              <div
-                style={{
-                  position: "relative",
-                  width: "100%",
-                  height: "100%",
-                }}
-              >
-                <img
-                  src="/private_board_images/forest.svg"
-                  alt="forest"
-                  style={{ width: "100%", height: "100%" }}
-                />
-              </div>
-              <div
-                style={{
-                  position: "relative",
-                  width: "100%",
-                  height: "100%",
-                }}
-              >
-                <img
-                  src="/private_board_images/forest.svg"
-                  alt="forest"
-                  style={{ width: "100%", height: "100%" }}
-                />
-              </div>
-              <div
-                style={{
-                  position: "relative",
-                  width: "100%",
-                  height: "100%",
-                }}
-              >
-                <img
-                  src="/private_board_images/forest.svg"
-                  alt="forest"
-                  style={{ width: "100%", height: "100%" }}
-                />
-              </div>
-              <div
-                style={{
-                  position: "relative",
-                  width: "100%",
-                  height: "100%",
-                }}
-              >
-                <img
-                  src="/private_board_images/forest.svg"
-                  alt="forest"
-                  style={{ width: "100%", height: "100%" }}
-                />
-              </div>
+              {renderForestOrField(5)}
+              {renderForestOrField(6)}
+              {renderForestOrField(7)}
+              {renderForestOrField(8)}
               <div
                 style={{
                   position: "relative",
@@ -335,58 +249,10 @@ const PrivateBoard = ({ onClose, nickname, index, isChange }) => {
                   style={{ width: "100%", height: "100%" }}
                 />
               </div>
-              <div
-                style={{
-                  position: "relative",
-                  width: "100%",
-                  height: "100%",
-                }}
-              >
-                <img
-                  src="/private_board_images/forest.svg"
-                  alt="forest"
-                  style={{ width: "100%", height: "100%" }}
-                />
-              </div>
-              <div
-                style={{
-                  position: "relative",
-                  width: "100%",
-                  height: "100%",
-                }}
-              >
-                <img
-                  src="/private_board_images/forest.svg"
-                  alt="forest"
-                  style={{ width: "100%", height: "100%" }}
-                />
-              </div>
-              <div
-                style={{
-                  position: "relative",
-                  width: "100%",
-                  height: "100%",
-                }}
-              >
-                <img
-                  src="/private_board_images/forest.svg"
-                  alt="forest"
-                  style={{ width: "100%", height: "100%" }}
-                />
-              </div>
-              <div
-                style={{
-                  position: "relative",
-                  width: "100%",
-                  height: "100%",
-                }}
-              >
-                <img
-                  src="/private_board_images/forest.svg"
-                  alt="forest"
-                  style={{ width: "100%", height: "100%" }}
-                />
-              </div>
+              {renderForestOrField(9)}
+              {renderForestOrField(10)}
+              {renderForestOrField(11)}
+              {renderForestOrField(12)}
             </div>
           </div>
           <div
@@ -954,7 +820,7 @@ const PrivateBoard = ({ onClose, nickname, index, isChange }) => {
               gap: "8px",
               marginTop: "3%",
             }}>
-              {playerState.job.map((card, index) => (
+              {playerState.job_active.map((card, index) => (
                 <img
                   key={index}
                   src={card}
@@ -1020,7 +886,7 @@ const PrivateBoard = ({ onClose, nickname, index, isChange }) => {
               gap: "8px",
               marginTop: "3%",
             }}>
-              {playerState.facility.map((card, index) => (
+              {playerState.facility_active.map((card, index) => (
                 <img
                   key={index}
                   src={card}

@@ -27,6 +27,9 @@ export const player1State = atom({
     major_facilities: [],
     job: Array.from({ length: 7 }, (_, i) => `../../../images/player1_jobcard/jobcard_${i + 1}.png`),
     facility: Array.from({ length: 7 }, (_, i) => `../../../images/player1_facilitycard/facilitycard_${i + 1}.png`),
+    job_active: [],
+    facility_active: [],
+    fieldState: Array(13).fill(false),
   },
 });
 
@@ -52,6 +55,9 @@ export const player2State = atom({
     major_facilities: [],
     job: Array.from({ length: 7 }, (_, i) => `../../../images/player2_jobcard/jobcard_${i + 1}.png`),
     facility: Array.from({ length: 7 }, (_, i) => `../../../images/player2_facilitycard/facilitycard_${i + 1}.png`),
+    job_active: [],
+    facility_active: [],
+    fieldState: Array(13).fill(false),
   },
 });
 
@@ -77,6 +83,9 @@ export const player3State = atom({
     major_facilities: [],
     job: Array.from({ length: 7 }, (_, i) => `../../../images/player3_jobcard/jobcard_${i + 1}.png`),
     facility: Array.from({ length: 7 }, (_, i) => `../../../images/player3_facilitycard/facilitycard_${i + 1}.png`),
+    job_active: [],
+    facility_active: [],
+    fieldState: Array(13).fill(false),
   },
 });
 
@@ -102,6 +111,9 @@ export const player4State = atom({
     major_facilities: [],
     job: Array.from({ length: 7 }, (_, i) => `../../../images/player4_jobcard/jobcard_${i + 1}.png`),
     facility: Array.from({ length: 7 }, (_, i) => `../../../images/player4_facilitycard/facilitycard_${i + 1}.png`),
+    job_active: [],
+    facility_active: [],
+    fieldState: Array(13).fill(false),
   },
 });
 

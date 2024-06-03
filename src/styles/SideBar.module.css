@@ -78,7 +78,91 @@
 
 .myTurnIcon{
   position: absolute;
-  top: 50%;
-  right: 0;
+  top: 30%;
+  left: 90%;
   z-index: 7;
+}
+
+.timerContainer {
+  width: 100%;
+  height: 20%;
+  background-color: #4D381C;
+  border-radius: 10%;
+  padding: 3%;
+}
+
+.timerInnerContainer {
+  width: 100%;
+  height: 100%;
+  background-color: #EFE6DC;
+  border-radius: 10%;
+  display: flex;
+  padding: 10%;
+  justify-content: center;
+  align-items: center;
+}
+
+.timerContent {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.hourglass {
+  width: 70%;
+  height: 70%;
+  animation: rotate360 2s linear infinite;
+}
+
+.endTurnButton {
+  width: 70%;
+  height: 30%;
+  background-color: #E7B376;
+  border-radius: 40%;
+  box-shadow: inset -4px -4px 4px rgba(0, 0, 0, 0.25);
+  color: #3C300F;
+  padding: 5%;
+  border: none;
+  margin-top: 2%;
+  font-weight: bold;
+}
+
+.endTurnButton:active {
+  box-shadow: inset 4px 4px 8px rgba(0, 0, 0, 0.25); /* 눌렸을 때 내부 그림자 */
+}
+
+.textSection {
+  width: 50%;
+}
+
+.playerTurn {
+  font-size: 2.5rem;
+  font-weight: bold;
+  text-align: center;
+}
+
+.gameStatus {
+  font-weight: bold;
+  color: black;
+  margin-top: 5%;
+  font-size: 1.2vw;
+  text-align: center;
+}
+
+.timer {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #605ACF;
+  margin-top: 5%;
+  text-align: center;
+  border: None;
+}
+
+@keyframes rotate360 {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
