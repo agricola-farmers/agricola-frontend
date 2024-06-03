@@ -1,11 +1,17 @@
+.background {
+  width: 100vw;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+}
+
 .container {
   position: fixed;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  padding: 20px;
   z-index: 100;
-  border-radius: 10px;
 }
 
 .topContainer {
@@ -28,7 +34,7 @@
   width: 80px;
   height: 70px;
   position: absolute;
-  right: 20px;
+  right: 0px;
   cursor: pointer;
 }
 
