@@ -14,7 +14,10 @@ export default function Play() {
   const { roomNumber, playerIndex } = router.query;
   const [players, setPlayers] = useRecoilState(playersState);
   const [showPrivateBoard, setShowPrivateBoard] = useState(false);
+  const [IsChange, setisChange] = useState(false);
   const [selectedNickname, setSelectedNickname] = useState('');
+  const [currentTurnIndex, setCurrentTurnIndex] = useState(2);
+  const [timer, setTimer] = useState(60); // 타이머 상태 추가
 
   useEffect(() => {
     if (roomNumber && socket) {
@@ -36,13 +39,31 @@ export default function Play() {
   }, [roomNumber, socket]);
 
   useEffect(() => {
-    console.log('Player Index:', playerIndex);
-  }, [playerIndex]);
+    const turnOrder = [2, 3, 0, 1];
 
-  const ShowPrivate = (nickname) => {
+    const interval = setInterval(() => {
+      setTimer((prevTimer) => {
+        if (prevTimer === 1) {
+          setCurrentTurnIndex((prevIndex) => {
+            const nextIndex = (prevIndex + 1) % turnOrder.length;
+            return nextIndex;
+          });
+          return 60; // 타이머 리셋
+        }
+        return prevTimer - 1;
+      });
+    }, 1000); // 1초마다 업데이트
+
+    // return () => clearInterval(interval);
+  }, []);
+
+
+  const ShowPrivate = (nickname, isChange) => {
     setSelectedNickname(nickname);
+    setisChange(isChange);
     setShowPrivateBoard(true);
   };
+
 
   return (
     <div className={styles.container}>
@@ -51,11 +72,12 @@ export default function Play() {
           onClose={() => setShowPrivateBoard(false)}
           nickname={selectedNickname}
           index={players.indexOf(selectedNickname)}
+          isChange={IsChange}
         />
       ) : (
         <>
-          <Board playerIndex={parseInt(playerIndex, 10)} />
-          <SideBar ShowPrivate={ShowPrivate} nicknames={players} />
+          <Board playerIndex={parseInt(playerIndex, 10)} isClickable={parseInt(playerIndex, 10) === currentTurnIndex} ShowPrivate={ShowPrivate} nicknames={players}/>
+          <SideBar ShowPrivate={ShowPrivate} nicknames={players} timer={timer} currentTurn={currentTurnIndex}/>
         </>
       )}
     </div>

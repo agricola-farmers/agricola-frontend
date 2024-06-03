@@ -1,35 +1,40 @@
-import React, { useState } from "react";
-import { useRecoilValue } from "recoil";
+import React, { useState, useEffect } from "react";
+import { useRecoilValue, useRecoilState } from "recoil";
+import { useRouter } from 'next/router';
 import { player1State, player2State, player3State, player4State } from "@/utils/atoms";
 import JobCardModal from "./JobCardModal";
 import FacilityCardModal from "./FacilityCardModal";
 
-const PrivateBoard = ({ onClose, nickname, index }) => {
+const PrivateBoard = ({ onClose, nickname, index, isChange }) => {
+  const router = useRouter();
+  const { playerIndex } = router.query;
   const [isJobModalOpen, setIsJobModalOpen] = useState(false);
+  const [isField, setIsField] = useState(false);
   const [isFacilityModalOpen, setIsFacilityModalOpen] = useState(false);
   const playerStates = [player1State, player2State, player3State, player4State];
-  const playerState = useRecoilValue(playerStates[index]);
+  const [playerState, setPlayerState] = useRecoilState(playerStates[index]);
+  const [cardchange, setcardchange] = useState(isChange);
 
-  let playerImage = "/private_board_images/red_player.svg";
-  let house = "/private_board_images/red_house.svg";
-  let fence = "/private_board_images/fence.svg";
-  let mainColor = "#E4B8AF";
+  let playerImage = "/private_board_images/orange_player.svg";
+  let house = "/private_board_images/orange_house.svg";
+  let fence = "/private_board_images/orange_fence.svg";
+  let mainColor = "#E7BF72";
 
   if (index === 1) {
-    playerImage = "/private_board_images/blue_player.svg";
-    house = "/private_board_images/blue_house.svg";
-    fence = "/private_board_images/blue_fence.svg";
-    mainColor = "#ABC7FF";
+    playerImage = "/private_board_images/red_player.svg";
+    house = "/private_board_images/red_house.svg";
+    fence = "/private_board_images/fence.svg";
+    mainColor = "#E4B8AF";
   } else if (index === 2) {
     playerImage = "/private_board_images/green_player.svg";
     house = "/private_board_images/green_house.svg";
     fence = "/private_board_images/green_fence.svg";
     mainColor = "#D8F2C7";
   } else if (index === 3) {
-    playerImage = "/private_board_images/orange_player.svg";
-    house = "/private_board_images/orange_house.svg";
-    fence = "/private_board_images/orange_fence.svg";
-    mainColor = "#E7BF72";
+    playerImage = "/private_board_images/blue_player.svg";
+    house = "/private_board_images/blue_house.svg";
+    fence = "/private_board_images/blue_fence.svg";
+    mainColor = "#ABC7FF";
   }
 
   const handleArrowClick = () => {
@@ -37,6 +42,7 @@ const PrivateBoard = ({ onClose, nickname, index }) => {
   };
 
   const handleJobModalClick = () => {
+    console.log("aaa")
     setIsJobModalOpen(true);
   };
 
@@ -54,12 +60,24 @@ const PrivateBoard = ({ onClose, nickname, index }) => {
 
   const handleJobCardClick = (card) => {
     console.log(card);
+    console.log(playerIndex); 
+    if (playerIndex === "3" && card === "../../../images/player4_jobcard/jobcard_5.png") { 
+      setcardchange(true);
+    }
     setIsJobModalOpen(false);
   };
 
   const handleFacilityCardClick = (card) => {
     console.log(card);
     setIsFacilityModalOpen(false);
+  };
+
+  const handleImageClick = () => {
+    console.log("Image clicked");
+    console.log("isChange:", isChange);
+    if(isChange || cardchange){
+      setIsField(true);
+    }
   };
 
   return (
@@ -166,7 +184,6 @@ const PrivateBoard = ({ onClose, nickname, index }) => {
                 height: "100%",
                 backgroundColor: "#B3D49C",
                 borderRadius: "18px",
-                zIndex: -1,
                 display: "grid",
                 gridTemplateColumns: "repeat(5, 1fr)",
                 gridTemplateRows: "repeat(3, 1fr)",
@@ -180,10 +197,11 @@ const PrivateBoard = ({ onClose, nickname, index }) => {
                   width: "100%",
                   height: "100%",
                 }}
+                onClick={handleImageClick}
               >
                 <img
-                  src="/private_board_images/forest.svg"
-                  alt="forest"
+                  src={isField ? "/private_board_images/field.svg" : "/private_board_images/forest.svg"}
+                  alt={isField ? "field" : "forest"}
                   style={{ width: "100%", height: "100%" }}
                 />
               </div>
@@ -505,7 +523,7 @@ const PrivateBoard = ({ onClose, nickname, index }) => {
                       alignItems: "center",
                     }}
                   >
-                    0
+                    {playerState.wood}
                   </div>
                   <div
                     style={{
@@ -534,7 +552,7 @@ const PrivateBoard = ({ onClose, nickname, index }) => {
                       alignItems: "center",
                     }}
                   >
-                    0
+                    {playerState.clay}
                   </div>
                   <div
                     style={{
@@ -545,7 +563,7 @@ const PrivateBoard = ({ onClose, nickname, index }) => {
                   >
                     <img
                       src="/private_board_images/gold.svg"
-                      alt="gold"
+                      alt="clay"
                       style={{ width: "100%", height: "100%" }}
                     />
                   </div>
@@ -563,7 +581,7 @@ const PrivateBoard = ({ onClose, nickname, index }) => {
                       alignItems: "center",
                     }}
                   >
-                    0
+                    {playerState.stone}
                   </div>
                   <div
                     style={{
@@ -596,7 +614,7 @@ const PrivateBoard = ({ onClose, nickname, index }) => {
                       alignItems: "center",
                     }}
                   >
-                    0
+                    {playerState.reed}
                   </div>
                   <div
                     style={{
@@ -607,7 +625,7 @@ const PrivateBoard = ({ onClose, nickname, index }) => {
                   >
                     <img
                       src="/private_board_images/stone_2.svg"
-                      alt="stone_2"
+                      alt="reed"
                       style={{ width: "100%", height: "100%" }}
                     />
                   </div>
@@ -636,7 +654,7 @@ const PrivateBoard = ({ onClose, nickname, index }) => {
                       alignItems: "center",
                     }}
                   >
-                    0
+                    {playerState.grain}
                   </div>
                   <div
                     style={{
@@ -647,7 +665,7 @@ const PrivateBoard = ({ onClose, nickname, index }) => {
                   >
                     <img
                       src="/private_board_images/herb_yellow.svg"
-                      alt="herb_yellow"
+                      alt="grain"
                       style={{ width: "100%", height: "100%" }}
                     />
                   </div>
@@ -665,7 +683,7 @@ const PrivateBoard = ({ onClose, nickname, index }) => {
                       alignItems: "center",
                     }}
                   >
-                    0
+                    {playerState.vegetable}
                   </div>
                   <div
                     style={{
@@ -676,7 +694,7 @@ const PrivateBoard = ({ onClose, nickname, index }) => {
                   >
                     <img
                       src="/private_board_images/coin.svg"
-                      alt="coin"
+                      alt="vegetable"
                       style={{ width: "100%", height: "100%" }}
                     />
                   </div>
@@ -694,7 +712,7 @@ const PrivateBoard = ({ onClose, nickname, index }) => {
                       alignItems: "center",
                     }}
                   >
-                    0
+                    {playerState.food}
                   </div>
                   <div
                     style={{
@@ -705,7 +723,7 @@ const PrivateBoard = ({ onClose, nickname, index }) => {
                   >
                     <img
                       src="/private_board_images/coin_1.svg"
-                      alt="coin_1"
+                      alt="food"
                       style={{
                         width: "100%",
                         height: "100%",
@@ -747,22 +765,22 @@ const PrivateBoard = ({ onClose, nickname, index }) => {
                       marginBottom: "5%",
                     }}>
                       <div style={{ position: "relative", width: "100%", height: "100%", textAlign: 'center', fontWeight: 'bold', fontSize: '2.5vw', lineHeight: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                        0
+                        {playerState.sheep}
                       </div>
                       <div style={{ position: "relative", width: "100%", height: "100%" }}>
                         <img src="/private_board_images/sheep.svg" alt="sheep" style={{ width: "100%", height: "100%"}}/>
                       </div>
                       <div style={{ position: "relative", width: "100%", height: "100%", textAlign: 'center', fontWeight: 'bold', fontSize: '2.5vw', lineHeight: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                        0
+                        {playerState.wild_boar}
                       </div>
                       <div style={{ position: "relative", width: "100%", height: "100%" }}>
-                        <img src="/private_board_images/pig.svg" alt="pig" style={{ width: "100%", height: "100%" }}/>
+                        <img src="/private_board_images/pig.svg" alt="wild_boar" style={{ width: "100%", height: "100%" }}/>
                       </div>
                       <div style={{ position: "relative", width: "100%", height: "100%", textAlign: 'center', fontWeight: 'bold', fontSize: '2.5vw', lineHeight: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                        0
+                        {playerState.cattle}
                       </div>
                       <div style={{ position: "relative", width: "100%", height: "100%" }}>
-                        <img src="/private_board_images/bull.svg" alt="bull" style={{ width: "100%", height: "100%" }}/>
+                        <img src="/private_board_images/bull.svg" alt="cattle" style={{ width: "100%", height: "100%" }}/>
                       </div>  
                       <div style={{ position: "relative", width: "100%", height: "100%", textAlign: 'center', fontWeight: 'bold', fontSize: '2.5vw', lineHeight: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                       </div>
@@ -799,7 +817,7 @@ const PrivateBoard = ({ onClose, nickname, index }) => {
                     fontWeight: "bold",
                   }}
                 >
-                  <span>3</span>
+                  <span>{playerState.family_member}</span>
                   <span>/5</span>
                 </div>
                 <div
@@ -812,7 +830,7 @@ const PrivateBoard = ({ onClose, nickname, index }) => {
                 >
                   <img
                     src={playerImage}
-                    alt="player"
+                    alt="family_member"
                     style={{ width: "100%", height: "100%" }}
                   />
                 </div>
@@ -828,7 +846,7 @@ const PrivateBoard = ({ onClose, nickname, index }) => {
                     fontWeight: "bold",
                   }}
                 >
-                  <span>2</span>
+                  <span>{playerState.fences.length}</span>
                   <span>/15</span>
                 </div>
                 <div
@@ -840,7 +858,7 @@ const PrivateBoard = ({ onClose, nickname, index }) => {
                 >
                   <img
                     src={fence}
-                    alt="fence"
+                    alt="fences"
                     style={{ width: "100%", height: "100%" }}
                   />
                 </div>
@@ -856,7 +874,7 @@ const PrivateBoard = ({ onClose, nickname, index }) => {
                     fontWeight: "bold",
                   }}
                 >
-                  <span>0</span>
+                  <span>{playerState.house}</span>
                   <span>/4</span>
                 </div>
                 <div
