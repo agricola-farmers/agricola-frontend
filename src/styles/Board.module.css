@@ -19,6 +19,7 @@
   flex-direction: column;
   gap: 8px;
   padding: 4px;
+  position: relative;
 }
 
 .section3 {
@@ -26,6 +27,7 @@
   flex-direction: column;
   gap: 4px;
   padding: 4px;
+  position: relative;
 }
 
 .roundCard {
@@ -112,4 +114,76 @@
 
 .cardImage:hover {
   transform: scale(1.05);
+}
+
+.playerIconforest {
+  position: absolute;
+  width: 20%; 
+  height: 20%; 
+  z-index: 5;
+  top: 80%;   
+  left: 80%;     
+}
+
+.playerIcontutoring1{
+  position: absolute;
+  width: 20%; 
+  height: 20%; 
+  z-index: 5;
+  top: 19%;   
+  left: 80%;     
+}
+
+.playerIconResource_market {
+  position: absolute;
+  width: 20%; 
+  height: 20%; 
+  z-index: 5;
+  top: 19%;   
+  left: 80%;     
+}
+
+.playerIcontutoring2{
+  position: absolute;
+  width: 20%; 
+  height: 20%; 
+  z-index: 5;
+  top: 50%;   
+  left: 80%;     
+}
+
+.playerIconclay_mine {
+  position: absolute;
+  width: 20%; 
+  height: 20%; 
+  z-index: 5;
+  top: 50%;   
+  left: 80%;     
+}
+
+.playerIcondelivery_seller{
+  position: absolute;
+  width: 20%; 
+  height: 20%; 
+  z-index: 5;
+  top: 50%;   
+  left: 80%; 
+}
+
+.playerIconboscage{
+  position: absolute;
+  width: 20%; 
+  height: 20%; 
+  z-index: 5;
+  top: 80%;   
+  left: 80%;     
+}
+
+.playerIconfarmland{
+  position: absolute;
+  width: 20%; 
+  height: 20%; 
+  z-index: 5;
+  top: 85%;   
+  left: 80%;     
 }

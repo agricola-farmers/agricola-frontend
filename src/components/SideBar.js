@@ -1,18 +1,17 @@
-// components/SideBar.js
 import Image from 'next/image';
 import styles from '../styles/SideBar.module.css';
 import { HelpManager } from './help_manager';
 import { ScoreManager } from './score_manager';
 
-export const SideBar = ({ ShowPrivate, nicknames, timer }) => {
+export const SideBar = ({ ShowPrivate, nicknames, timer, currentTurn }) => {
   const { showHelp, toggleHelp, HelpModalComponent } = HelpManager();
   const { showScore, toggleScore, ScoreModalComponent } = ScoreManager();
 
   const playerImages = [
+    "/private_board_images/orange_player.svg",
     "/private_board_images/red_player.svg",
-    "/private_board_images/blue_player.svg",
     "/private_board_images/green_player.svg",
-    "/private_board_images/orange_player.svg"
+    "/private_board_images/blue_player.svg",
   ];
 
   return (
@@ -27,7 +26,7 @@ export const SideBar = ({ ShowPrivate, nicknames, timer }) => {
           <div
             key={index}
             className={styles.playerContainer}
-            onClick={() => ShowPrivate(name)}
+            onClick={() => ShowPrivate(name, false)}
           >
             <Image
               src="/images/name_background.png"
@@ -38,34 +37,47 @@ export const SideBar = ({ ShowPrivate, nicknames, timer }) => {
               <div
                 className={styles.circle}
                 style={{
-                  backgroundColor: ['#DB9485', '#ABC7FF', '#D8F2C7', '#E7BF72'][
+                  backgroundColor: ['#E7BF72', '#DB9485', '#D8F2C7', '#ABC7FF'][
                     index % 4
                   ],
-                  zIndex: 3,
+                  zIndex: 2,
                 }}
-              ><img
-              src={playerImages[index % 4]}
-              alt="player"
-              className = {styles.playerImage}
-              style={{zIndex: 4}}
-            /></div>
+              >
+                <img
+                  src={playerImages[index % 4]}
+                  alt="player"
+                  className={styles.playerImage}
+                />
+              </div>
               <div
                 className={styles.rectangle}
                 style={{
-                  backgroundColor: ['#DB9485', '#ABC7FF', '#D8F2C7', '#E7BF72'][
+                  backgroundColor: ['#E7BF72', '#DB9485', '#D8F2C7', '#ABC7FF'][
                     index % 4
                   ],
                   zIndex: 1,
                 }}
               >
-                <div className={styles.userName}>{name}</div>
+                <div
+                  className={styles.userName}
+                  style={{
+                    zIndex: 5,
+                  }}
+                >
+                  {name}
+                </div>
+                {currentTurn === index && (
+                  <div className={styles.myTurnIcon}>
+                    <img src="/images/myturn.svg" alt="My Turn"/>
+                  </div>
+                )}
               </div>
             </div>
           </div>
         ))}
       </div>
       {/* Timer */}
-      <div className={styles.timer}>Time remaining: {timer}s</div>
+      <div className={styles.timer}>남은 시간: {timer}초</div>
       {/* Help & Score */}
       <div className={styles.gameInfo}>
         <div style={{ width: '50%', position: 'relative' }}>
