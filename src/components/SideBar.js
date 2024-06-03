@@ -2,10 +2,13 @@ import Image from 'next/image';
 import styles from '../styles/SideBar.module.css';
 import { HelpManager } from './help_manager';
 import { ScoreManager } from './score_manager';
+import { useRouter } from 'next/router';
 
-export const SideBar = ({ ShowPrivate, nicknames, timer, currentTurn }) => {
+export const SideBar = ({ ShowPrivate, nicknames, timer, currentTurn, onEndTurn }) => {
   const { showHelp, toggleHelp, HelpModalComponent } = HelpManager();
   const { showScore, toggleScore, ScoreModalComponent } = ScoreManager();
+  const router = useRouter();
+  const { playerIndex } = router.query;
 
   const playerImages = [
     "/private_board_images/orange_player.svg",
@@ -13,6 +16,8 @@ export const SideBar = ({ ShowPrivate, nicknames, timer, currentTurn }) => {
     "/private_board_images/green_player.svg",
     "/private_board_images/blue_player.svg",
   ];
+
+  const playerColors = ['#EA7B30', '#98312D', '#04741B', '#121E54'];
 
   return (
     <div className={styles.container}>
@@ -77,7 +82,31 @@ export const SideBar = ({ ShowPrivate, nicknames, timer, currentTurn }) => {
         ))}
       </div>
       {/* Timer */}
-      <div className={styles.timer}>남은 시간: {timer}초</div>
+      <div className={styles.timerContainer}>
+        <div className={styles.timerInnerContainer}>
+          <div className={styles.timerContent}>
+            <div style={{ width: '50%' }}>
+              <img src="/images/hourglass.svg" alt="Hourglass" className={styles.hourglass} />
+              {playerIndex === currentTurn.toString() && (
+                <button className={styles.endTurnButton} onClick={onEndTurn}>
+                  턴 종료
+                </button>
+              )}
+            </div>
+            <div className={styles.textSection}>
+              <div
+                className={styles.playerTurn}
+                style={{ color: playerColors[currentTurn % 4] }}
+              >
+                {nicknames[currentTurn]}
+              </div>
+              <div className={styles.gameStatus}>게임 진행 중</div>
+              <div className={styles.timer}>{timer}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       {/* Help & Score */}
       <div className={styles.gameInfo}>
         <div style={{ width: '50%', position: 'relative' }}>
