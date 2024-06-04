@@ -6,6 +6,7 @@ import styles from '../styles/Board.module.css';
 import { SectionImage } from './SectionImage';
 import Modal from './Modal';
 import JobCardModal from './JobCardModal';
+import FacilityModal from './FacilityModal';
 import FacilityCardModal from './FacilityCardModal';
 
 export const Board = ({ playerIndex, isClickable, ShowPrivate, nicknames }) => {
@@ -21,6 +22,16 @@ export const Board = ({ playerIndex, isClickable, ShowPrivate, nicknames }) => {
   const [selectedItem, setSelectedItem] = useState(null);
   const [isJobModalOpen, setIsJobModalOpen] = useState(false);
   const [isFacilityModalOpen, setIsFacilityModalOpen] = useState(false);
+  const [isFacilityCardModalOpen, setIsFacilityCardModalOpen] = useState(false);
+  // isFacilityCardModalOpen 은 행동 칸에서 열리는 설비 모달을 관리하기 위해 만듬.
+  const [isJobCardModalOpen, setIsJobCardModalOpen] = useState(false);
+  // isJobCardModalOpen 은 행동 칸에서 열리는 직업 모달을 관리하기 위해 만듬.
+  const [selectedJobCard, setSelectedJobCard] = useState(null);
+
+  const [facilityType, setFacilityType] = useState(null); 
+  const [isMainFacility, setIsMainFacility] = useState(null);
+  const [selectedFacilityCard, setSelectedFacilityCard] = useState(null);
+
   const [onceClick, setOnceClick] = useState(isClickable); // 보드판 한 번씩만 클릭 가능하도록 설정해야함!!
 
   const playerImages = [
@@ -34,8 +45,15 @@ export const Board = ({ playerIndex, isClickable, ShowPrivate, nicknames }) => {
     if (item === '직업 카드') {
       setIsJobModalOpen(true);
     } else if (item === '보조 설비') {
+      setIsFacilityCardModalOpen(true);
+    } else if (item === '주요 설비') {
       setIsFacilityModalOpen(true);
-    } 
+      setFacilityType('main');
+    } else if (item === '화합 장소') {
+      setIsFacilityCardModalOpen(true);
+    } else if (item === '교습1' || item === '교습2') {
+      setIsJobCardModalOpen(true);
+    }
     else{ 
       if (isClickable) {
         console.log(nicknames[index]);
@@ -48,92 +66,98 @@ export const Board = ({ playerIndex, isClickable, ShowPrivate, nicknames }) => {
     setSelectedItem(null);
     setIsJobModalOpen(false);
     setIsFacilityModalOpen(false);
+    setIsFacilityCardModalOpen(false);
+    setIsMainFacility(null); 
+    setSelectedJobCard(null);
+    setSelectedFacilityCard(null);
+    setIsJobCardModalOpen(false);
   };
 
-  const handleSelectItem = () => {
-    if (selectedItem === '숲') {
-      setPlayerState((prevState) => ({
-        ...prevState,
-        wood: prevState.wood + 3,
-      }));
-      const newPositions = [...playersPosition];
-      newPositions[index] = [...newPositions[index], 'forest'];
-      setPlayersPosition(newPositions);
-      setOnceClick(false);
+  const handleSelectItem = (item) => {
+    if (facilityType) {
+      setIsMainFacility(item);
+      setFacilityType(null);
+      setIsFacilityModalOpen(false);
+    } else if (selectedItem) {
+      if (selectedItem === '숲') {
+        setPlayerState((prevState) => ({
+          ...prevState,
+          wood: prevState.wood + 3,
+        }));
+        const newPositions = [...playersPosition];
+        newPositions[index] = [...newPositions[index], 'forest'];
+        setPlayersPosition(newPositions);
+        setOnceClick(false);
+      }
+      else if (selectedItem === '교습1') {
+        setSelectedJobCard(item);
+        setIsJobCardModalOpen(false);
+        setSelectedItem('직업 카드');
+      }
+      else if (selectedItem === '자원 시장') {
+        setPlayerState((prevState) => ({
+          ...prevState,
+          food: prevState.food + 1,
+          stone: prevState.stone + 1,
+          reed: prevState.reed + 1,
+        }));
+        const newPositions = [...playersPosition];
+        newPositions[index] = [...newPositions[index], 'Resource_market'];
+        setPlayersPosition(newPositions);
+        setOnceClick(false);
+      }
+      else if (selectedItem === '교습2') {
+        setSelectedJobCard(item);
+        setIsJobCardModalOpen(false);
+        setSelectedItem('직업 카드');
+      }
+      else if (selectedItem === '점토 채굴장') {
+        setPlayerState((prevState) => ({
+          ...prevState,
+          clay: prevState.clay + 2,
+        }));
+        const newPositions = [...playersPosition];
+        newPositions[index] = [...newPositions[index], 'clay_mine'];
+        setPlayersPosition(newPositions);
+        setOnceClick(false);
+      }
+      else if (selectedItem === '날품 팔이') {
+        setPlayerState((prevState) => ({
+          ...prevState,
+          food: prevState.food + 2,
+        }));
+        const newPositions = [...playersPosition];
+        newPositions[index] = [...newPositions[index], 'delivery_seller'];
+        setPlayersPosition(newPositions);
+        setOnceClick(false);
+      }
+      else if (selectedItem === '수풀') {
+        setPlayerState((prevState) => ({
+          ...prevState,
+          wood: prevState.wood + 2,
+        }));
+        const newPositions = [...playersPosition];
+        newPositions[index] = [...newPositions[index], 'boscage'];
+        setPlayersPosition(newPositions);
+        setOnceClick(false);
+      }
+      else if (selectedItem === '농지') {
+        setPlayerState((prevState) => ({
+          ...prevState,
+        }));
+        ShowPrivate(nicknames[index], true);
+        const newPositions = [...playersPosition];
+        newPositions[index] = [...newPositions[index], 'farmland'];
+        setPlayersPosition(newPositions);
+        setOnceClick(false);
+      }
+      else if (selectedItem === '화합 장소') {
+        setSelectedFacilityCard(facility);
+        setIsFacilityCardModalOpen(false);
+        setSelectedItem('보조 설비');
+      }
+      handleCloseModal();
     }
-    else if (selectedItem === '교습1') {
-      setPlayerState((prevState) => ({
-        ...prevState,
-        food: prevState.food + 1,
-      }));
-      const newPositions = [...playersPosition];
-      newPositions[index] = [...newPositions[index], 'tutoring1'];
-      setPlayersPosition(newPositions);
-      setOnceClick(false);
-    }
-    else if (selectedItem === '자원 시장') {
-      setPlayerState((prevState) => ({
-        ...prevState,
-        food: prevState.food + 1,
-        stone: prevState.stone + 1,
-        reed: prevState.reed + 1,
-      }));
-      const newPositions = [...playersPosition];
-      newPositions[index] = [...newPositions[index], 'Resource_market'];
-      setPlayersPosition(newPositions);
-      setOnceClick(false);
-    }
-    else if (selectedItem === '교습2') {
-      setPlayerState((prevState) => ({
-        ...prevState,
-        food: prevState.food + 1,
-      }));
-      const newPositions = [...playersPosition];
-      newPositions[index] = [...newPositions[index], 'tutoring2'];
-      setPlayersPosition(newPositions);
-      setOnceClick(false);
-    }
-    else if (selectedItem === '점토 채굴장') {
-      setPlayerState((prevState) => ({
-        ...prevState,
-        clay: prevState.clay + 2,
-      }));
-      const newPositions = [...playersPosition];
-      newPositions[index] = [...newPositions[index], 'clay_mine'];
-      setPlayersPosition(newPositions);
-      setOnceClick(false);
-    }
-    else if (selectedItem === '날품 팔이') {
-      setPlayerState((prevState) => ({
-        ...prevState,
-        food: prevState.food + 2,
-      }));
-      const newPositions = [...playersPosition];
-      newPositions[index] = [...newPositions[index], 'delivery_seller'];
-      setPlayersPosition(newPositions);
-      setOnceClick(false);
-    }
-    else if (selectedItem === '수풀') {
-      setPlayerState((prevState) => ({
-        ...prevState,
-        wood: prevState.wood + 2,
-      }));
-      const newPositions = [...playersPosition];
-      newPositions[index] = [...newPositions[index], 'boscage'];
-      setPlayersPosition(newPositions);
-      setOnceClick(false);
-    }
-    else if (selectedItem === '농지') {
-      setPlayerState((prevState) => ({
-        ...prevState,
-      }));
-      ShowPrivate(nicknames[index], true);
-      const newPositions = [...playersPosition];
-      newPositions[index] = [...newPositions[index], 'farmland'];
-      setPlayersPosition(newPositions);
-      setOnceClick(false);
-    }
-    handleCloseModal();
   };
 
   useEffect(() => {
@@ -171,8 +195,17 @@ export const Board = ({ playerIndex, isClickable, ShowPrivate, nicknames }) => {
   const handleFacilityCardClick = (card) => {
     console.log(card);
     setIsFacilityModalOpen(false);
+    setIsFacilityCardModalOpen(false);
+    setSelectedFacilityCard(card);
+    setSelectedItem('보조 설비');
   };
 
+  const handleJobCardModalClick = (card) => {
+    console.log(card);
+    setIsJobCardModalOpen(false);
+    setSelectedJobCard(card);
+    setSelectedItem('직업 카드');
+  }
 
   return (
     <div style={{ width: '80%' }}>
@@ -198,7 +231,7 @@ export const Board = ({ playerIndex, isClickable, ShowPrivate, nicknames }) => {
         <div className={styles.section3}>
           <SectionImage ratio={33} image="reed_field" onClick={() => handleClick('갈대')} />
           <SectionImage ratio={33} image="fishing" onClick={() => handleClick('낚시')} />
-          <SectionImage ratio={33} image="main_facility" onClick={() => handleClick('주 설비')} />
+          <SectionImage ratio={33} image="main_facility" onClick={() => handleClick('주요 설비')} />
         </div>
         <div className={styles.roundCard}>
           <SectionImage ratio={100} image="round_1"/>
@@ -377,8 +410,11 @@ export const Board = ({ playerIndex, isClickable, ShowPrivate, nicknames }) => {
           </div>
         </div>
       </div>
-      {selectedItem && (
+      {selectedItem && !isMainFacility && (
         <Modal item={selectedItem} onClose={handleCloseModal} onSelect={handleSelectItem} />
+      )}
+      {isMainFacility && (
+        <Modal item="주요 설비" onClose={handleCloseModal} onSelect={handleSelectItem} />
       )}
       <JobCardModal
         isOpen={isJobModalOpen}
@@ -386,10 +422,22 @@ export const Board = ({ playerIndex, isClickable, ShowPrivate, nicknames }) => {
         cards={playerState.job}
         onCardClick={handleJobCardClick}
       />
-      <FacilityCardModal
+      <JobCardModal
+        isOpen={isJobCardModalOpen}
+        onClose={handleCloseModal}
+        cards={playerState.job}
+        onCardClick={handleJobCardModalClick}
+      />
+      <FacilityModal
         isOpen={isFacilityModalOpen}
         onClose={handleCloseModal}
-        cards={playerState.facility}
+        type={facilityType}
+        onSelect={handleSelectItem}
+      />
+      <FacilityCardModal
+        isOpen={isFacilityCardModalOpen}
+        onClose={handleCloseModal}
+        cards={playerState.facility} // 보조 설비 카드들 전달
         onCardClick={handleFacilityCardClick}
       />
     </div>
