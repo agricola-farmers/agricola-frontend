@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
-import { player1State, player2State, player3State, player4State, playersPositionState } from '@/utils/atoms';
+import { player1State, player2State, player3State, player4State, playersPositionState, newBoardState, NewFieldCardState, new_Player1State, new_Player2State, new_Player3State, new_Player4State } from '@/utils/atoms';
 import { SocketContext } from '@/context/socket';
 import styles from '../styles/Board.module.css';
 import { SectionImage } from './SectionImage';
@@ -15,13 +15,16 @@ export const Board = ({ playerIndex, isClickable, ShowPrivate, nicknames }) => {
     throw new Error("Invalid player index");
   }
 
-  const playerStates = [player1State, player2State, player3State, player4State];
+  //const playerStates = [player1State, player2State, player3State, player4State];
+  const playerStates = [new_Player1State, new_Player2State, new_Player3State, new_Player4State];
   const [playerState, setPlayerState] = useRecoilState(playerStates[index]);
   const [playersPosition, setPlayersPosition] = useRecoilState(playersPositionState);
   const [selectedItem, setSelectedItem] = useState(null);
   const [isJobModalOpen, setIsJobModalOpen] = useState(false);
   const [isFacilityModalOpen, setIsFacilityModalOpen] = useState(false);
   const [onceClick, setOnceClick] = useState(isClickable); // 보드판 한 번씩만 클릭 가능하도록 설정해야함!!
+  const [newBoard, setNewBoard] = useRecoilState(newBoardState);
+  const [newFieldCard, setNewFieldCard] = useRecoilState(NewFieldCardState);
 
   const playerImages = [
     "/private_board_images/orange_player.svg",
@@ -173,6 +176,11 @@ export const Board = ({ playerIndex, isClickable, ShowPrivate, nicknames }) => {
     setIsFacilityModalOpen(false);
   };
 
+  const getImageForRound = (round, front) => {
+    return front ? `round_${round}` : `round${round}`;
+  };
+  
+
 
   return (
     <div style={{ width: '80%' }}>
@@ -191,6 +199,46 @@ export const Board = ({ playerIndex, isClickable, ShowPrivate, nicknames }) => {
               }}
             />
           )}
+          {newBoard.bush_1 > 0 && (
+            <><img
+              src={"/private_board_images/wood.svg"}
+              alt="Wood Icon"
+              style={{
+                position: 'absolute',
+                top: "17%",
+                left: "62%",
+                opacity: 0.7,
+                width: '20%',
+                height: '20%',
+              }} />
+              <span style={{
+                position: 'absolute',
+                color: 'black',
+                fontWeight: 'bold',
+                top: "22%",
+                left: "68%",
+              }}>{newBoard.bush_1}</span></>
+          )}
+          {newBoard.bush_2 > 0 && (
+            <><img
+              src={"/private_board_images/wood.svg"}
+              alt="Wood Icon"
+              style={{
+                position: 'absolute',
+                top: "67%",
+                left: "62%",
+                opacity: 0.7,
+                width: '20%',
+                height: '20%',
+              }} />
+              <span style={{
+                position: 'absolute',
+                color: 'black',
+                fontWeight: 'bold',
+                top: "72%",
+                left: "68%",
+              }}>{newBoard.bush_2}</span></>
+          )}
         </div>
         <div className={styles.section1}>
           <SectionImage ratio={100} image="farm_expansion" onClick={() => handleClick('농장 확장')} />
@@ -199,18 +247,58 @@ export const Board = ({ playerIndex, isClickable, ShowPrivate, nicknames }) => {
           <SectionImage ratio={33} image="reed_field" onClick={() => handleClick('갈대')} />
           <SectionImage ratio={33} image="fishing" onClick={() => handleClick('낚시')} />
           <SectionImage ratio={33} image="main_facility" onClick={() => handleClick('주 설비')} />
+          {newBoard.reed > 0 && (
+            <><img
+              src={"/private_board_images/stone_2.svg"}
+              alt="Reed Icon"
+              style={{
+                position: 'absolute',
+                top: "8%",
+                left: "63%",
+                opacity: 0.7,
+                width: '20%',
+                height: '20%',
+              }} />
+              <span style={{
+                position: 'absolute',
+                color: 'black',
+                fontWeight: 'bold',
+                top: "13%",
+                left: "70%",
+              }}>{newBoard.reed}</span></>
+          )}
+          {newBoard.fishing > 0 && (
+            <><img
+              src={"/private_board_images/coin_1.svg"}
+              alt="Food Icon"
+              style={{
+                position: 'absolute',
+                top: "40%",
+                left: "20%",
+                opacity: 0.7,
+                width: '20%',
+                height: '20%',
+              }} />
+              <span style={{
+                position: 'absolute',
+                color: 'black',
+                fontWeight: 'bold',
+                top: "46%",
+                left: "28%",
+              }}>{newBoard.fishing}</span></>
+          )}
         </div>
         <div className={styles.roundCard}>
-          <SectionImage ratio={100} image="round_1"/>
+          <SectionImage ratio={100} image={getImageForRound(1, newFieldCard.round1.front)} stone={newFieldCard.round1.stone} />
         </div>
         <div className={styles.roundCard}>
-          <SectionImage ratio={100} image="round2" />
+          <SectionImage ratio={100} image={getImageForRound(2, newFieldCard.round2.front)} stone={newFieldCard.round2.stone} />
         </div>
         <div className={styles.roundCard}>
-          <SectionImage ratio={100} image="round3" />
+          <SectionImage ratio={100} image={getImageForRound(3, newFieldCard.round3.front)} stone={newFieldCard.round3.stone} />
         </div>
         <div className={styles.roundCard}>
-          <SectionImage ratio={100} image="round4" />
+          <SectionImage ratio={100} image={getImageForRound(4, newFieldCard.round4.front)} stone={newFieldCard.round4.stone} />
         </div>
         <div className={styles.section3}>
           <SectionImage ratio={33} image="Resource_market" onClick={() => handleClick('자원 시장')} />
@@ -236,6 +324,46 @@ export const Board = ({ playerIndex, isClickable, ShowPrivate, nicknames }) => {
               }}
             />
           )}
+          {newBoard.clay_mine > 0 && (
+            <><img
+              src={"/private_board_images/gold.svg"}
+              alt="Clay Icon"
+              style={{
+                position: 'absolute',
+                top: "42%",
+                left: "62%",
+                opacity: 0.7,
+                width: '20%',
+                height: '20%',
+              }} />
+              <span style={{
+                position: 'absolute',
+                color: 'black',
+                fontWeight: 'bold',
+                top: "47%",
+                left: "68%",
+              }}>{newBoard.clay_mine}</span></>
+          )}
+          {newBoard.traveling_theater > 0 && (
+            <><img
+              src={"/private_board_images/coin_1.svg"}
+              alt="Food Icon"
+              style={{
+                position: 'absolute',
+                top: "74%",
+                left: "20%",
+                opacity: 0.7,
+                width: '20%',
+                height: '20%',
+              }} />
+              <span style={{
+                position: 'absolute',
+                color: 'black',
+                fontWeight: 'bold',
+                top: "80%",
+                left: "28%",
+              }}>{newBoard.traveling_theater}</span></>
+          )}
         </div>
         <div className={styles.section3}>
           <SectionImage ratio={33} image="dirt_mine" onClick={() => handleClick('흙 채굴장')} />
@@ -251,21 +379,41 @@ export const Board = ({ playerIndex, isClickable, ShowPrivate, nicknames }) => {
               }}
             /> 
           )}
+          {newBoard.dirt_mine > 0 && (
+            <><img
+              src={"/private_board_images/gold.svg"}
+              alt="Clay Icon"
+              style={{
+                position: 'absolute',
+                top: "8%",
+                left: "62%",
+                opacity: 0.7,
+                width: '20%',
+                height: '20%',
+              }} />
+              <span style={{
+                position: 'absolute',
+                color: 'black',
+                fontWeight: 'bold',
+                top: "14%",
+                left: "70%",
+              }}>{newBoard.dirt_mine}</span></>
+          )}
         </div>
         <div className={styles.roundCard}>
-          <SectionImage ratio={100} image="round5" />
+          <SectionImage ratio={100} image={getImageForRound(5, newFieldCard.round5.front)} stone={newFieldCard.round5.stone} />
         </div>
         <div className={styles.roundCard}>
-          <SectionImage ratio={100} image="round6" />
+          <SectionImage ratio={100} image={getImageForRound(6, newFieldCard.round6.front)} stone={newFieldCard.round6.stone} />
         </div>
         <div className={styles.roundCard}>
-          <SectionImage ratio={100} image="round7" />
+          <SectionImage ratio={100} image={getImageForRound(7, newFieldCard.round7.front)} stone={newFieldCard.round7.stone}/>
         </div>
         <div className={styles.roundCard}>
-          <SectionImage ratio={100} image="round8" />
+          <SectionImage ratio={100} image={getImageForRound(8, newFieldCard.round8.front)} stone={newFieldCard.round8.stone}/>
         </div>
         <div className={styles.roundCard}>
-          <SectionImage ratio={100} image="round9" />
+          <SectionImage ratio={100} image={getImageForRound(9, newFieldCard.round9.front)} stone={newFieldCard.round9.stone}/>
         </div>
         <div className={styles.section3}>
           <SectionImage ratio={33} image="tutoring1" onClick={() => handleClick('교습1')} />
@@ -315,21 +463,41 @@ export const Board = ({ playerIndex, isClickable, ShowPrivate, nicknames }) => {
               }}
             />
           )}
+          {newBoard.forest > 0 && (
+            <><img
+              src={"/private_board_images/wood.svg"}
+              alt="Wood Icon"
+              style={{
+                position: 'absolute',
+                top: "65%",
+                left: "63%",
+                opacity: 0.7,
+                width: '20%',
+                height: '20%',
+              }} />
+              <span style={{
+                position: 'absolute',
+                color: 'black',
+                fontWeight: 'bold',
+                top: "70%",
+                left: "70%",
+              }}>{newBoard.forest}</span></>
+          )}
         </div>
         <div className={styles.roundCard}>
-          <SectionImage ratio={100} image="round10" />
+          <SectionImage ratio={100} image={getImageForRound(10, newFieldCard.round10.front)} stone={newFieldCard.round10.stone} />
         </div>
         <div className={styles.roundCard}>
-          <SectionImage ratio={100} image="round11" />
+          <SectionImage ratio={100} image={getImageForRound(11, newFieldCard.round11.front)} stone={newFieldCard.round11.stone}/>
         </div>
         <div className={styles.roundCard}>
-          <SectionImage ratio={100} image="round12" />
+          <SectionImage ratio={100} image={getImageForRound(12, newFieldCard.round12.front)} stone={newFieldCard.round12.stone}/>
         </div>
         <div className={styles.roundCard}>
-          <SectionImage ratio={100} image="round13" />
+          <SectionImage ratio={100} image={getImageForRound(13, newFieldCard.round13.front)} stone={newFieldCard.round13.stone}/>
         </div>
         <div className={styles.roundCard}>
-          <SectionImage ratio={100} image="round14" />
+          <SectionImage ratio={100} image={getImageForRound(14, newFieldCard.round14.front)} stone={newFieldCard.round14.stone}/>
         </div>
       </div>
       {/* bottom */}
@@ -345,12 +513,20 @@ export const Board = ({ playerIndex, isClickable, ShowPrivate, nicknames }) => {
             <div className={styles.jobText}>직업 카드</div>
           </div>
           <div className={styles.cardContainer}>
-            {playerState.job.map((card, index) => (
+          {playerState.job.map((card, index) => (
               <img
                 key={index}
                 src={card}
                 alt={`job card ${index + 1}`}
                 className={styles.cardImage}
+                onError={(e) => e.target.style.display = 'none'} // 이미지가 없을 경우 숨기기
+              />
+            ))}
+            {Array.from({ length: 7 - playerState.job.length }).map((_, index) => (
+              <div
+                key={`job_empty_${index}`}
+                className={styles.cardImage}
+                style={{ background: 'none' }} // 빈 공간을 표시
               />
             ))}
           </div>
@@ -372,6 +548,14 @@ export const Board = ({ playerIndex, isClickable, ShowPrivate, nicknames }) => {
                 src={card}
                 alt={`facility card ${index + 1}`}
                 className={styles.cardImage}
+                onError={(e) => e.target.style.display = 'none'} // 이미지가 없을 경우 숨기기
+              />
+            ))}
+            {Array.from({ length: 7 - playerState.facility.length }).map((_, index) => (
+              <div
+                key={`facility_empty_${index}`}
+                className={styles.cardImage}
+                style={{ background: 'none' }} // 빈 공간을 표시
               />
             ))}
           </div>
