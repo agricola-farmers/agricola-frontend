@@ -1,4 +1,4 @@
-import { atom } from 'recoil';
+import { atom, selector } from 'recoil';
 
 export const BoardState = atom({
   key: 'BoardState',
@@ -230,6 +230,34 @@ export const playersPositionState = atom({
 });
 
 
+export const itemNumbersState = atom({
+  key: 'itemNumbersState',
+  default: {
+    '덤불': 1,
+    '수풀': 2,
+    '숲': 3,
+    '날품 팔이': 2,
+    '곡식 종자': 1,
+    '자원 시장': [1, 1, 1],
+    '흙 채굴장': 2,
+    '점토 채굴장': 2,
+    '유랑 극단': 1,
+    '낚시': 1,
+    '갈대': 1,
+  },
+});
+
+export const itemNumberSelector = selector({
+  key: 'itemNumberSelector',
+  get: ({ get }) => get(itemNumbersState),
+  set: ({ set, get }, newValue) => {
+    const currentNumbers = get(itemNumbersState);
+    set(itemNumbersState, {
+      ...currentNumbers,
+      ...newValue,
+    });
+
+
 export const new_PlayersState = atom({
   key: 'new_PlayersState',
   default: [],
@@ -447,5 +475,6 @@ export const NewFieldCardState = atom({
     round12: { front: true, stone: 0 },
     round13: { front: true, stone: 0 },
     round14: { front: true, stone: 0 },
+
   },
 });

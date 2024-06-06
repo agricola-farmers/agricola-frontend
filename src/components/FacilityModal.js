@@ -2,7 +2,9 @@ import React from 'react';
 import styles from '../styles/FacilityModal.module.css';
 import { mainFacilities, subFacilities } from '../models/Facility';
 
-const FacilityModal = ({ type, onClose, onSelect }) => {
+const FacilityModal = ({ type, onClose, onSelect, isOpen }) => {
+  if (!isOpen) return null;
+  
   const facilities = type === 'main' ? mainFacilities : subFacilities;
 
   //Facility.js 의 요소들을 받아서 사용
