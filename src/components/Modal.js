@@ -54,7 +54,7 @@ const Modal = ({ item, onClose, onSelect }) => {
                     <div className={styles.speechBubble}>
                         <p>
                             <strong>
-                                {item === "주요 설비" || item === "보조 설비" || item === '직업 카드' || item === '집 개조'
+                                {item === "주요 설비" || item === "보조 설비" || item === '직업 카드' || item === '집 개조' || item === '화합 장소' || item === '보조경작자' || item === '양의친구'
                                     ? `해당 ${item}를 선택하시겠습니까?`
                                     : `“${item}”을 선택하시겠습니까?`}
                             </strong>

@@ -36,8 +36,6 @@ export const Board = ({ playerIndex, isClickable, ShowPrivate, nicknames }) => {
   const [isFacilityCardModalOpen, setIsFacilityCardModalOpen] = useState(false);
   // isFacilityCardModalOpen 은 행동 칸에서 열리는 설비 모달을 관리하기 위해 만듬.
   const [isJobCardModalOpen, setIsJobCardModalOpen] = useState(false);
-  // isJobCardModalOpen 은 행동 칸에서 열리는 직업 모달을 관리하기 위해 만듬.
-  const [selectedJobCard, setSelectedJobCard] = useState(null);
 
   const [facilityType, setFacilityType] = useState(null);
   const [isMainFacility, setIsMainFacility] = useState(null);
@@ -85,6 +83,18 @@ export const Board = ({ playerIndex, isClickable, ShowPrivate, nicknames }) => {
   const dirt_minePlayerIndex = playersPosition.findIndex((positionArray) =>
     positionArray.includes('dirt_mine')
   );
+  const farmlandPlayerIndex = playersPosition.findIndex((positionArray) =>
+    positionArray.includes('farmland')
+  );
+  const meeting_placePlayerIndex = playersPosition.findIndex((positionArray) =>
+    positionArray.includes('meeting_place')
+  );
+  const tutoring1PlayerIndex = playersPosition.findIndex((positionArray) =>
+    positionArray.includes('tutoring1')
+  );
+  const tutoring2PlayerIndex = playersPosition.findIndex((positionArray) =>
+    positionArray.includes('tutoring2')
+  );
 
   useEffect(() => {
     socket.on('sync', (data) => {
@@ -101,6 +111,7 @@ export const Board = ({ playerIndex, isClickable, ShowPrivate, nicknames }) => {
       }
     });
     console.log(board, 'here!');
+    console.log(playerState.job_active);
   }, []);
 
   const playerImages = [
@@ -118,15 +129,20 @@ export const Board = ({ playerIndex, isClickable, ShowPrivate, nicknames }) => {
     } else if (item === '주요 설비') {
       setIsFacilityModalOpen(true);
       setFacilityType('main');
-    } else if (item === '화합 장소') {
-      setIsFacilityCardModalOpen(true);
-    } else if (item === '교습1' || item === '교습2') {
-      setIsJobCardModalOpen(true);
     } else {
       if (isClickable) {
         console.log(nicknames[index]);
         if (onceClick) {
-          setSelectedItem(item);
+          if (item === '화합 장소') {
+            setIsFacilityCardModalOpen(true);
+          } else if (item === '교습1') {
+            setIsJobCardModalOpen(true);
+          } else if (item === '교습2') {
+            setIsJobCardModalOpen(true);
+          }
+          else{
+            setSelectedItem(item);
+          }
         }
       }
     }
@@ -144,7 +160,6 @@ export const Board = ({ playerIndex, isClickable, ShowPrivate, nicknames }) => {
     setIsFacilityModalOpen(false);
     setIsFacilityCardModalOpen(false);
     setIsMainFacility(null);
-    setSelectedJobCard(null);
     setSelectedFacilityCard(null);
     setIsJobCardModalOpen(false);
   };
@@ -180,10 +195,24 @@ export const Board = ({ playerIndex, isClickable, ShowPrivate, nicknames }) => {
         });
 
         setOnceClick(false);
-      } else if (selectedItem === '교습1') {
-        setSelectedJobCard(item);
-        setIsJobCardModalOpen(false);
-        setSelectedItem('직업 카드');
+      } else if (selectedItem === '보조경작자') {
+        const newPlayerState = {
+          ...playerState,
+          job: playerState.job.filter((jobCard) => jobCard !== '../../../images/player4_jobcard/jobcard_5.png'),
+          job_active: [...playerState.job_active, '../../../images/player4_jobcard/jobcard_5.png'],
+        };
+        setPlayerState(newPlayerState);
+        const newPositions = [...playersPosition];
+        newPositions[index] = [...newPositions[index], 'tutoring1'];
+        setPlayersPosition(newPositions);
+
+        socket.emit('sync', {
+          playerNumber: index,
+          state: newPlayerState,
+          stateBoard: board,
+          position: newPositions,
+        });
+        setOnceClick(false);
       } else if (selectedItem === '자원 시장') {
         const newPlayerState = {
           ...playerState, // 기존 playerState 복사
@@ -204,10 +233,27 @@ export const Board = ({ playerIndex, isClickable, ShowPrivate, nicknames }) => {
           position: newPositions,
         });
         setOnceClick(false);
-      } else if (selectedItem === '교습2') {
-        setSelectedJobCard(item);
-        setIsJobCardModalOpen(false);
-        setSelectedItem('직업 카드');
+      } else if (selectedItem === '양의친구') {
+        console.log("tjsxor!");
+        const newPlayerState = {
+          ...playerState,
+          job: playerState.job.filter((jobCard) => jobCard !== '../../../images/player2_jobcard/jobcard_7.png'),
+          job_active: [...playerState.job_active, '../../../images/player2_jobcard/jobcard_7.png'],
+          food: playerState.food - 1,
+        };
+        setPlayerState(newPlayerState);
+
+        const newPositions = [...playersPosition];
+        newPositions[index] = [...newPositions[index], 'tutoring2'];
+        setPlayersPosition(newPositions);
+
+        socket.emit('sync', {
+          playerNumber: index,
+          state: newPlayerState,
+          stateBoard: board,
+          position: newPositions,
+        });
+        setOnceClick(false);
       } else if (selectedItem === '점토 채굴장') {
         const newPlayerState = {
           ...playerState, // 기존 playerState 복사
@@ -406,22 +452,31 @@ export const Board = ({ playerIndex, isClickable, ShowPrivate, nicknames }) => {
         });
         setOnceClick(false);
       } else if (selectedItem === '농지') {
-        setPlayerState((prevState) => ({
-          ...prevState,
-        }));
         ShowPrivate(nicknames[index], true, 0);
         const newPositions = [...playersPosition];
         newPositions[index] = [...newPositions[index], 'farmland'];
         setPlayersPosition(newPositions);
+
+        socket.emit('sync', {
+          playerNumber: index,
+          state: playerState,
+          stateBoard: board,
+          position: newPositions,
+        });
         setOnceClick(false);
       } else if (selectedItem === '화합 장소') {
-        // 플레이어 아이콘이 안생김
-        setSelectedFacilityCard(facility);
-        setIsFacilityCardModalOpen(false);
-        setSelectedItem('보조 설비');
+
         const newPositions = [...playersPosition];
         newPositions[index] = [...newPositions[index], 'meeting_place'];
         setPlayersPosition(newPositions);
+
+        socket.emit('sync', {
+          playerNumber: index,
+          state: playerState,
+          stateBoard: board,
+          position: newPositions,
+        });
+        setOnceClick(false);
       } else if (selectedItem === '집 개조') {
         setPlayerState((prevState) => {
           let count = 0;
@@ -480,6 +535,7 @@ export const Board = ({ playerIndex, isClickable, ShowPrivate, nicknames }) => {
 
   useEffect(() => {
     console.log('playersPosition이 업데이트되었습니다:', playersPosition);
+    //console.log(playerState.job_active);
   }, [playersPosition]);
 
   const handleJobCardClick = (card) => {
@@ -489,15 +545,7 @@ export const Board = ({ playerIndex, isClickable, ShowPrivate, nicknames }) => {
       isClickable
     ) {
       console.log(card);
-      setPlayerState((prevState) => {
-        const updatedJob = prevState.job.filter((jobCard) => jobCard !== card);
-        const updatedJobActive = [...prevState.job_active, card];
-        return {
-          ...prevState,
-          job: updatedJob,
-          job_active: updatedJobActive,
-        };
-      });
+      setSelectedItem('보조경작자');
     }
     if (
       playerIndex === 1 &&
@@ -505,33 +553,19 @@ export const Board = ({ playerIndex, isClickable, ShowPrivate, nicknames }) => {
       isClickable
     ) {
       console.log(card);
-      setPlayerState((prevState) => {
-        const updatedJob = prevState.job.filter((jobCard) => jobCard !== card);
-        const updatedJobActive = [...prevState.job_active, card];
-        return {
-          ...prevState,
-          job: updatedJob,
-          job_active: updatedJobActive,
-        };
-      });
+      setSelectedItem('양의친구');
+      
     }
     setIsJobModalOpen(false);
   };
 
   const handleFacilityCardClick = (card) => {
-    console.log(card);
     setIsFacilityModalOpen(false);
     setIsFacilityCardModalOpen(false);
     setSelectedFacilityCard(card);
     setSelectedItem('보조 설비');
   };
 
-  const handleJobCardModalClick = (card) => {
-    console.log(card);
-    setIsJobCardModalOpen(false);
-    setSelectedJobCard(card);
-    setSelectedItem('직업 카드');
-  };
   const getImageForRound = (round, front) => {
     return front ? `round_${round}` : `round${round}`;
   };
@@ -1011,9 +1045,9 @@ export const Board = ({ playerIndex, isClickable, ShowPrivate, nicknames }) => {
             image="farmland"
             onClick={() => handleClick('농지')}
           />
-          {playersPosition[index].includes('tutoring1') && (
+          {tutoring1PlayerIndex !== -1 && (
             <img
-              src={playerImages[index]}
+              src={playerImages[tutoring1PlayerIndex]}
               alt="Player Icon"
               className={styles.playerIcontutoring1}
               style={{
@@ -1021,9 +1055,9 @@ export const Board = ({ playerIndex, isClickable, ShowPrivate, nicknames }) => {
               }}
             />
           )}
-          {playersPosition[index].includes('tutoring2') && (
+          {tutoring2PlayerIndex !== -1 && (
             <img
-              src={playerImages[index]}
+              src={playerImages[tutoring2PlayerIndex]}
               alt="Player Icon"
               className={styles.playerIcontutoring2}
               style={{
@@ -1031,9 +1065,9 @@ export const Board = ({ playerIndex, isClickable, ShowPrivate, nicknames }) => {
               }}
             />
           )}
-          {playersPosition[index].includes('farmland') && (
+          {farmlandPlayerIndex !== -1 && (
             <img
-              src={playerImages[index]}
+              src={playerImages[farmlandPlayerIndex]}
               alt="Player Icon"
               className={styles.playerIconfarmland}
               style={{
@@ -1063,9 +1097,9 @@ export const Board = ({ playerIndex, isClickable, ShowPrivate, nicknames }) => {
               }}
             />
           )}
-          {playersPosition[index].includes('meeting_place') && (
+          {meeting_placePlayerIndex !== -1 && (
             <img
-              src={playerImages[index]}
+              src={playerImages[meeting_placePlayerIndex]}
               alt="Player Icon"
               className={styles.playerIconMeeting_place}
               style={{
@@ -1237,7 +1271,7 @@ export const Board = ({ playerIndex, isClickable, ShowPrivate, nicknames }) => {
         isOpen={isJobCardModalOpen}
         onClose={handleCloseModal}
         cards={playerState.job}
-        onCardClick={handleJobCardModalClick}
+        onCardClick={handleJobCardClick}
       />
       <FacilityModal
         isOpen={isFacilityModalOpen}

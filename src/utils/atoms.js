@@ -588,3 +588,8 @@ export const onceClickState = atom({
   key: 'onceClickState',
   default: true,
 });
+
+export const myNicknameState = atom({
+  key: 'myNicknameState',
+  default: '',
+});

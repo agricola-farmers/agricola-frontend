@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { useRecoilValue, useRecoilState } from 'recoil';
 import { useRouter } from 'next/router';
 import {
@@ -9,8 +9,10 @@ import {
 } from '@/utils/atoms';
 import JobCardModal from './JobCardModal';
 import FacilityCardModal from './FacilityCardModal';
+import { SocketContext } from '@/context/socket';
 
 const PrivateBoard = ({ onClose, nickname, index, isChange, animal }) => {
+  const socket = useContext(SocketContext);
   const router = useRouter();
   const { playerIndex } = router.query;
   const [isJobModalOpen, setIsJobModalOpen] = useState(false);
@@ -18,6 +20,12 @@ const PrivateBoard = ({ onClose, nickname, index, isChange, animal }) => {
   const playerStates = [player1State, player2State, player3State, player4State];
   const [playerState, setPlayerState] = useRecoilState(playerStates[index]);
   const [cardchange, setcardchange] = useState(isChange);
+  const [cardClick, setCardClick] = useState(animal);
+
+  const [playerState1, setPlayerState1] = useRecoilState(player1State);
+  const [playerState2, setPlayerState2] = useRecoilState(player2State);
+  const [playerState3, setPlayerState3] = useRecoilState(player3State);
+  const [playerState4, setPlayerState4] = useRecoilState(player4State);
 
   let playerImage = '/private_board_images/orange_player.svg';
   let houseImage = '/private_board_images/orange_house.svg';
@@ -25,6 +33,21 @@ const PrivateBoard = ({ onClose, nickname, index, isChange, animal }) => {
   let farm_fence_col = '/private_board_images/fence_orange.svg';
   let farm_fence_row = '/private_board_images/fence_orange_row.svg';
   let mainColor = '#E7BF72';
+
+  useEffect(() => {
+    socket.on('fieldSync', (data) => {
+      if (data.playerNumber == 0) {
+        setPlayerState1(data.state);
+      } else if (data.playerNumber == 1) {
+        setPlayerState2(data.state);
+      } else if (data.playerNumber == 2) {
+        setPlayerState3(data.state);
+      } else if (data.playerNumber == 3) {
+        setPlayerState4(data.state);
+      }
+    });
+    console.log("fieldUpdate");
+  }, []);
 
   if (index === 1) {
     playerImage = '/private_board_images/red_player.svg';
@@ -77,6 +100,7 @@ const PrivateBoard = ({ onClose, nickname, index, isChange, animal }) => {
       card === '../../../images/player4_jobcard/jobcard_5.png'
     ) {
       setcardchange(true);
+      setCardClick(0);
     }
     setIsJobModalOpen(false);
   };
@@ -88,36 +112,79 @@ const PrivateBoard = ({ onClose, nickname, index, isChange, animal }) => {
 
   const handleGridClick = (forest_index) => {
     if (cardchange) {
-      setPlayerState((prevState) => {
-        const updatedFieldState = { ...prevState.fieldState };
+      // 상태 업데이트 로직
+      const updatedFieldState = { ...playerState.fieldState };
 
-        if (animal === 0) {
-          // field 상태 업데이트
-          updatedFieldState[forest_index] = {
-            ...updatedFieldState[forest_index],
-            field: (updatedFieldState[forest_index].field + 1) % 4,
-          };
-        } else {
-          const animalKey =
-            animal === 1 ? 'pig' : animal === 2 ? 'sheep' : 'cattle';
-          // animal 상태 업데이트
-          updatedFieldState[forest_index] = {
-            ...updatedFieldState[forest_index],
-            [animalKey]: (updatedFieldState[forest_index][animalKey] || 0) + 1,
-          };
-          // playerState의 동물 수 업데이트
-          return {
-            ...prevState,
-            fieldState: updatedFieldState,
-            [animalKey]: prevState[animalKey] + 1,
-          };
-        }
+      if (animal === 0 || cardClick == 0) {
+        // field 상태 업데이트
+        updatedFieldState[forest_index] = {
+          ...updatedFieldState[forest_index],
+          field: (updatedFieldState[forest_index].field + 1) % 4,
+        };
 
-        return {
-          ...prevState,
+        const newPlayerState = {
+          ...playerState,
           fieldState: updatedFieldState,
         };
-      });
+
+        socket.emit('fieldSync', {
+          playerNumber: index,
+          state: newPlayerState,
+        });
+      } else {
+        const animalKey = animal === 1 ? 'pig' : animal === 2 ? 'sheep' : 'cattle';
+
+        // animal 상태 업데이트
+        updatedFieldState[forest_index] = {
+          ...updatedFieldState[forest_index],
+          [animalKey]: (updatedFieldState[forest_index][animalKey] || 0) + 1,
+        };
+
+        const newPlayerState = {
+          ...playerState,
+          fieldState: updatedFieldState,
+          [animalKey]: playerState[animalKey] + 1,
+        };
+        
+        socket.emit('fieldSync', {
+          playerNumber: index,
+          state: newPlayerState,
+        });
+
+      }
+
+      
+
+      // setPlayerState((prevState) => {
+      //   const updatedFieldState = { ...prevState.fieldState };
+
+      //   if (animal === 0) {
+      //     // field 상태 업데이트
+      //     updatedFieldState[forest_index] = {
+      //       ...updatedFieldState[forest_index],
+      //       field: (updatedFieldState[forest_index].field + 1) % 4,
+      //     };
+      //   } else {
+      //     const animalKey =
+      //       animal === 1 ? 'pig' : animal === 2 ? 'sheep' : 'cattle';
+      //     // animal 상태 업데이트
+      //     updatedFieldState[forest_index] = {
+      //       ...updatedFieldState[forest_index],
+      //       [animalKey]: (updatedFieldState[forest_index][animalKey] || 0) + 1,
+      //     };
+      //     // playerState의 동물 수 업데이트
+      //     return {
+      //       ...prevState,
+      //       fieldState: updatedFieldState,
+      //       [animalKey]: prevState[animalKey] + 1,
+      //     };
+      //   }
+
+      //   return {
+      //     ...prevState,
+      //     fieldState: updatedFieldState,
+      //   };
+      // });
       setcardchange(false);
     }
   };
