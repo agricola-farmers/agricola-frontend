@@ -25,7 +25,7 @@ export const Board = ({ playerIndex, isClickable, ShowPrivate, nicknames }) => {
     throw new Error('Invalid player index');
   }
 
-  const playerStates = [player1State, player2State, player3State, player4State];
+  const playerStates = [new_Player1State, new_Player2State, new_Player3State, new_Player4State];
   const [playerState, setPlayerState] = useRecoilState(playerStates[index]);
   const playerValue = useRecoilValue(playerStates[index]);
   const [playersPosition, setPlayersPosition] =
@@ -34,74 +34,16 @@ export const Board = ({ playerIndex, isClickable, ShowPrivate, nicknames }) => {
   const [isJobModalOpen, setIsJobModalOpen] = useState(false);
   const [isFacilityModalOpen, setIsFacilityModalOpen] = useState(false);
   const [isFacilityCardModalOpen, setIsFacilityCardModalOpen] = useState(false);
-  // isFacilityCardModalOpen 은 행동 칸에서 열리는 설비 모달을 관리하기 위해 만듬.
   const [isJobCardModalOpen, setIsJobCardModalOpen] = useState(false);
-  // isJobCardModalOpen 은 행동 칸에서 열리는 직업 모달을 관리하기 위해 만듬.
   const [selectedJobCard, setSelectedJobCard] = useState(null);
 
   const [facilityType, setFacilityType] = useState(null);
   const [isMainFacility, setIsMainFacility] = useState(null);
   const [selectedFacilityCard, setSelectedFacilityCard] = useState(null);
 
-  const [onceClick, setOnceClick] = useRecoilState(onceClickState);
-  const [board, setBoard] = useRecoilState(BoardState);
-  const [fieldCard, setFieldCard] = useRecoilState(FieldCardState);
-
-  const [playerState1, setPlayerState1] = useRecoilState(player1State);
-  const [playerState2, setPlayerState2] = useRecoilState(player2State);
-  const [playerState3, setPlayerState3] = useRecoilState(player3State);
-  const [playerState4, setPlayerState4] = useRecoilState(player4State);
-
-  const bushPlayerIndex = playersPosition.findIndex((positionArray) =>
-    positionArray.includes('bush')
-  );
-  const forestPlayerIndex = playersPosition.findIndex((positionArray) =>
-    positionArray.includes('forest')
-  );
-  const resourcePlayerIndex = playersPosition.findIndex((positionArray) =>
-    positionArray.includes('Resource_market')
-  );
-  const clay_minePlayerIndex = playersPosition.findIndex((positionArray) =>
-    positionArray.includes('clay_mine')
-  );
-  const delivery_sellerPlayerIndex = playersPosition.findIndex(
-    (positionArray) => positionArray.includes('delivery_seller')
-  );
-  const grain_seedPlayerIndex = playersPosition.findIndex((positionArray) =>
-    positionArray.includes('grain_seed')
-  );
-  const boscagePlayerIndex = playersPosition.findIndex((positionArray) =>
-    positionArray.includes('boscage')
-  );
-  const traveling_theaterPlayerIndex = playersPosition.findIndex(
-    (positionArray) => positionArray.includes('traveling_theater')
-  );
-  const reed_fieldPlayerIndex = playersPosition.findIndex((positionArray) =>
-    positionArray.includes('reed_field')
-  );
-  const fishingPlayerIndex = playersPosition.findIndex((positionArray) =>
-    positionArray.includes('fishing')
-  );
-  const dirt_minePlayerIndex = playersPosition.findIndex((positionArray) =>
-    positionArray.includes('dirt_mine')
-  );
-
-  useEffect(() => {
-    socket.on('sync', (data) => {
-      setBoard(data.stateBoard);
-      setPlayersPosition(data.position);
-      if (data.playerNumber == 0) {
-        setPlayerState1(data.state);
-      } else if (data.playerNumber == 1) {
-        setPlayerState2(data.state);
-      } else if (data.playerNumber == 2) {
-        setPlayerState3(data.state);
-      } else if (data.playerNumber == 3) {
-        setPlayerState4(data.state);
-      }
-    });
-    console.log(board, 'here!');
-  }, []);
+  const [onceClick, setOnceClick] = useState(isClickable); // 보드판 한 번씩만 클릭 가능하도록 설정해야함!!
+  const [newBoard, setNewBoard] = useRecoilState(newBoardState);
+  const [newFieldCard, setNewFieldCard] = useRecoilState(NewFieldCardState);
 
   const playerImages = [
     '/private_board_images/orange_player.svg',
@@ -111,24 +53,8 @@ export const Board = ({ playerIndex, isClickable, ShowPrivate, nicknames }) => {
   ];
 
   const handleClick = (item) => {
-    if (item === '직업 카드') {
-      setIsJobModalOpen(true);
-    } else if (item === '보조 설비') {
-      setIsFacilityCardModalOpen(true);
-    } else if (item === '주요 설비') {
-      setIsFacilityModalOpen(true);
-      setFacilityType('main');
-    } else if (item === '화합 장소') {
-      setIsFacilityCardModalOpen(true);
-    } else if (item === '교습1' || item === '교습2') {
-      setIsJobCardModalOpen(true);
-    } else {
-      if (isClickable) {
-        console.log(nicknames[index]);
-        if (onceClick) {
-          setSelectedItem(item);
-        }
-      }
+    if (isClickable) {
+      handleSelectItem(item);
     }
   };
 
@@ -150,6 +76,26 @@ export const Board = ({ playerIndex, isClickable, ShowPrivate, nicknames }) => {
   };
 
   const handleSelectItem = (item) => {
+    if (!isClickable) return;
+
+    if (item === '직업 카드') {
+      setIsJobModalOpen(true);
+    } else if (item === '보조 설비') {
+      setIsFacilityCardModalOpen(true);
+    } else if (item === '주요 설비') {
+      setIsFacilityModalOpen(true);
+      setFacilityType('main');
+    } else if (item === '화합 장소') {
+      setIsFacilityCardModalOpen(true);
+    } else if (item === '교습1' || item === '교습2') {
+      setIsJobCardModalOpen(true);
+    } else if (item === '기본 가족 늘리기') {
+      setIsFacilityCardModalOpen(true);
+    } else {
+      console.log(nicknames[index]);
+      setSelectedItem(item);
+    }
+
     if (facilityType) {
       setIsMainFacility(item);
       setFacilityType(null);

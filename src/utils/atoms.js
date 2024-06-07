@@ -272,8 +272,14 @@ export const itemNumbersState = atom({
     '흙 채굴장': 2,
     '점토 채굴장': 2,
     '유랑 극단': 1,
-    낚시: 1,
-    갈대: 1,
+    '낚시': 1,
+    '갈대': 1,
+    '채소 종자': 1,
+    '양 시장': 1,
+    '돼지 시장': 1,
+    '소 시장': 1,
+    '서부 채석장': 3,
+    '동부 채석장': 3,
   },
 });
 
@@ -581,10 +587,25 @@ export const NewFieldCardState = atom({
     round12: { front: true, stone: 0 },
     round13: { front: true, stone: 0 },
     round14: { front: true, stone: 0 },
+
   },
 });
 
 export const onceClickState = atom({
   key: 'onceClickState',
   default: true,
+});
+
+
+export const selectedMainFacilityIndexState = atom({
+  key: 'selectedMainFacilityIndexState',
+  default: null,
+});
+
+export const selectedMainFacilityState = atom({
+  key: 'selectedMainFacilityState',
+  default: {
+    id: null,
+    name: null,
+  },
 });
