@@ -30,6 +30,10 @@ const getItemImage = (item) => {
             return ['/images/resource/reed.png'];
         case '자원 시장':
             return ['/images/resource/stone.png', '/images/resource/food.png', '/images/resource/reed.png'];
+    
+        case '서부 채석장':
+        case '동부 채석장':
+            return ['/images/resource/stone.png'];
         case '농지':
             return ['/images/resource/farmland.png'];
         case '회합 장소':
@@ -38,6 +42,14 @@ const getItemImage = (item) => {
             return ['/images/resource/grain.png'];
         case '농장 확장':
             return ['/images/resource/room.png'];
+        case '양 시장':
+            return ['/images/resource/sheep.png'];
+        case '돼지 시장':
+            return ['/images/resource/pig.png'];
+        case '소 시장':
+            return ['/images/resource/cattle.png'];
+        case '채소 종자':
+            return ['/images/resource/vegetable.png'];
         default:
             return [];
     }
@@ -47,6 +59,12 @@ const Modal = ({ item, onClose, onSelect }) => {
     const itemImages = Array.isArray(getItemImage(item)) ? getItemImage(item) : [getItemImage(item)];
     const itemNumbers = useRecoilValue(itemNumberSelector);
 
+    const isMainFacility = mainFacilities.some(facility => facility.name === item);
+
+    console.log("item", item);
+    console.log("itemImages:", itemImages);
+    console.log("itemNumbers:", itemNumbers[item]);
+
     return (
         <div className={styles.modalOverlay}>
             <div className={styles.modalContent}>
@@ -54,12 +72,15 @@ const Modal = ({ item, onClose, onSelect }) => {
                     <div className={styles.speechBubble}>
                         <p>
                             <strong>
-                                {item === "주요 설비" || item === "보조 설비" || item === '직업 카드' || item === '집 개조'
+                                {item === "주요 설비" || item === "보조 설비" || item === '직업 카드' || item === '집 개조' || item === '화합 장소' || item === '보조경작자' || item === '양의친구'
                                     ? `해당 ${item}를 선택하시겠습니까?`
+                                    : `“${item}”을 선택하시겠습니까?`}
+                                {isMainFacility
+                                    ? `해당 주요 설비를 선택하시겠습니까?`
                                     : `“${item}”을 선택하시겠습니까?`}
                             </strong>
                         </p>
-                        {(item !== "주요 설비" && item !== "보조 설비") && (
+                        {!isMainFacility && (
                             <div className={styles.itemImagesContainer}>
                                 {itemImages.map((src, index) => (
                                     <div key={index} className={styles.itemImageWrapper}>

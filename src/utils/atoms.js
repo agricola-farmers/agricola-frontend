@@ -289,26 +289,6 @@ export const itemNumberSelector = selector({
   },
 });
 
-export const NewFieldCardState = atom({
-  key: 'NewFieldCardState',
-  default: {
-    round1: { front: true, stone: 0 },
-    round2: { front: true, stone: 0 },
-    round3: { front: true, stone: 1 },
-    round4: { front: true, stone: 0 },
-    round5: { front: true, stone: 0 },
-    round6: { front: true, stone: 0 },
-    round7: { front: true, stone: 3 },
-    round8: { front: true, stone: 1 },
-    round9: { front: true, stone: 0 },
-    round10: { front: true, stone: 1 },
-    round11: { front: true, stone: 4 },
-    round12: { front: true, stone: 0 },
-    round13: { front: true, stone: 0 },
-    round14: { front: true, stone: 0 },
-  },
-});
-
 export const onceClickState = atom({
   key: 'onceClickState',
   default: true,
@@ -325,4 +305,9 @@ export const selectedMainFacilityState = atom({
     id: null,
     name: null,
   },
+});
+
+export const myNicknameState = atom({
+  key: 'myNicknameState',
+  default: '',
 });
