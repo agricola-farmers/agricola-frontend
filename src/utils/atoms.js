@@ -558,13 +558,13 @@ export const new_Player4State = atom({
 export const newBoardState = atom({
   key: 'newBoardState',
   default: {
-    bush_1: 6,
-    bush_2: 8,
-    clay_mine: 2,
+    bush_1: 7,
+    bush_2: 10,
+    clay_mine: 4,
     traveling_theater: 1,
     dirt_mine: 1,
-    forest: 3,
-    reed: 3,
+    forest: 6,
+    reed: 4,
     fishing: 1,
   },
 });
@@ -579,15 +579,17 @@ export const NewFieldCardState = atom({
     round5: { front: true, stone: 0 },
     round6: { front: true, stone: 0 },
     round7: { front: true, stone: 3 },
-    round8: { front: true, stone: 0 },
+    round8: { front: true, stone: 1 },
     round9: { front: true, stone: 0 },
-    round10: { front: true, stone: 0 },
-    round11: { front: true, stone: 3 },
+    round10: { front: true, stone: 1 },
+    round11: { front: true, stone: 4 },
     round12: { front: true, stone: 0 },
     round13: { front: true, stone: 0 },
     round14: { front: true, stone: 0 },
+
   },
 });
+
 
 export const onceClickState = atom({
   key: 'onceClickState',
