@@ -46,7 +46,10 @@ export const player1State = atom({
     family_member: 2,
     stables: 0,
     fences: [],
-    fence_array: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    fence_array: [
+      0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+      0, 0, 0, 0, 0, 0, 0, 0, 0,
+    ],
     wood: 0,
     clay: 0,
     reed: 0,
@@ -60,8 +63,14 @@ export const player1State = atom({
     hut: [{}],
     food: 3,
     major_facilities: [],
-    job: Array.from({ length: 7 }, (_, i) => `../../../images/player1_jobcard/jobcard_${i + 1}.png`),
-    facility: Array.from({ length: 7 }, (_, i) => `../../../images/player1_facilitycard/facilitycard_${i + 1}.png`),
+    job: Array.from(
+      { length: 7 },
+      (_, i) => `../../../images/player1_jobcard/jobcard_${i + 1}.png`
+    ),
+    facility: Array.from(
+      { length: 7 },
+      (_, i) => `../../../images/player1_facilitycard/facilitycard_${i + 1}.png`
+    ),
     job_active: [],
     facility_active: [],
     fieldState: {
@@ -91,7 +100,10 @@ export const player2State = atom({
     family_member: 2,
     stables: 0,
     fences: [],
-    fence_array: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    fence_array: [
+      0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+      0, 0, 0, 0, 0, 0, 0, 0, 0,
+    ],
     wood: 0,
     clay: 0,
     reed: 0,
@@ -105,8 +117,14 @@ export const player2State = atom({
     hut: [{}],
     food: 3,
     major_facilities: [],
-    job: Array.from({ length: 7 }, (_, i) => `../../../images/player2_jobcard/jobcard_${i + 1}.png`),
-    facility: Array.from({ length: 7 }, (_, i) => `../../../images/player2_facilitycard/facilitycard_${i + 1}.png`),
+    job: Array.from(
+      { length: 7 },
+      (_, i) => `../../../images/player2_jobcard/jobcard_${i + 1}.png`
+    ),
+    facility: Array.from(
+      { length: 7 },
+      (_, i) => `../../../images/player2_facilitycard/facilitycard_${i + 1}.png`
+    ),
     job_active: [],
     facility_active: [],
     fieldState: {
@@ -136,7 +154,10 @@ export const player3State = atom({
     family_member: 2,
     stables: 0,
     fences: [],
-    fence_array: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    fence_array: [
+      0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+      0, 0, 0, 0, 0, 0, 0, 0, 0,
+    ],
     wood: 0,
     clay: 0,
     reed: 0,
@@ -150,8 +171,14 @@ export const player3State = atom({
     hut: [{}],
     food: 2,
     major_facilities: [],
-    job: Array.from({ length: 7 }, (_, i) => `../../../images/player3_jobcard/jobcard_${i + 1}.png`),
-    facility: Array.from({ length: 7 }, (_, i) => `../../../images/player3_facilitycard/facilitycard_${i + 1}.png`),
+    job: Array.from(
+      { length: 7 },
+      (_, i) => `../../../images/player3_jobcard/jobcard_${i + 1}.png`
+    ),
+    facility: Array.from(
+      { length: 7 },
+      (_, i) => `../../../images/player3_facilitycard/facilitycard_${i + 1}.png`
+    ),
     job_active: [],
     facility_active: [],
     fieldState: {
@@ -181,7 +208,10 @@ export const player4State = atom({
     family_member: 2,
     stables: 0,
     fences: [],
-    fence_array: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    fence_array: [
+      0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+      0, 0, 0, 0, 0, 0, 0, 0, 0,
+    ],
     wood: 0,
     clay: 0,
     reed: 0,
@@ -195,8 +225,14 @@ export const player4State = atom({
     hut: [{}],
     food: 3,
     major_facilities: [],
-    job: Array.from({ length: 7 }, (_, i) => `../../../images/player4_jobcard/jobcard_${i + 1}.png`),
-    facility: Array.from({ length: 7 }, (_, i) => `../../../images/player4_facilitycard/facilitycard_${i + 1}.png`),
+    job: Array.from(
+      { length: 7 },
+      (_, i) => `../../../images/player4_jobcard/jobcard_${i + 1}.png`
+    ),
+    facility: Array.from(
+      { length: 7 },
+      (_, i) => `../../../images/player4_facilitycard/facilitycard_${i + 1}.png`
+    ),
     job_active: [],
     facility_active: [],
     fieldState: {
@@ -229,21 +265,20 @@ export const playersPositionState = atom({
   default: [[], [], [], []],
 });
 
-
 export const itemNumbersState = atom({
   key: 'itemNumbersState',
   default: {
-    '덤불': 1,
-    '수풀': 2,
-    '숲': 3,
+    덤불: 1,
+    수풀: 2,
+    숲: 3,
     '날품 팔이': 2,
     '곡식 종자': 1,
     '자원 시장': [1, 1, 1],
     '흙 채굴장': 2,
     '점토 채굴장': 2,
     '유랑 극단': 1,
-    '낚시': 1,
-    '갈대': 1,
+    낚시: 1,
+    갈대: 1,
   },
 });
 
@@ -256,9 +291,8 @@ export const itemNumberSelector = selector({
       ...currentNumbers,
       ...newValue,
     });
-  }
+  },
 });
-
 
 export const new_PlayersState = atom({
   key: 'new_PlayersState',
@@ -271,7 +305,10 @@ export const new_Player1State = atom({
     isActive: false,
     family_member: 4,
     stables: 0,
-    fence_array: [0, 0, 0, 1, 1, 0, 0, 0, 1, 1, 1, 0, 0, 1, 1, 1, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 1, 1, 1],
+    fence_array: [
+      0, 0, 0, 1, 1, 0, 0, 0, 1, 1, 1, 0, 0, 1, 1, 1, 0, 1, 0, 0, 1, 0, 0, 0, 0,
+      0, 1, 0, 0, 1, 0, 1, 1, 1,
+    ],
     fences: 15,
     wood: 0,
     clay: 10,
@@ -286,23 +323,39 @@ export const new_Player1State = atom({
     house: 0,
     hut: [{}],
     major_facilities: [],
-    job: Array.from({ length: 7 }, (_, i) => `../../../images/player1_newJobcard/jobcard_${i + 1}.png`),
-    facility: Array.from({ length: 7 }, (_, i) => `../../../images/player1_newFacilitycard/facilitycard_${i + 1}.png`),
-    job_active: Array.from({ length: 7 }, (_, i) => `../../../images/player1_newJobCard_active/jobcard_${i + 1}.png`),
-    facility_active: Array.from({ length: 7 }, (_, i) => `../../../images/player1_newFacilitycard_active/facilitycard_${i + 1}.png`),
+    job: Array.from(
+      { length: 7 },
+      (_, i) => `../../../images/player1_newJobcard/jobcard_${i + 1}.png`
+    ),
+    facility: Array.from(
+      { length: 7 },
+      (_, i) =>
+        `../../../images/player1_newFacilitycard/facilitycard_${i + 1}.png`
+    ),
+    job_active: Array.from(
+      { length: 7 },
+      (_, i) => `../../../images/player1_newJobCard_active/jobcard_${i + 1}.png`
+    ),
+    facility_active: Array.from(
+      { length: 7 },
+      (_, i) =>
+        `../../../images/player1_newFacilitycard_active/facilitycard_${
+          i + 1
+        }.png`
+    ),
     fieldState: {
-      0: { field: 2, playerImage: 1},
-      1: { field: 1, grain: 2},
-      2: { field: 1, vegetable: 1},
+      0: { field: 2, playerImage: 1 },
+      1: { field: 1, grain: 2 },
+      2: { field: 1, vegetable: 1 },
       3: { field: 0 },
       4: { field: 0 },
-      5: { field: 2, playerImage: 1},
-      6: { field: 1, grain: 2},
+      5: { field: 2, playerImage: 1 },
+      6: { field: 1, grain: 2 },
       7: { field: 0 },
       8: { field: 0 },
       9: { field: 0 },
-      10: { field: 2, playerImage: 1, sheep: 1},
-      11: { field: 2, playerImage: 1},
+      10: { field: 2, playerImage: 1, sheep: 1 },
+      11: { field: 2, playerImage: 1 },
       12: { field: 0 },
       13: { field: 0 },
       14: { field: 0 },
@@ -316,7 +369,10 @@ export const new_Player2State = atom({
     isActive: false,
     family_member: 3,
     stables: 0,
-    fence_array: [0, 0, 0, 1, 1, 0, 0, 0, 1, 0, 1, 0, 0, 1, 1, 1, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 1, 1, 1],
+    fence_array: [
+      0, 0, 0, 1, 1, 0, 0, 0, 1, 0, 1, 0, 0, 1, 1, 1, 0, 1, 0, 0, 1, 0, 0, 0, 0,
+      0, 1, 0, 0, 1, 0, 1, 1, 1,
+    ],
     fences: 15,
     wood: 0,
     clay: 0,
@@ -331,25 +387,41 @@ export const new_Player2State = atom({
     house: 1,
     hut: [{}],
     major_facilities: [],
-    job: Array.from({ length: 7 }, (_, i) => `../../../images/player2_newJobcard/jobcard_${i + 1}.png`),
-    facility: Array.from({ length: 7 }, (_, i) => `../../../images/player2_newFacilitycard/facilitycard_${i + 1}.png`),
-    job_active: Array.from({ length: 7 }, (_, i) => `../../../images/player2_newJobCard_active/jobcard_${i + 1}.png`),
-    facility_active: Array.from({ length: 7 }, (_, i) => `../../../images/player2_newFacilitycard_active/facilitycard_${i + 1}.png`),
+    job: Array.from(
+      { length: 7 },
+      (_, i) => `../../../images/player2_newJobcard/jobcard_${i + 1}.png`
+    ),
+    facility: Array.from(
+      { length: 7 },
+      (_, i) =>
+        `../../../images/player2_newFacilitycard/facilitycard_${i + 1}.png`
+    ),
+    job_active: Array.from(
+      { length: 7 },
+      (_, i) => `../../../images/player2_newJobCard_active/jobcard_${i + 1}.png`
+    ),
+    facility_active: Array.from(
+      { length: 7 },
+      (_, i) =>
+        `../../../images/player2_newFacilitycard_active/facilitycard_${
+          i + 1
+        }.png`
+    ),
     fieldState: {
       0: { field: 1 },
       1: { field: 1 },
       2: { field: 0 },
-      3: { field: 0, pig : 2 },
-      4: { field: 0, pig : 1, house : 1},
-      5: { field: 2, playerImage: 1},
+      3: { field: 0, pig: 2 },
+      4: { field: 0, pig: 1, house: 1 },
+      5: { field: 2, playerImage: 1 },
       6: { field: 0 },
-      7: { field: 0, sheep: 2},
-      8: { field: 0, sheep: 2},
-      9: { field: 0, sheep: 2},
-      10: { field: 2, playerImage: 1, sheep: 1},
-      11: { field: 2, playerImage: 1},
-      12: { field: 0, sheep: 2},
-      13: { field: 0, sheep: 1},
+      7: { field: 0, sheep: 2 },
+      8: { field: 0, sheep: 2 },
+      9: { field: 0, sheep: 2 },
+      10: { field: 2, playerImage: 1, sheep: 1 },
+      11: { field: 2, playerImage: 1 },
+      12: { field: 0, sheep: 2 },
+      13: { field: 0, sheep: 1 },
       14: { field: 0 },
     },
   },
@@ -361,7 +433,10 @@ export const new_Player3State = atom({
     isActive: false,
     family_member: 2,
     stables: 0,
-    fence_array: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 1, 0, 1, 0, 0, 0, 0, 1, 0, 1, 0, 1, 1, 1, 1, 1],
+    fence_array: [
+      0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 1, 0, 1, 0, 0, 0, 0,
+      1, 0, 1, 0, 1, 1, 1, 1, 1,
+    ],
     fences: 14,
     wood: 8,
     clay: 8,
@@ -376,22 +451,38 @@ export const new_Player3State = atom({
     house: 0,
     hut: [{}],
     major_facilities: [],
-    job: Array.from({ length: 7 }, (_, i) => `../../../images/player3_newJobcard/jobcard_${i + 1}.png`),
-    facility: Array.from({ length: 7 }, (_, i) => `../../../images/player3_newFacilitycard/facilitycard_${i + 1}.png`),
-    job_active: Array.from({ length: 7 }, (_, i) => `../../../images/player3_newJobCard_active/jobcard_${i + 1}.png`),
-    facility_active: Array.from({ length: 7 }, (_, i) => `../../../images/player3_newFacilitycard_active/facilitycard_${i + 1}.png`),
+    job: Array.from(
+      { length: 7 },
+      (_, i) => `../../../images/player3_newJobcard/jobcard_${i + 1}.png`
+    ),
+    facility: Array.from(
+      { length: 7 },
+      (_, i) =>
+        `../../../images/player3_newFacilitycard/facilitycard_${i + 1}.png`
+    ),
+    job_active: Array.from(
+      { length: 7 },
+      (_, i) => `../../../images/player3_newJobCard_active/jobcard_${i + 1}.png`
+    ),
+    facility_active: Array.from(
+      { length: 7 },
+      (_, i) =>
+        `../../../images/player3_newFacilitycard_active/facilitycard_${
+          i + 1
+        }.png`
+    ),
     fieldState: {
       0: { field: 0 },
       1: { field: 1 },
       2: { field: 1 },
       3: { field: 1 },
       4: { field: 1 },
-      5: { field: 3, playerImage: 1},
-      6: { field: 0, pig: 2},
-      7: { field: 0, pig: 1},
-      8: { field: 0, sheep: 2},
-      9: { field: 0, sheep: 1},
-      10: { field: 3, playerImage: 1, cattle: 1},
+      5: { field: 3, playerImage: 1 },
+      6: { field: 0, pig: 2 },
+      7: { field: 0, pig: 1 },
+      8: { field: 0, sheep: 2 },
+      9: { field: 0, sheep: 1 },
+      10: { field: 3, playerImage: 1, cattle: 1 },
       11: { field: 0 },
       12: { field: 0 },
       13: { field: 0 },
@@ -406,7 +497,10 @@ export const new_Player4State = atom({
     isActive: false,
     family_member: 4,
     stables: 0,
-    fence_array: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 1, 0, 0, 1, 0, 0, 1, 1, 0, 1, 1, 0, 1, 0, 1, 1, 1],
+    fence_array: [
+      0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 1, 0, 0, 1, 0, 0, 1, 1,
+      0, 1, 1, 0, 1, 0, 1, 1, 1,
+    ],
     fences: 0,
     wood: 3,
     clay: 1,
@@ -421,22 +515,38 @@ export const new_Player4State = atom({
     house: 0,
     hut: [{}],
     major_facilities: [],
-    job: Array.from({ length: 7 }, (_, i) => `../../../images/player4_newJobcard/jobcard_${i + 1}.png`),
-    facility: Array.from({ length: 7 }, (_, i) => `../../../images/player4_newFacilitycard/facilitycard_${i + 1}.png`),
-    job_active: Array.from({ length: 7 }, (_, i) => `../../../images/player4_newJobCard_active/jobcard_${i + 1}.png`),
-    facility_active: Array.from({ length: 7 }, (_, i) => `../../../images/player4_newFacilitycard_active/facilitycard_${i + 1}.png`),
+    job: Array.from(
+      { length: 7 },
+      (_, i) => `../../../images/player4_newJobcard/jobcard_${i + 1}.png`
+    ),
+    facility: Array.from(
+      { length: 7 },
+      (_, i) =>
+        `../../../images/player4_newFacilitycard/facilitycard_${i + 1}.png`
+    ),
+    job_active: Array.from(
+      { length: 7 },
+      (_, i) => `../../../images/player4_newJobCard_active/jobcard_${i + 1}.png`
+    ),
+    facility_active: Array.from(
+      { length: 7 },
+      (_, i) =>
+        `../../../images/player4_newFacilitycard_active/facilitycard_${
+          i + 1
+        }.png`
+    ),
     fieldState: {
-      0: { field: 2, playerImage: 1},
+      0: { field: 2, playerImage: 1 },
       1: { field: 1 },
       2: { field: 1 },
       3: { field: 1 },
       4: { field: 1 },
-      5: { field: 2, playerImage: 1},
+      5: { field: 2, playerImage: 1 },
       6: { field: 1 },
-      7: { field: 0, cattle: 2},
-      8: { field: 0, cattle: 1},
+      7: { field: 0, cattle: 2 },
+      8: { field: 0, cattle: 1 },
       9: { field: 0 },
-      10: { field: 2, playerImage: 1, sheep: 1},
+      10: { field: 2, playerImage: 1, sheep: 1 },
       11: { field: 2, playerImage: 1 },
       12: { field: 0 },
       13: { field: 0, pig: 2 },
@@ -444,7 +554,6 @@ export const new_Player4State = atom({
     },
   },
 });
-
 
 export const newBoardState = atom({
   key: 'newBoardState',
@@ -477,6 +586,10 @@ export const NewFieldCardState = atom({
     round12: { front: true, stone: 0 },
     round13: { front: true, stone: 0 },
     round14: { front: true, stone: 0 },
-
   },
+});
+
+export const onceClickState = atom({
+  key: 'onceClickState',
+  default: true,
 });
