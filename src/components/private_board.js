@@ -2,37 +2,48 @@ import React, { useState, useEffect } from "react";
 import { useRecoilValue, useRecoilState } from "recoil";
 import { useRouter } from 'next/router';
 import { player1State, player2State, player3State, player4State } from "@/utils/atoms";
+import { new_Player1State, new_Player2State, new_Player3State, new_Player4State } from "@/utils/atoms";
 import JobCardModal from "./JobCardModal";
 import FacilityCardModal from "./FacilityCardModal";
 
-const PrivateBoard = ({ onClose, nickname, index, isChange }) => {
+const PrivateBoard = ({ onClose, nickname, index, isChange, animal }) => {
   const router = useRouter();
   const { playerIndex } = router.query;
   const [isJobModalOpen, setIsJobModalOpen] = useState(false);
   const [isFacilityModalOpen, setIsFacilityModalOpen] = useState(false);
-  const playerStates = [player1State, player2State, player3State, player4State];
-  const [playerState, setPlayerState] = useRecoilState(playerStates[index]);
+  // const playerStates = [player1State, player2State, player3State, player4State];
+  // const [playerState, setPlayerState] = useRecoilState(playerStates[index]);
+  const new_PlayersState = [new_Player1State, new_Player2State, new_Player3State, new_Player4State];
+  const [playerState, setPlayerState] = useRecoilState(new_PlayersState[index]);
   const [cardchange, setcardchange] = useState(isChange);
 
   let playerImage = "/private_board_images/orange_player.svg";
-  let house = "/private_board_images/orange_house.svg";
+  let houseImage = "/private_board_images/orange_house.svg";
   let fence = "/private_board_images/orange_fence.svg";
+  let farm_fence_col = "/private_board_images/fence_orange.svg";
+  let farm_fence_row = "/private_board_images/fence_orange_row.svg";
   let mainColor = "#E7BF72";
 
   if (index === 1) {
     playerImage = "/private_board_images/red_player.svg";
-    house = "/private_board_images/red_house.svg";
+    houseImage = "/private_board_images/red_house.svg";
     fence = "/private_board_images/fence.svg";
+    farm_fence_col = "/private_board_images/fence_red.svg";
+    farm_fence_row = "/private_board_images/fence_red_row.svg";
     mainColor = "#E4B8AF";
   } else if (index === 2) {
     playerImage = "/private_board_images/green_player.svg";
-    house = "/private_board_images/green_house.svg";
+    houseImage = "/private_board_images/green_house.svg";
     fence = "/private_board_images/green_fence.svg";
+    farm_fence_col = "/private_board_images/fence_green.svg";
+    farm_fence_row = "/private_board_images/fence_green_row.svg";
     mainColor = "#D8F2C7";
   } else if (index === 3) {
     playerImage = "/private_board_images/blue_player.svg";
-    house = "/private_board_images/blue_house.svg";
+    houseImage = "/private_board_images/blue_house.svg";
     fence = "/private_board_images/blue_fence.svg";
+    farm_fence_col = "/private_board_images/fence_blue.svg";
+    farm_fence_row = "/private_board_images/fence_blue_row.svg";
     mainColor = "#ABC7FF";
   }
 
@@ -70,21 +81,159 @@ const PrivateBoard = ({ onClose, nickname, index, isChange }) => {
     setIsFacilityModalOpen(false);
   };
 
-  const handleImageClick = (forest_index) => {
+  const handleGridClick = (forest_index) => {
     if (cardchange) {
-      setPlayerState(prevState => {
-        const newFieldState = [...prevState.fieldState];
-        newFieldState[forest_index] = true;
+      setPlayerState((prevState) => {
+        const updatedFieldState = { ...prevState.fieldState };
+  
+        if (animal === 0) {
+          // field 상태 업데이트
+          updatedFieldState[forest_index] = {
+            ...updatedFieldState[forest_index],
+            field: (updatedFieldState[forest_index].field + 1) % 4,
+          };
+        } else {
+          const animalKey = animal === 1 ? 'pig' : animal === 2 ? 'sheep' : 'cattle';
+          // animal 상태 업데이트
+          updatedFieldState[forest_index] = {
+            ...updatedFieldState[forest_index],
+            [animalKey]: (updatedFieldState[forest_index][animalKey] || 0) + 1,
+          };
+          // playerState의 동물 수 업데이트
+          return {
+            ...prevState,
+            fieldState: updatedFieldState,
+            [animalKey]: prevState[animalKey] + 1,
+          };
+        }
+  
         return {
           ...prevState,
-          fieldState: newFieldState
+          fieldState: updatedFieldState,
         };
       });
       setcardchange(false);
     }
   };
+  
+
+  const renderFieldBackground = (field) => {
+    switch (field) {
+      case 0:
+        return "/private_board_images/forest.svg";
+      case 1:
+        return "/private_board_images/field.svg";
+      case 2:
+        return "/private_board_images/room.svg";
+      case 3:
+        return "/private_board_images/clay_home.svg";
+      default:
+        return "/private_board_images/forest.svg";
+    }
+  };
+
+  const renderPeopleIcon = (people) => {
+    if (people) {
+      return (
+        <img
+          src={playerImage}
+          alt="player"
+          style={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            width: "50%",
+            height: "50%",
+          }}
+        />
+      );
+    }
+    return null;
+  };
+
+  const renderHouseIcon = (house) => {
+    if (house > 0) {
+      return (
+        <img
+          src={houseImage}
+          alt="house"
+          style={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            width: "30%",
+            height: "30%",
+          }}
+        />
+      );
+    }
+    return null;
+  };
+
+  const renderResourceIcons = (state) => {
+    const resources = [];
+    if (state.grain) {
+      resources.push({ type: 'grain', amount: state.grain });
+    }
+    if (state.vegetable) {
+      resources.push({ type: 'vegetable', amount: state.vegetable });
+    }
+    if (state.sheep) {
+      resources.push({ type: 'sheep', amount: state.sheep });
+    }
+    if (state.pig) {
+      resources.push({ type: 'pig', amount: state.pig });
+    }
+    if (state.cattle) {
+      resources.push({ type: 'cattle', amount: state.cattle });
+    }
+  
+    return resources.map((resource, index) => (
+      <div
+        key={index}
+        style={{
+          position: 'absolute',
+          bottom: '10%',
+          right: `${index * 20 + 10}%`,
+          width: '40%',
+          height: '40%',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+        }}
+      >
+        <img
+          src={`/private_board_images/${resource.type}.svg`}
+          alt={resource.type}
+          style={{
+            width: '100%',
+            height: '100%',
+          }}
+        />
+        {resource.amount > 1 && (
+          <span
+            style={{
+              position: 'absolute',
+              top: '0',
+              right: '0',
+              backgroundColor: 'black',
+              borderRadius: '50%',
+              padding: '2px 5px',
+              fontSize: '0.8rem',
+              color: 'white'
+            }}
+          >
+            {resource.amount}
+          </span>
+        )}
+      </div>
+    ));
+  };
 
   const renderForestOrField = (forest_index) => {
+    const state = playerState.fieldState[forest_index];
     return (
       <div
         style={{
@@ -92,15 +241,23 @@ const PrivateBoard = ({ onClose, nickname, index, isChange }) => {
           width: "100%",
           height: "100%",
         }}
-        onClick={() => handleImageClick(forest_index)}
+        onClick={() => handleGridClick(forest_index)}
       >
         <img
-          src={playerState.fieldState[forest_index] ? "/private_board_images/field.svg" : "/private_board_images/forest.svg"}
-          alt={playerState.fieldState[forest_index] ? `field_${forest_index}` : `forest_${forest_index}`}
+          src={renderFieldBackground(state.field)}
+          alt={`background_${forest_index}`}
           style={{ width: "100%", height: "100%" }}
         />
+        {renderPeopleIcon(state.playerImage)}
+        {renderHouseIcon(state.house)}
+        {renderResourceIcons(state)}
+
       </div>
     );
+  };
+
+  const handleImageError = (event) => {
+    event.target.style.display = 'none';
   };
 
   return (
@@ -210,50 +367,571 @@ const PrivateBoard = ({ onClose, nickname, index, isChange }) => {
                 display: "grid",
                 gridTemplateColumns: "repeat(5, 1fr)",
                 gridTemplateRows: "repeat(3, 1fr)",
-                gap: 10,
-                padding: 10,
+                columnGap: "3%",
+                paddingTop: "1%",
+                paddingBottom: "1%",
+                paddingLeft: "3%",
+                paddingRight: "3%",
               }}
             >
-              {renderForestOrField(0)}
-              {renderForestOrField(1)}
-              {renderForestOrField(2)}
-              {renderForestOrField(3)}
-              {renderForestOrField(4)}
-              <div
-                style={{
-                  position: "relative",
-                  width: "100%",
-                  height: "100%",
-                }}
-              >
-                <img
-                  src="/private_board_images/room.svg"
-                  alt="room"
-                  style={{ width: "100%", height: "100%" }}
-                />
-              </div>
-              {renderForestOrField(5)}
-              {renderForestOrField(6)}
-              {renderForestOrField(7)}
-              {renderForestOrField(8)}
-              <div
-                style={{
-                  position: "relative",
-                  width: "100%",
-                  height: "100%",
-                }}
-              >
-                <img
-                  src="/private_board_images/room.svg"
-                  alt="room"
-                  style={{ width: "100%", height: "100%" }}
-                />
-              </div>
-              {renderForestOrField(9)}
-              {renderForestOrField(10)}
-              {renderForestOrField(11)}
-              {renderForestOrField(12)}
+              {Object.keys(playerState.fieldState).map((index) => (
+                <div key={index}>
+                  {renderForestOrField(index)}
+                </div>
+              ))}
             </div>
+            <div
+              style={{
+                position: "absolute",
+                top: "3.2%",
+                left: "3%",
+                width: "10%",
+              }}
+            >
+              {playerState.fence_array[0] === 1 && (
+                <img
+                  src={farm_fence_col}
+                  alt="fence0"
+                  style={{ width: '100%', height: '100%' }}
+                />
+              )}
+            </div>
+            <div
+              style={{
+                position: "absolute",
+                top: "3.2%",
+                left: "14.5%",
+                width: "10%",
+              }}
+            >
+              {playerState.fence_array[1] === 1 && (
+                <img
+                  src={farm_fence_col}
+                  alt="fence1"
+                  style={{ width: '100%', height: '100%'}}
+                />
+              )}
+            </div>
+            <div
+              style={{
+                position: "absolute",
+                top: "3.2%",
+                left: "25.5%",
+                width: "10%",
+              }}
+            >
+              {playerState.fence_array[2] === 1 && (
+                <img
+                  src={farm_fence_col}
+                  alt="fence2"
+                  style={{ width: '100%', height: '100%'}}
+                />
+              )}
+            </div>
+            <div
+              style={{
+                position: "absolute",
+                top: "3.2%",
+                left: "37%",
+                width: "10%",
+              }}
+            >
+              {playerState.fence_array[3] === 1 && (
+                <img
+                  src={farm_fence_col}
+                  alt="fence3"
+                  style={{ width: '100%', height: '100%' }}
+                />
+              )}
+            </div>
+            <div
+              style={{
+                position: "absolute",
+                top: "3.2%",
+                left: "48%",
+                width: "10%",
+              }}
+            >
+              {playerState.fence_array[4] === 1 && (
+                <img
+                  src={farm_fence_col}
+                  alt="fence4"
+                  style={{ width: '100%', height: '100%'}}
+                />
+              )}
+            </div>
+            <div
+              style={{
+                position: "absolute",
+                top: "5%",
+                left: "1.8%",
+                height: "17%",
+              }}
+            >
+              {playerState.fence_array[5] === 1 && (
+                <img
+                  src={farm_fence_row}
+                  alt="fence5"
+                  style={{ width: '100%', height: '100%'}}
+                />
+              )}
+            </div>
+            <div
+              style={{
+                position: "absolute",
+                top: "5%",
+                left: "13.1%",
+                height: "17%",
+              }}
+            >
+              {playerState.fence_array[6] === 1 && (
+                <img
+                  src={farm_fence_row}
+                  alt="fence6"
+                  style={{ width: '100%', height: '100%'}}
+                />
+              )}
+            </div>
+            <div
+              style={{
+                position: "absolute",
+                top: "5%",
+                left: "24.4%",
+                height: "17%",
+              }}
+            >
+              {playerState.fence_array[7] === 1 && (
+                <img
+                  src={farm_fence_row}
+                  alt="fence7"
+                  style={{ width: '100%', height: '100%'}}
+                />
+              )}
+            </div>
+            <div
+              style={{
+                position: "absolute",
+                top: "5%",
+                left: "35.6%",
+                height: "17%",
+              }}
+            >
+              {playerState.fence_array[8] === 1 && (
+                <img
+                  src={farm_fence_row}
+                  alt="fence8"
+                  style={{ width: '100%', height: '100%'}}
+                />
+              )}
+            </div>
+            <div
+              style={{
+                position: "absolute",
+                top: "5%",
+                left: "46.9%",
+                height: "17%",
+              }}
+            >
+              {playerState.fence_array[9] === 1 && (
+                <img
+                  src={farm_fence_row}
+                  alt="fence9"
+                  style={{ width: '100%', height: '100%'}}
+                />
+              )}
+            </div>
+            <div
+              style={{
+                position: "absolute",
+                top: "5%",
+                left: "58.1%",
+                height: "17%",
+              }}
+            >
+              {playerState.fence_array[10] === 1 && (
+                <img
+                  src={farm_fence_row}
+                  alt="fence10"
+                  style={{ width: '100%', height: '100%'}}
+                />
+              )}
+            </div>
+            <div
+              style={{
+                position: "absolute",
+                top: "22.5%",
+                left: "3%",
+                width: "10%",
+              }}
+            >
+              {playerState.fence_array[11] === 1 && (
+                <img
+                  src={farm_fence_col}
+                  alt="fence11"
+                  style={{ width: '100%', height: '100%' }}
+                />
+              )}
+            </div>
+            <div
+              style={{
+                position: "absolute",
+                top: "22.5%",
+                left: "14.5%",
+                width: "10%",
+              }}
+            >
+              {playerState.fence_array[12] === 1 && (
+                <img
+                  src={farm_fence_col}
+                  alt="fence12"
+                  style={{ width: '100%', height: '100%'}}
+                />
+              )}
+            </div>
+            <div
+              style={{
+                position: "absolute",
+                top: "22.5%",
+                left: "25.5%",
+                width: "10%",
+              }}
+            >
+              {playerState.fence_array[13] === 1 && (
+                <img
+                  src={farm_fence_col}
+                  alt="fence13"
+                  style={{ width: '100%', height: '100%'}}
+                />
+              )}
+            </div>
+            <div
+              style={{
+                position: "absolute",
+                top: "22.5%",
+                left: "37%",
+                width: "10%",
+              }}
+            >
+              {playerState.fence_array[14] === 1 && (
+                <img
+                  src={farm_fence_col}
+                  alt="fence14"
+                  style={{ width: '100%', height: '100%' }}
+                />
+              )}
+            </div>
+            <div
+              style={{
+                position: "absolute",
+                top: "22.5%",
+                left: "48%",
+                width: "10%",
+              }}
+            >
+              {playerState.fence_array[15] === 1 && (
+                <img
+                  src={farm_fence_col}
+                  alt="fence15"
+                  style={{ width: '100%', height: '100%'}}
+                />
+              )}
+            </div>
+            <div
+              style={{
+                position: "absolute",
+                top: "25%",
+                left: "13.1%",
+                height: "17%",
+              }}
+            >
+              {playerState.fence_array[16] === 1 && (
+                <img
+                  src={farm_fence_row}
+                  alt="fence16"
+                  style={{ width: '100%', height: '100%'}}
+                />
+              )}
+            </div>
+            <div
+              style={{
+                position: "absolute",
+                top: "25%",
+                left: "24.4%",
+                height: "17%",
+              }}
+            >
+              {playerState.fence_array[17] === 1 && (
+                <img
+                  src={farm_fence_row}
+                  alt="fence17"
+                  style={{ width: '100%', height: '100%'}}
+                />
+              )}
+            </div>
+            <div
+              style={{
+                position: "absolute",
+                top: "25%",
+                left: "35.6%",
+                height: "17%",
+              }}
+            >
+              {playerState.fence_array[18] === 1 && (
+                <img
+                  src={farm_fence_row}
+                  alt="fence18"
+                  style={{ width: '100%', height: '100%'}}
+                />
+              )}
+            </div>
+            <div
+              style={{
+                position: "absolute",
+                top: "25%",
+                left: "46.9%",
+                height: "17%",
+              }}
+            >
+              {playerState.fence_array[19] === 1 && (
+                <img
+                  src={farm_fence_row}
+                  alt="fence19"
+                  style={{ width: '100%', height: '100%'}}
+                />
+              )}
+            </div>
+            <div
+              style={{
+                position: "absolute",
+                top: "25%",
+                left: "58.1%",
+                height: "17%",
+              }}
+            >
+              {playerState.fence_array[20] === 1 && (
+                <img
+                  src={farm_fence_row}
+                  alt="fence20"
+                  style={{ width: '100%', height: '100%'}}
+                />
+              )}
+            </div>
+            <div
+              style={{
+                position: "absolute",
+                top: "42.5%",
+                left: "14.5%",
+                width: "10%",
+              }}
+            >
+              {playerState.fence_array[21] === 1 && (
+                <img
+                  src={farm_fence_col}
+                  alt="fence21"
+                  style={{ width: '100%', height: '100%'}}
+                />
+              )}
+            </div>
+            <div
+              style={{
+                position: "absolute",
+                top: "42.5%",
+                left: "25.5%",
+                width: "10%",
+              }}
+            >
+              {playerState.fence_array[22] === 1 && (
+                <img
+                  src={farm_fence_col}
+                  alt="fence22"
+                  style={{ width: '100%', height: '100%'}}
+                />
+              )}
+            </div>
+            <div
+              style={{
+                position: "absolute",
+                top: "42.5%",
+                left: "37%",
+                width: "10%",
+              }}
+            >
+              {playerState.fence_array[23] === 1 && (
+                <img
+                  src={farm_fence_col}
+                  alt="fence23"
+                  style={{ width: '100%', height: '100%' }}
+                />
+              )}
+            </div>
+            <div
+              style={{
+                position: "absolute",
+                top: "42.5%",
+                left: "48%",
+                width: "10%",
+              }}
+            >
+              {playerState.fence_array[24] === 1 && (
+                <img
+                  src={farm_fence_col}
+                  alt="fence24"
+                  style={{ width: '100%', height: '100%'}}
+                />
+              )}
+            </div>
+            <div
+              style={{
+                position: "absolute",
+                top: "45%",
+                left: "13.1%",
+                height: "17%",
+              }}
+            >
+              {playerState.fence_array[25] === 1 && (
+                <img
+                  src={farm_fence_row}
+                  alt="fence25"
+                  style={{ width: '100%', height: '100%'}}
+                />
+              )}
+            </div>
+            <div
+              style={{
+                position: "absolute",
+                top: "45%",
+                left: "24.4%",
+                height: "17%",
+              }}
+            >
+              {playerState.fence_array[26] === 1 && (
+                <img
+                  src={farm_fence_row}
+                  alt="fence26"
+                  style={{ width: '100%', height: '100%'}}
+                />
+              )}
+            </div>
+            <div
+              style={{
+                position: "absolute",
+                top: "45%",
+                left: "35.6%",
+                height: "17%",
+              }}
+            >
+              {playerState.fence_array[27] === 1 && (
+                <img
+                  src={farm_fence_row}
+                  alt="fence27"
+                  style={{ width: '100%', height: '100%'}}
+                />
+              )}
+            </div>
+            <div
+              style={{
+                position: "absolute",
+                top: "45%",
+                left: "46.9%",
+                height: "17%",
+              }}
+            >
+              {playerState.fence_array[28] === 1 && (
+                <img
+                  src={farm_fence_row}
+                  alt="fence28"
+                  style={{ width: '100%', height: '100%'}}
+                />
+              )}
+            </div>
+            <div
+              style={{
+                position: "absolute",
+                top: "45%",
+                left: "58.1%",
+                height: "17%",
+              }}
+            >
+              {playerState.fence_array[29] === 1 && (
+                <img
+                  src={farm_fence_row}
+                  alt="fence29"
+                  style={{ width: '100%', height: '100%'}}
+                />
+              )}
+            </div>
+            <div
+              style={{
+                position: "absolute",
+                top: "61.8%",
+                left: "14.5%",
+                width: "10%",
+              }}
+            >
+              {playerState.fence_array[30] === 1 && (
+                <img
+                  src={farm_fence_col}
+                  alt="fence30"
+                  style={{ width: '100%', height: '100%'}}
+                />
+              )}
+            </div>
+            <div
+              style={{
+                position: "absolute",
+                top: "61.8%",
+                left: "25.5%",
+                width: "10%",
+              }}
+            >
+              {playerState.fence_array[31] === 1 && (
+                <img
+                  src={farm_fence_col}
+                  alt="fence31"
+                  style={{ width: '100%', height: '100%'}}
+                />
+              )}
+            </div>
+            <div
+              style={{
+                position: "absolute",
+                top: "61.8%",
+                left: "37%",
+                width: "10%",
+              }}
+            >
+              {playerState.fence_array[32] === 1 && (
+                <img
+                  src={farm_fence_col}
+                  alt="fence32"
+                  style={{ width: '100%', height: '100%' }}
+                />
+              )}
+            </div>
+            <div
+              style={{
+                position: "absolute",
+                top: "61.8%",
+                left: "48%",
+                width: "10%",
+              }}
+            >
+              {playerState.fence_array[33] === 1 && (
+                <img
+                  src={farm_fence_col}
+                  alt="fence33"
+                  style={{ width: '100%', height: '100%'}}
+                />
+              )}
+            </div>
+            <div
+              style={{
+                position: "absolute",
+                top: "5%",
+                left: "1.8%",
+                height: "17%",
+              }}
+            ></div>
           </div>
           <div
             style={{
@@ -530,7 +1208,7 @@ const PrivateBoard = ({ onClose, nickname, index, isChange }) => {
                     }}
                   >
                     <img
-                      src="/private_board_images/herb_yellow.svg"
+                      src="/private_board_images/grain.svg"
                       alt="grain"
                       style={{ width: "100%", height: "100%" }}
                     />
@@ -559,7 +1237,7 @@ const PrivateBoard = ({ onClose, nickname, index, isChange }) => {
                     }}
                   >
                     <img
-                      src="/private_board_images/coin.svg"
+                      src="/private_board_images/vegetable.svg"
                       alt="vegetable"
                       style={{ width: "100%", height: "100%" }}
                     />
@@ -637,7 +1315,7 @@ const PrivateBoard = ({ onClose, nickname, index, isChange }) => {
                         <img src="/private_board_images/sheep.svg" alt="sheep" style={{ width: "100%", height: "100%"}}/>
                       </div>
                       <div style={{ position: "relative", width: "100%", height: "100%", textAlign: 'center', fontWeight: 'bold', fontSize: '2.5vw', lineHeight: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                        {playerState.wild_boar}
+                        {playerState.pig}
                       </div>
                       <div style={{ position: "relative", width: "100%", height: "100%" }}>
                         <img src="/private_board_images/pig.svg" alt="wild_boar" style={{ width: "100%", height: "100%" }}/>
@@ -646,7 +1324,7 @@ const PrivateBoard = ({ onClose, nickname, index, isChange }) => {
                         {playerState.cattle}
                       </div>
                       <div style={{ position: "relative", width: "100%", height: "100%" }}>
-                        <img src="/private_board_images/bull.svg" alt="cattle" style={{ width: "100%", height: "100%" }}/>
+                        <img src="/private_board_images/cattle.svg" alt="cattle" style={{ width: "100%", height: "100%" }}/>
                       </div>  
                       <div style={{ position: "relative", width: "100%", height: "100%", textAlign: 'center', fontWeight: 'bold', fontSize: '2.5vw', lineHeight: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                       </div>
@@ -712,7 +1390,7 @@ const PrivateBoard = ({ onClose, nickname, index, isChange }) => {
                     fontWeight: "bold",
                   }}
                 >
-                  <span>{playerState.fences.length}</span>
+                  <span>{playerState.fences}</span>
                   <span>/15</span>
                 </div>
                 <div
@@ -751,7 +1429,7 @@ const PrivateBoard = ({ onClose, nickname, index, isChange }) => {
                   }}
                 >
                   <img
-                    src={house}
+                    src={houseImage}
                     alt="house"
                     style={{ width: "100%", height: "100%" }}
                   />
@@ -825,6 +1503,7 @@ const PrivateBoard = ({ onClose, nickname, index, isChange }) => {
                   key={index}
                   src={card}
                   alt={`job card ${index + 1}`}
+                  onError={handleImageError}
                   style={{
                     width: "100%",
                     height: "auto",
@@ -832,6 +1511,7 @@ const PrivateBoard = ({ onClose, nickname, index, isChange }) => {
                     cursor: "pointer",
                     transition: "transform 0.2s",
                   }}
+                  
                 />
               ))}
             </div>
@@ -891,6 +1571,7 @@ const PrivateBoard = ({ onClose, nickname, index, isChange }) => {
                   key={index}
                   src={card}
                   alt={`facility card ${index + 1}`}
+                  onError={handleImageError}
                   style={{
                     width: "100%",
                     height: "auto",
