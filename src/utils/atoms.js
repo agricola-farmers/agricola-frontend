@@ -3,19 +3,19 @@ import { atom, selector } from 'recoil';
 export const BoardState = atom({
   key: 'BoardState',
   default: {
-    bush_1: 0,
-    bush_2: 0,
-    clay_mine: 0,
-    traveling_theater: 0,
-    dirt_mine: 0,
-    forest: 0,
-    reed: 0,
-    fishing: 0,
+    bush_1: 1,
+    bush_2: 2,
+    clay_mine: 2,
+    traveling_theater: 1,
+    dirt_mine: 1,
+    forest: 3,
+    reed: 1,
+    fishing: 1,
   },
 });
 
 export const FieldCardState = atom({
-  key: 'BoardState',
+  key: 'FieldCardState',
   default: {
     round1: { front: true },
     round2: { front: false },
@@ -45,7 +45,7 @@ export const player1State = atom({
     isActive: false,
     family_member: 2,
     stables: 0,
-    fences: [],
+    fences: 0,
     fence_array: [
       0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
       0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -57,7 +57,7 @@ export const player1State = atom({
     grain: 0,
     vegetable: 0,
     sheep: 0,
-    wild_boar: 0,
+    pig: 0,
     cattle: 0,
     house: 2,
     hut: [{}],
@@ -99,7 +99,7 @@ export const player2State = atom({
     isActive: false,
     family_member: 2,
     stables: 0,
-    fences: [],
+    fences: 0,
     fence_array: [
       0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
       0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -111,7 +111,7 @@ export const player2State = atom({
     grain: 0,
     vegetable: 0,
     sheep: 0,
-    wild_boar: 0,
+    pig: 0,
     cattle: 0,
     house: 2,
     hut: [{}],
@@ -153,7 +153,7 @@ export const player3State = atom({
     isActive: false,
     family_member: 2,
     stables: 0,
-    fences: [],
+    fences: 0,
     fence_array: [
       0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
       0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -165,7 +165,7 @@ export const player3State = atom({
     grain: 0,
     vegetable: 0,
     sheep: 0,
-    wild_boar: 0,
+    pig: 0,
     cattle: 0,
     house: 2,
     hut: [{}],
@@ -207,7 +207,7 @@ export const player4State = atom({
     isActive: false,
     family_member: 2,
     stables: 0,
-    fences: [],
+    fences: 0,
     fence_array: [
       0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
       0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -219,7 +219,7 @@ export const player4State = atom({
     grain: 0,
     vegetable: 0,
     sheep: 0,
-    wild_boar: 0,
+    pig: 0,
     cattle: 0,
     house: 2,
     hut: [{}],
@@ -253,11 +253,6 @@ export const player4State = atom({
       14: { field: 0 },
     },
   },
-});
-
-export const myNicknameState = atom({
-  key: 'myNicknameState',
-  default: '',
 });
 
 export const playersPositionState = atom({
@@ -570,7 +565,7 @@ export const newBoardState = atom({
 });
 
 export const NewFieldCardState = atom({
-  key: 'BoardState',
+  key: 'NewFieldCardState',
   default: {
     round1: { front: true, stone: 0 },
     round2: { front: true, stone: 0 },
@@ -586,10 +581,8 @@ export const NewFieldCardState = atom({
     round12: { front: true, stone: 0 },
     round13: { front: true, stone: 0 },
     round14: { front: true, stone: 0 },
-
   },
 });
-
 
 export const onceClickState = atom({
   key: 'onceClickState',
