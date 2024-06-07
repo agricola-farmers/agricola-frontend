@@ -16,8 +16,8 @@
     padding: 20px;
     border-radius: 16px;
     position: relative;
-    width: 80%;
-    height: 80%;
+    width: 100%;
+    height: 90%;
     max-width: 1500px;
     text-align: center;
   }
@@ -25,8 +25,9 @@
   .modalBody {
     position:relative;
     top: 70px;
+    width: 100%;
     flex-direction: column;
-    padding-right: 10%;
+    padding-right: 15%;
     max-height: fit-content;
   }
   
@@ -43,6 +44,14 @@
     border-radius: 8px;
     cursor: pointer;
   }
+
+  .facilityCard {
+    border: 2px solid transparent;
+  }
+
+  .facilityCard.selected {
+    border: 2px solid #FFD700;
+  }
   
   .closeButton {
     position: absolute;
@@ -53,5 +62,18 @@
     width: 60px;
     height: 60px;
     border: none;
+    cursor: pointer;
+  }
+
+  .selectButton {
+    background-color: #E7B376;
+    border: none;
+    border-radius: 8px;
+    position:absolute;
+    bottom: 40px;
+    right: 650px;
+    width: 240px; 
+    height: 65px; 
+    font-size: 40px;
     cursor: pointer;
   }
