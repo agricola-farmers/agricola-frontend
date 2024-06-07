@@ -19,6 +19,7 @@ export default function Play() {
   const [currentTurnIndex, setCurrentTurnIndex] = useState(2);
   const [timer, setTimer] = useState(60);
   const [turnCount, setTurnCount] = useState(0);
+  const [animal, setAnimal] = useState(0);
 
   useEffect(() => {
     if (roomNumber && socket) {
@@ -64,10 +65,12 @@ export default function Play() {
   }, []);
 
 
-  const ShowPrivate = (nickname, isChange) => {
+  const ShowPrivate = (nickname, isChange, animal) => {
     setSelectedNickname(nickname);
     setisChange(isChange);
     setShowPrivateBoard(true);
+    setAnimal(animal);
+    console.log(animal);
   };
 
   const handleEndTurn = () => {
@@ -92,6 +95,7 @@ export default function Play() {
           nickname={selectedNickname}
           index={players.indexOf(selectedNickname)}
           isChange={IsChange}
+          animal = {animal}
         />
       ) : (
         <>

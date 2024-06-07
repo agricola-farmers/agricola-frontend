@@ -256,6 +256,8 @@ export const itemNumberSelector = selector({
       ...currentNumbers,
       ...newValue,
     });
+  }
+});
 
 
 export const new_PlayersState = atom({
@@ -361,7 +363,7 @@ export const new_Player3State = atom({
     stables: 0,
     fence_array: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 1, 0, 1, 0, 0, 0, 0, 1, 0, 1, 0, 1, 1, 1, 1, 1],
     fences: 14,
-    wood: 7,
+    wood: 8,
     clay: 8,
     stone: 1,
     reed: 4,
