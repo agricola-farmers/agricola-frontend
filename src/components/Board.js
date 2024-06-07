@@ -83,10 +83,22 @@ export const Board = ({ playerIndex, isClickable, ShowPrivate, nicknames }) => {
       setIsFacilityModalOpen(false);
     } else if (selectedItem) {
       if (selectedItem === '숲') {
-        setPlayerState((prevState) => ({
-          ...prevState,
-          wood: prevState.wood + 3,
-        }));
+        if(newBoard.forest == 0){
+          setPlayerState((prevState) => ({
+            ...prevState,
+            wood: prevState.wood + 3,
+          }));
+        }
+        else{
+          setPlayerState((prevState) => ({
+            ...prevState,
+            wood: prevState.wood + newBoard.forest + 3,
+          }));
+          setNewBoard((prevState) => ({
+            ...prevState,
+            forest: 0,
+          }));
+        }
         const newPositions = [...playersPosition];
         newPositions[index] = [...newPositions[index], 'forest'];
         setPlayersPosition(newPositions);
@@ -115,12 +127,46 @@ export const Board = ({ playerIndex, isClickable, ShowPrivate, nicknames }) => {
         setSelectedItem('직업 카드');
       }
       else if (selectedItem === '점토 채굴장') {
-        setPlayerState((prevState) => ({
-          ...prevState,
-          clay: prevState.clay + 2,
-        }));
+        if(newBoard.clay_mine == 0){
+          setPlayerState((prevState) => ({
+            ...prevState,
+            clay: prevState.clay + 2,
+          }));
+        }
+        else{
+          setPlayerState((prevState) => ({
+            ...prevState,
+            clay: prevState.clay + newBoard.clay_mine + 2,
+          }));
+          setNewBoard((prevState) => ({
+            ...prevState,
+            clay_mine: 0,
+          }));
+        }
         const newPositions = [...playersPosition];
         newPositions[index] = [...newPositions[index], 'clay_mine'];
+        setPlayersPosition(newPositions);
+        setOnceClick(false);
+      }
+      else if (selectedItem === '덤블') {
+        if(newBoard.bush_1 == 0){
+          setPlayerState((prevState) => ({
+            ...prevState,
+            wood: prevState.wood + 1,
+          }));
+        }
+        else{
+          setPlayerState((prevState) => ({
+            ...prevState,
+            wood: prevState.wood + newBoard.bush_1 + 1,
+          }));
+          setNewBoard((prevState) => ({
+            ...prevState,
+            bush_1: 0,
+          }));
+        }
+        const newPositions = [...playersPosition];
+        newPositions[index] = [...newPositions[index], 'bush'];
         setPlayersPosition(newPositions);
         setOnceClick(false);
       }
@@ -134,13 +180,123 @@ export const Board = ({ playerIndex, isClickable, ShowPrivate, nicknames }) => {
         setPlayersPosition(newPositions);
         setOnceClick(false);
       }
-      else if (selectedItem === '수풀') {
+      else if (selectedItem === '곡식 종자') {
         setPlayerState((prevState) => ({
           ...prevState,
-          wood: prevState.wood + 2,
+          grain: prevState.grain + 1,
         }));
         const newPositions = [...playersPosition];
+        newPositions[index] = [...newPositions[index], 'grain_seed'];
+        setPlayersPosition(newPositions);
+        setOnceClick(false);
+      }
+      else if (selectedItem === '수풀') {
+        if(newBoard.bush_2 == 0){
+          setPlayerState((prevState) => ({
+            ...prevState,
+            wood: prevState.wood + 2,
+          }));
+        }
+        else{
+          setPlayerState((prevState) => ({
+            ...prevState,
+            wood: prevState.wood + newBoard.bush_2 + 2,
+          }));
+          setNewBoard((prevState) => ({
+            ...prevState,
+            bush_2: 0,
+          }));
+        }
+        const newPositions = [...playersPosition];
         newPositions[index] = [...newPositions[index], 'boscage'];
+        setPlayersPosition(newPositions);
+        setOnceClick(false);
+      }
+      else if (selectedItem === '유랑 극단') {
+        if(newBoard.traveling_theater == 0){
+          setPlayerState((prevState) => ({
+            ...prevState,
+            food: prevState.food + 1,
+          }));
+        }
+        else{
+          setPlayerState((prevState) => ({
+            ...prevState,
+            food: prevState.food + newBoard.traveling_theater + 1,
+          }));
+          setNewBoard((prevState) => ({
+            ...prevState,
+            traveling_theater: 0,
+          }));
+        }
+        const newPositions = [...playersPosition];
+        newPositions[index] = [...newPositions[index], 'traveling_theater'];
+        setPlayersPosition(newPositions);
+        setOnceClick(false);
+      }
+      else if (selectedItem === '갈대') {
+        if(newBoard.reed == 0){
+          setPlayerState((prevState) => ({
+            ...prevState,
+            reed: prevState.reed + 1,
+          }));
+        }
+        else{
+          setPlayerState((prevState) => ({
+            ...prevState,
+            reed: prevState.reed + newBoard.reed + 1,
+          }));
+          setNewBoard((prevState) => ({
+            ...prevState,
+            reed: 0,
+          }));
+        }
+        const newPositions = [...playersPosition];
+        newPositions[index] = [...newPositions[index], 'reed_field'];
+        setPlayersPosition(newPositions);
+        setOnceClick(false);
+      }
+      else if (selectedItem === '낚시') {
+        if(newBoard.fishing == 0){
+          setPlayerState((prevState) => ({
+            ...prevState,
+            food: prevState.food + 1,
+          }));
+        }
+        else{
+          setPlayerState((prevState) => ({
+            ...prevState,
+            food: prevState.food + newBoard.fishing + 1,
+          }));
+          setNewBoard((prevState) => ({
+            ...prevState,
+            fishing: 0,
+          }));
+        }
+        const newPositions = [...playersPosition];
+        newPositions[index] = [...newPositions[index], 'fishing'];
+        setPlayersPosition(newPositions);
+        setOnceClick(false);
+      }
+      else if (selectedItem === '흙 채굴장') {
+        if(newBoard.dirt_mine == 0){
+          setPlayerState((prevState) => ({
+            ...prevState,
+            clay: prevState.clay + 1,
+          }));
+        }
+        else{
+          setPlayerState((prevState) => ({
+            ...prevState,
+            clay: prevState.clay + newBoard.dirt_mine + 1,
+          }));
+          setNewBoard((prevState) => ({
+            ...prevState,
+            dirt_mine: 0,
+          }));
+        }
+        const newPositions = [...playersPosition];
+        newPositions[index] = [...newPositions[index], 'dirt_mine'];
         setPlayersPosition(newPositions);
         setOnceClick(false);
       }
@@ -148,16 +304,75 @@ export const Board = ({ playerIndex, isClickable, ShowPrivate, nicknames }) => {
         setPlayerState((prevState) => ({
           ...prevState,
         }));
-        ShowPrivate(nicknames[index], true);
+        ShowPrivate(nicknames[index], true, 0);
         const newPositions = [...playersPosition];
         newPositions[index] = [...newPositions[index], 'farmland'];
         setPlayersPosition(newPositions);
         setOnceClick(false);
       }
-      else if (selectedItem === '화합 장소') {
+      else if (selectedItem === '화합 장소') { // 플레이어 아이콘이 안생김
         setSelectedFacilityCard(facility);
         setIsFacilityCardModalOpen(false);
         setSelectedItem('보조 설비');
+        const newPositions = [...playersPosition];
+        newPositions[index] = [...newPositions[index], 'meeting_place'];
+        setPlayersPosition(newPositions);
+      }
+      else if (selectedItem === '집 개조') {
+        setPlayerState((prevState) => {
+          let count = 0;
+          const updatedFieldState = Object.fromEntries(
+            Object.entries(prevState.fieldState).map(([key, value]) => {
+              if (value.field === 2) {
+                count++;
+                return [key, { ...value, field: 3 }];
+              }
+              return [key, value];
+            })
+          );
+      
+          return {
+            ...prevState,
+            fieldState: updatedFieldState,
+            clay: prevState.clay - count,
+            reed: prevState.reed - 1,
+          };
+        });
+        ShowPrivate(nicknames[index], false, 0);
+        const newPositions = [...playersPosition];
+        newPositions[index] = [...newPositions[index], '집 개조'];
+        setPlayersPosition(newPositions);
+        setOnceClick(false);
+      }
+      else if (selectedItem === '급한 가족 늘리기') {
+        const newPositions = [...playersPosition];
+        newPositions[index] = [...newPositions[index], '급한 가족 늘리기'];
+        setPlayersPosition(newPositions);
+        setOnceClick(false);
+      }
+      else if (selectedItem === '돼지 시장') {
+        ShowPrivate(nicknames[index], true, 1);
+        const newPositions = [...playersPosition];
+        newPositions[index] = [...newPositions[index], '돼지 시장'];
+        setPlayersPosition(newPositions);
+        setOnceClick(false);
+      }
+      else if (selectedItem === '소 시장') {
+        ShowPrivate(nicknames[index], true, 3);
+        const newPositions = [...playersPosition];
+        newPositions[index] = [...newPositions[index], '소 시장'];
+        setPlayersPosition(newPositions);
+        setOnceClick(false);
+      }
+      else if (selectedItem === '채소 종자') {
+        setPlayerState((prevState) => ({
+          ...prevState,
+          vegetable: prevState.vegetable + 1,
+        }));
+        const newPositions = [...playersPosition];
+        newPositions[index] = [...newPositions[index], '채소 종자'];
+        setPlayersPosition(newPositions);
+        setOnceClick(false);
       }
       handleCloseModal();
     }
@@ -219,8 +434,18 @@ export const Board = ({ playerIndex, isClickable, ShowPrivate, nicknames }) => {
       {/* top */}
       <div className={styles.container}>
         <div className={styles.section2}>
-          <SectionImage ratio={50} image="bush" onClick={() => handleClick('덤불')} />
+          <SectionImage ratio={50} image="bush" onClick={() => handleClick('덤블')} />
           <SectionImage ratio={50} image="boscage" onClick={() => handleClick('수풀')} />
+          {playersPosition[index].includes('bush') && (
+            <img
+              src={playerImages[index]}
+              alt="Player Icon"
+              className={styles.playerIconbush}
+              style={{
+                zIndex: 5,
+              }}
+            />
+          )}
           {playersPosition[index].includes('boscage') && (
             <img
               src={playerImages[index]}
@@ -279,6 +504,26 @@ export const Board = ({ playerIndex, isClickable, ShowPrivate, nicknames }) => {
           <SectionImage ratio={33} image="reed_field" onClick={() => handleClick('갈대')} />
           <SectionImage ratio={33} image="fishing" onClick={() => handleClick('낚시')} />
           <SectionImage ratio={33} image="main_facility" onClick={() => handleClick('주요 설비')} />
+          {playersPosition[index].includes('reed_field') && (
+            <img
+              src={playerImages[index]}
+              alt="Player Icon"
+              className={styles.playerIconReed_field}
+              style={{
+                zIndex: 5,
+              }}
+            />
+          )}
+          {playersPosition[index].includes('fishing') && (
+            <img
+              src={playerImages[index]}
+              alt="Player Icon"
+              className={styles.playerIconFishing}
+              style={{
+                zIndex: 5,
+              }}
+            />
+          )}
           {newBoard.reed > 0 && (
             <><img
               src={"/private_board_images/stone_2.svg"}
@@ -356,6 +601,16 @@ export const Board = ({ playerIndex, isClickable, ShowPrivate, nicknames }) => {
               }}
             />
           )}
+          {playersPosition[index].includes('traveling_theater') && (
+            <img
+              src={playerImages[index]}
+              alt="Player Icon"
+              className={styles.playerIcontraveling_theater}
+              style={{
+                zIndex: 5,
+              }}
+            />
+          )}
           {newBoard.clay_mine > 0 && (
             <><img
               src={"/private_board_images/gold.svg"}
@@ -411,6 +666,26 @@ export const Board = ({ playerIndex, isClickable, ShowPrivate, nicknames }) => {
               }}
             /> 
           )}
+          {playersPosition[index].includes('dirt_mine') && (
+            <img
+              src={playerImages[index]}
+              alt="Player Icon"
+              className={styles.playerIcondirt_mine}
+              style={{
+                zIndex: 5,
+              }}
+            /> 
+          )}
+          {playersPosition[index].includes('grain_seed') && (
+            <img
+              src={playerImages[index]}
+              alt="Player Icon"
+              className={styles.playerIconGrain_seed}
+              style={{
+                zIndex: 5,
+              }}
+            /> 
+          )}
           {newBoard.dirt_mine > 0 && (
             <><img
               src={"/private_board_images/gold.svg"}
@@ -433,19 +708,49 @@ export const Board = ({ playerIndex, isClickable, ShowPrivate, nicknames }) => {
           )}
         </div>
         <div className={styles.roundCard}>
-          <SectionImage ratio={100} image={getImageForRound(5, newFieldCard.round5.front)} stone={newFieldCard.round5.stone} />
+          <SectionImage ratio={100} image={getImageForRound(5, newFieldCard.round5.front)} stone={newFieldCard.round5.stone}/>
         </div>
         <div className={styles.roundCard}>
-          <SectionImage ratio={100} image={getImageForRound(6, newFieldCard.round6.front)} stone={newFieldCard.round6.stone} />
+          <SectionImage ratio={100} image={getImageForRound(6, newFieldCard.round6.front)} stone={newFieldCard.round6.stone} onClick={() => handleClick('집 개조')}/>
+          {playersPosition[index].includes('집 개조') && (
+            <img
+              src={playerImages[index]}
+              alt="Player Icon"
+              className={styles.playerIconHouseFix}
+              style={{
+                zIndex: 5,
+              }}
+            />
+          )}
         </div>
         <div className={styles.roundCard}>
           <SectionImage ratio={100} image={getImageForRound(7, newFieldCard.round7.front)} stone={newFieldCard.round7.stone}/>
         </div>
         <div className={styles.roundCard}>
-          <SectionImage ratio={100} image={getImageForRound(8, newFieldCard.round8.front)} stone={newFieldCard.round8.stone}/>
+          <SectionImage ratio={100} image={getImageForRound(8, newFieldCard.round8.front)} stone={newFieldCard.round8.stone} onClick={() => handleClick('돼지 시장')}/>
+          {playersPosition[index].includes('돼지 시장') && (
+            <img
+              src={playerImages[index]}
+              alt="Player Icon"
+              className={styles.playerIconPigMarket}
+              style={{
+                zIndex: 5,
+              }}
+            />
+          )}
         </div>
         <div className={styles.roundCard}>
-          <SectionImage ratio={100} image={getImageForRound(9, newFieldCard.round9.front)} stone={newFieldCard.round9.stone}/>
+          <SectionImage ratio={100} image={getImageForRound(9, newFieldCard.round9.front)} stone={newFieldCard.round9.stone} onClick={() => handleClick('채소 종자')}/>
+          {playersPosition[index].includes('채소 종자') && (
+            <img
+              src={playerImages[index]}
+              alt="Player Icon"
+              className={styles.playerIconVegetableSeed}
+              style={{
+                zIndex: 5,
+              }}
+            />
+          )}
         </div>
         <div className={styles.section3}>
           <SectionImage ratio={33} image="tutoring1" onClick={() => handleClick('교습1')} />
@@ -495,6 +800,16 @@ export const Board = ({ playerIndex, isClickable, ShowPrivate, nicknames }) => {
               }}
             />
           )}
+          {playersPosition[index].includes('meeting_place') && (
+            <img
+              src={playerImages[index]}
+              alt="Player Icon"
+              className={styles.playerIconMeeting_place}
+              style={{
+                zIndex: 5,
+              }}
+            />
+          )}
           {newBoard.forest > 0 && (
             <><img
               src={"/private_board_images/wood.svg"}
@@ -517,13 +832,33 @@ export const Board = ({ playerIndex, isClickable, ShowPrivate, nicknames }) => {
           )}
         </div>
         <div className={styles.roundCard}>
-          <SectionImage ratio={100} image={getImageForRound(10, newFieldCard.round10.front)} stone={newFieldCard.round10.stone} />
+          <SectionImage ratio={100} image={getImageForRound(10, newFieldCard.round10.front)} stone={newFieldCard.round10.stone} onClick={() => handleClick('소 시장')}/>
+          {playersPosition[index].includes('소 시장') && (
+            <img
+              src={playerImages[index]}
+              alt="Player Icon"
+              className={styles.playerIconCattleMarket}
+              style={{
+                zIndex: 5,
+              }}
+            />
+          )}
         </div>
         <div className={styles.roundCard}>
           <SectionImage ratio={100} image={getImageForRound(11, newFieldCard.round11.front)} stone={newFieldCard.round11.stone}/>
         </div>
         <div className={styles.roundCard}>
-          <SectionImage ratio={100} image={getImageForRound(12, newFieldCard.round12.front)} stone={newFieldCard.round12.stone}/>
+          <SectionImage ratio={100} image={getImageForRound(12, newFieldCard.round12.front)} stone={newFieldCard.round12.stone} onClick={() => handleClick('급한 가족 늘리기')}/>
+          {playersPosition[index].includes('급한 가족 늘리기') && (
+            <img
+              src={playerImages[index]}
+              alt="Player Icon"
+              className={styles.playerIconRapidFamily}
+              style={{
+                zIndex: 5,
+              }}
+            />
+          )}
         </div>
         <div className={styles.roundCard}>
           <SectionImage ratio={100} image={getImageForRound(13, newFieldCard.round13.front)} stone={newFieldCard.round13.stone}/>
@@ -554,13 +889,6 @@ export const Board = ({ playerIndex, isClickable, ShowPrivate, nicknames }) => {
                 onError={(e) => e.target.style.display = 'none'} // 이미지가 없을 경우 숨기기
               />
             ))}
-            {Array.from({ length: 7 - playerState.job.length }).map((_, index) => (
-              <div
-                key={`job_empty_${index}`}
-                className={styles.cardImage}
-                style={{ background: 'none' }} // 빈 공간을 표시
-              />
-            ))}
           </div>
         </div>
         {/* 보조 설비 */}
@@ -581,13 +909,6 @@ export const Board = ({ playerIndex, isClickable, ShowPrivate, nicknames }) => {
                 alt={`facility card ${index + 1}`}
                 className={styles.cardImage}
                 onError={(e) => e.target.style.display = 'none'} // 이미지가 없을 경우 숨기기
-              />
-            ))}
-            {Array.from({ length: 7 - playerState.facility.length }).map((_, index) => (
-              <div
-                key={`facility_empty_${index}`}
-                className={styles.cardImage}
-                style={{ background: 'none' }} // 빈 공간을 표시
               />
             ))}
           </div>

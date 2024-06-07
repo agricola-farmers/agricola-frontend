@@ -125,6 +125,15 @@
   left: 80%;     
 }
 
+.playerIconMeeting_place{
+  position: absolute;
+  width: 20%; 
+  height: 20%; 
+  z-index: 5;
+  top: 40%;   
+  left: 80%;     
+}
+
 .playerIcontutoring1{
   position: absolute;
   width: 20%; 
@@ -170,12 +179,48 @@
   left: 80%; 
 }
 
+.playerIconbush{
+  position: absolute;
+  width: 20%; 
+  height: 20%; 
+  z-index: 5;
+  top: 30%;   
+  left: 80%;
+}
+
 .playerIconboscage{
   position: absolute;
   width: 20%; 
   height: 20%; 
   z-index: 5;
   top: 80%;   
+  left: 80%;     
+}
+
+.playerIcontraveling_theater{
+  position: absolute;
+  width: 20%; 
+  height: 20%; 
+  z-index: 5;
+  top: 82%;   
+  left: 80%;  
+}
+
+.playerIconGrain_seed{
+  position: absolute;
+  width: 20%; 
+  height: 20%; 
+  z-index: 5;
+  top: 80%;   
+  left: 80%;     
+}
+
+.playerIcondirt_mine{
+  position: absolute;
+  width: 20%; 
+  height: 20%; 
+  z-index: 5;
+  top: 18%;   
   left: 80%;     
 }
 
@@ -186,4 +231,66 @@
   z-index: 5;
   top: 85%;   
   left: 80%;     
+}
+
+.playerIconHouseFix{
+  position: absolute;
+  width: 4%; 
+  height: 4%;
+  top: 50%;   
+  left: 42%;     
+}
+
+.playerIconReed_field{
+  position: absolute;
+  width: 20%; 
+  height: 20%; 
+  z-index: 5;
+  top: 18%;   
+  left: 80%;     
+}
+
+.playerIconFishing{
+  position: absolute;
+  width: 20%; 
+  height: 20%; 
+  z-index: 5;
+  top: 50%;   
+  left: 80%;    
+}
+
+.playerIconRapidFamily{
+  position: absolute;
+  width: 7%; 
+  height: 7%; 
+  z-index: 5;
+  top: 71%;   
+  left: 51%;     
+}
+
+.playerIconPigMarket{
+  position: absolute;
+  width: 7%; 
+  height: 7%; 
+  z-index: 5;
+  top: 45%;   
+  left: 62%;     
+}
+
+.playerIconCattleMarket{
+  position: absolute;
+  width: 7%; 
+  height: 7%; 
+  z-index: 5;
+  top: 71%;   
+  left: 29%;     
+}
+
+.playerIconVegetableSeed{
+  position: absolute;
+  width: 7%; 
+  height: 7%; 
+  z-index: 5;
+  top: 45%;   
+  left: 73%;    
 }

@@ -6,7 +6,7 @@ import { new_Player1State, new_Player2State, new_Player3State, new_Player4State 
 import JobCardModal from "./JobCardModal";
 import FacilityCardModal from "./FacilityCardModal";
 
-const PrivateBoard = ({ onClose, nickname, index, isChange }) => {
+const PrivateBoard = ({ onClose, nickname, index, isChange, animal }) => {
   const router = useRouter();
   const { playerIndex } = router.query;
   const [isJobModalOpen, setIsJobModalOpen] = useState(false);
@@ -80,6 +80,42 @@ const PrivateBoard = ({ onClose, nickname, index, isChange }) => {
     console.log(card);
     setIsFacilityModalOpen(false);
   };
+
+  const handleGridClick = (forest_index) => {
+    if (cardchange) {
+      setPlayerState((prevState) => {
+        const updatedFieldState = { ...prevState.fieldState };
+  
+        if (animal === 0) {
+          // field 상태 업데이트
+          updatedFieldState[forest_index] = {
+            ...updatedFieldState[forest_index],
+            field: (updatedFieldState[forest_index].field + 1) % 4,
+          };
+        } else {
+          const animalKey = animal === 1 ? 'pig' : animal === 2 ? 'sheep' : 'cattle';
+          // animal 상태 업데이트
+          updatedFieldState[forest_index] = {
+            ...updatedFieldState[forest_index],
+            [animalKey]: (updatedFieldState[forest_index][animalKey] || 0) + 1,
+          };
+          // playerState의 동물 수 업데이트
+          return {
+            ...prevState,
+            fieldState: updatedFieldState,
+            [animalKey]: prevState[animalKey] + 1,
+          };
+        }
+  
+        return {
+          ...prevState,
+          fieldState: updatedFieldState,
+        };
+      });
+      setcardchange(false);
+    }
+  };
+  
 
   const renderFieldBackground = (field) => {
     switch (field) {
@@ -205,6 +241,7 @@ const PrivateBoard = ({ onClose, nickname, index, isChange }) => {
           width: "100%",
           height: "100%",
         }}
+        onClick={() => handleGridClick(forest_index)}
       >
         <img
           src={renderFieldBackground(state.field)}
