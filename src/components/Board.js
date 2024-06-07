@@ -1,6 +1,12 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
-import { player1State, player2State, player3State, player4State, playersPositionState } from '@/utils/atoms';
+import {
+  player1State,
+  player2State,
+  player3State,
+  player4State,
+  playersPositionState,
+} from '@/utils/atoms';
 import { SocketContext } from '@/context/socket';
 import styles from '../styles/Board.module.css';
 import { SectionImage } from './SectionImage';
@@ -12,22 +18,43 @@ export const Board = ({ playerIndex, isClickable, ShowPrivate, nicknames }) => {
   const socket = useContext(SocketContext);
   const index = parseInt(playerIndex, 10);
   if (isNaN(index) || index < 0 || index > 3) {
-    throw new Error("Invalid player index");
+    throw new Error('Invalid player index');
   }
 
   const playerStates = [player1State, player2State, player3State, player4State];
   const [playerState, setPlayerState] = useRecoilState(playerStates[index]);
-  const [playersPosition, setPlayersPosition] = useRecoilState(playersPositionState);
+  const playerValue = useRecoilValue(playerStates[index]);
+  const [playersPosition, setPlayersPosition] =
+    useRecoilState(playersPositionState);
   const [selectedItem, setSelectedItem] = useState(null);
   const [isJobModalOpen, setIsJobModalOpen] = useState(false);
   const [isFacilityModalOpen, setIsFacilityModalOpen] = useState(false);
   const [onceClick, setOnceClick] = useState(isClickable); // 보드판 한 번씩만 클릭 가능하도록 설정해야함!!
 
+  const [playerState1, setPlayerState1] = useRecoilState(player1State);
+  const [playerState2, setPlayerState2] = useRecoilState(player3State);
+  const [playerState3, setPlayerState3] = useRecoilState(player3State);
+  const [playerState4, setPlayerState4] = useRecoilState(player4State);
+
+  useEffect(() => {
+    socket.on('sync', (data) => {
+      if (data.playerNumber == 0) {
+        setPlayerState1(data.state);
+      } else if (data.playerNumber == 1) {
+        setPlayerState2(data.state);
+      } else if (data.playerNumber == 2) {
+        setPlayerState3(data.state);
+      } else if (data.playerNumber == 3) {
+        setPlayerState4(data.state);
+      }
+    });
+  }, []);
+
   const playerImages = [
-    "/private_board_images/orange_player.svg",
-    "/private_board_images/red_player.svg",
-    "/private_board_images/green_player.svg",
-    "/private_board_images/blue_player.svg",
+    '/private_board_images/orange_player.svg',
+    '/private_board_images/red_player.svg',
+    '/private_board_images/green_player.svg',
+    '/private_board_images/blue_player.svg',
   ];
 
   const handleClick = (item) => {
@@ -35,8 +62,7 @@ export const Board = ({ playerIndex, isClickable, ShowPrivate, nicknames }) => {
       setIsJobModalOpen(true);
     } else if (item === '보조 설비') {
       setIsFacilityModalOpen(true);
-    } 
-    else{ 
+    } else {
       if (isClickable) {
         console.log(nicknames[index]);
         setSelectedItem(item);
@@ -60,8 +86,7 @@ export const Board = ({ playerIndex, isClickable, ShowPrivate, nicknames }) => {
       newPositions[index] = [...newPositions[index], 'forest'];
       setPlayersPosition(newPositions);
       setOnceClick(false);
-    }
-    else if (selectedItem === '교습1') {
+    } else if (selectedItem === '교습1') {
       setPlayerState((prevState) => ({
         ...prevState,
         food: prevState.food + 1,
@@ -70,8 +95,7 @@ export const Board = ({ playerIndex, isClickable, ShowPrivate, nicknames }) => {
       newPositions[index] = [...newPositions[index], 'tutoring1'];
       setPlayersPosition(newPositions);
       setOnceClick(false);
-    }
-    else if (selectedItem === '자원 시장') {
+    } else if (selectedItem === '자원 시장') {
       setPlayerState((prevState) => ({
         ...prevState,
         food: prevState.food + 1,
@@ -82,8 +106,7 @@ export const Board = ({ playerIndex, isClickable, ShowPrivate, nicknames }) => {
       newPositions[index] = [...newPositions[index], 'Resource_market'];
       setPlayersPosition(newPositions);
       setOnceClick(false);
-    }
-    else if (selectedItem === '교습2') {
+    } else if (selectedItem === '교습2') {
       setPlayerState((prevState) => ({
         ...prevState,
         food: prevState.food + 1,
@@ -92,8 +115,7 @@ export const Board = ({ playerIndex, isClickable, ShowPrivate, nicknames }) => {
       newPositions[index] = [...newPositions[index], 'tutoring2'];
       setPlayersPosition(newPositions);
       setOnceClick(false);
-    }
-    else if (selectedItem === '점토 채굴장') {
+    } else if (selectedItem === '점토 채굴장') {
       setPlayerState((prevState) => ({
         ...prevState,
         clay: prevState.clay + 2,
@@ -102,8 +124,7 @@ export const Board = ({ playerIndex, isClickable, ShowPrivate, nicknames }) => {
       newPositions[index] = [...newPositions[index], 'clay_mine'];
       setPlayersPosition(newPositions);
       setOnceClick(false);
-    }
-    else if (selectedItem === '날품 팔이') {
+    } else if (selectedItem === '날품 팔이') {
       setPlayerState((prevState) => ({
         ...prevState,
         food: prevState.food + 2,
@@ -112,18 +133,24 @@ export const Board = ({ playerIndex, isClickable, ShowPrivate, nicknames }) => {
       newPositions[index] = [...newPositions[index], 'delivery_seller'];
       setPlayersPosition(newPositions);
       setOnceClick(false);
-    }
-    else if (selectedItem === '수풀') {
-      setPlayerState((prevState) => ({
-        ...prevState,
-        wood: prevState.wood + 2,
-      }));
+    } else if (selectedItem === '수풀') {
+      const newPlayerState = {
+        ...playerState, // 기존 playerState 복사
+        wood: playerState.wood + 2, // wood 값 업데이트
+      };
+
+      setPlayerState(newPlayerState);
+
+      socket.emit('sync', {
+        playerNumber: index,
+        state: newPlayerState,
+      });
+
       const newPositions = [...playersPosition];
       newPositions[index] = [...newPositions[index], 'boscage'];
       setPlayersPosition(newPositions);
       setOnceClick(false);
-    }
-    else if (selectedItem === '농지') {
+    } else if (selectedItem === '농지') {
       setPlayerState((prevState) => ({
         ...prevState,
       }));
@@ -141,7 +168,11 @@ export const Board = ({ playerIndex, isClickable, ShowPrivate, nicknames }) => {
   }, [playersPosition]);
 
   const handleJobCardClick = (card) => {
-    if (playerIndex === 3 && card === "../../../images/player4_jobcard/jobcard_5.png" && isClickable) { 
+    if (
+      playerIndex === 3 &&
+      card === '../../../images/player4_jobcard/jobcard_5.png' &&
+      isClickable
+    ) {
       console.log(card);
       setPlayerState((prevState) => {
         const updatedJob = prevState.job.filter((jobCard) => jobCard !== card);
@@ -153,7 +184,11 @@ export const Board = ({ playerIndex, isClickable, ShowPrivate, nicknames }) => {
         };
       });
     }
-    if (playerIndex === 1 && card === "../../../images/player2_jobcard/jobcard_7.png" && isClickable) { 
+    if (
+      playerIndex === 1 &&
+      card === '../../../images/player2_jobcard/jobcard_7.png' &&
+      isClickable
+    ) {
       console.log(card);
       setPlayerState((prevState) => {
         const updatedJob = prevState.job.filter((jobCard) => jobCard !== card);
@@ -173,14 +208,21 @@ export const Board = ({ playerIndex, isClickable, ShowPrivate, nicknames }) => {
     setIsFacilityModalOpen(false);
   };
 
-
   return (
     <div style={{ width: '80%' }}>
       {/* top */}
       <div className={styles.container}>
         <div className={styles.section2}>
-          <SectionImage ratio={50} image="bush" onClick={() => handleClick('덤불')} />
-          <SectionImage ratio={50} image="boscage" onClick={() => handleClick('수풀')} />
+          <SectionImage
+            ratio={50}
+            image="bush"
+            onClick={() => handleClick('덤불')}
+          />
+          <SectionImage
+            ratio={50}
+            image="boscage"
+            onClick={() => handleClick('수풀')}
+          />
           {playersPosition[index].includes('boscage') && (
             <img
               src={playerImages[index]}
@@ -193,15 +235,31 @@ export const Board = ({ playerIndex, isClickable, ShowPrivate, nicknames }) => {
           )}
         </div>
         <div className={styles.section1}>
-          <SectionImage ratio={100} image="farm_expansion" onClick={() => handleClick('농장 확장')} />
+          <SectionImage
+            ratio={100}
+            image="farm_expansion"
+            onClick={() => handleClick('농장 확장')}
+          />
         </div>
         <div className={styles.section3}>
-          <SectionImage ratio={33} image="reed_field" onClick={() => handleClick('갈대')} />
-          <SectionImage ratio={33} image="fishing" onClick={() => handleClick('낚시')} />
-          <SectionImage ratio={33} image="main_facility" onClick={() => handleClick('주 설비')} />
+          <SectionImage
+            ratio={33}
+            image="reed_field"
+            onClick={() => handleClick('갈대')}
+          />
+          <SectionImage
+            ratio={33}
+            image="fishing"
+            onClick={() => handleClick('낚시')}
+          />
+          <SectionImage
+            ratio={33}
+            image="main_facility"
+            onClick={() => handleClick('주 설비')}
+          />
         </div>
         <div className={styles.roundCard}>
-          <SectionImage ratio={100} image="round_1"/>
+          <SectionImage ratio={100} image="round_1" />
         </div>
         <div className={styles.roundCard}>
           <SectionImage ratio={100} image="round2" />
@@ -213,9 +271,21 @@ export const Board = ({ playerIndex, isClickable, ShowPrivate, nicknames }) => {
           <SectionImage ratio={100} image="round4" />
         </div>
         <div className={styles.section3}>
-          <SectionImage ratio={33} image="Resource_market" onClick={() => handleClick('자원 시장')} />
-          <SectionImage ratio={33} image="clay_mine" onClick={() => handleClick('점토 채굴장')} />
-          <SectionImage ratio={33} image="traveling_theater" onClick={() => handleClick('유랑 극단')} />
+          <SectionImage
+            ratio={33}
+            image="Resource_market"
+            onClick={() => handleClick('자원 시장')}
+          />
+          <SectionImage
+            ratio={33}
+            image="clay_mine"
+            onClick={() => handleClick('점토 채굴장')}
+          />
+          <SectionImage
+            ratio={33}
+            image="traveling_theater"
+            onClick={() => handleClick('유랑 극단')}
+          />
           {playersPosition[index].includes('Resource_market') && (
             <img
               src={playerImages[index]}
@@ -238,9 +308,21 @@ export const Board = ({ playerIndex, isClickable, ShowPrivate, nicknames }) => {
           )}
         </div>
         <div className={styles.section3}>
-          <SectionImage ratio={33} image="dirt_mine" onClick={() => handleClick('흙 채굴장')} />
-          <SectionImage ratio={33} image="delivery_seller" onClick={() => handleClick('날품 팔이')} />
-          <SectionImage ratio={33} image="grain_seed" onClick={() => handleClick('곡식 종자')} />
+          <SectionImage
+            ratio={33}
+            image="dirt_mine"
+            onClick={() => handleClick('흙 채굴장')}
+          />
+          <SectionImage
+            ratio={33}
+            image="delivery_seller"
+            onClick={() => handleClick('날품 팔이')}
+          />
+          <SectionImage
+            ratio={33}
+            image="grain_seed"
+            onClick={() => handleClick('곡식 종자')}
+          />
           {playersPosition[index].includes('delivery_seller') && (
             <img
               src={playerImages[index]}
@@ -249,7 +331,7 @@ export const Board = ({ playerIndex, isClickable, ShowPrivate, nicknames }) => {
               style={{
                 zIndex: 5,
               }}
-            /> 
+            />
           )}
         </div>
         <div className={styles.roundCard}>
@@ -268,9 +350,21 @@ export const Board = ({ playerIndex, isClickable, ShowPrivate, nicknames }) => {
           <SectionImage ratio={100} image="round9" />
         </div>
         <div className={styles.section3}>
-          <SectionImage ratio={33} image="tutoring1" onClick={() => handleClick('교습1')} />
-          <SectionImage ratio={33} image="tutoring2" onClick={() => handleClick('교습2')} />
-          <SectionImage ratio={33} image="farmland" onClick={() => handleClick('농지')} />
+          <SectionImage
+            ratio={33}
+            image="tutoring1"
+            onClick={() => handleClick('교습1')}
+          />
+          <SectionImage
+            ratio={33}
+            image="tutoring2"
+            onClick={() => handleClick('교습2')}
+          />
+          <SectionImage
+            ratio={33}
+            image="farmland"
+            onClick={() => handleClick('농지')}
+          />
           {playersPosition[index].includes('tutoring1') && (
             <img
               src={playerImages[index]}
@@ -303,8 +397,16 @@ export const Board = ({ playerIndex, isClickable, ShowPrivate, nicknames }) => {
           )}
         </div>
         <div className={styles.section2} style={{ position: 'relative' }}>
-          <SectionImage ratio={50} image="meeting_place" onClick={() => handleClick('화합 장소')} />
-          <SectionImage ratio={50} image="forest" onClick={() => handleClick('숲')} />
+          <SectionImage
+            ratio={50}
+            image="meeting_place"
+            onClick={() => handleClick('화합 장소')}
+          />
+          <SectionImage
+            ratio={50}
+            image="forest"
+            onClick={() => handleClick('숲')}
+          />
           {playersPosition[index].includes('forest') && (
             <img
               src={playerImages[index]}
@@ -335,7 +437,10 @@ export const Board = ({ playerIndex, isClickable, ShowPrivate, nicknames }) => {
       {/* bottom */}
       <div className={styles.bottomContainer}>
         {/* 직업 카드 */}
-        <div className={styles.cardBoard} onClick={() => handleClick('직업 카드')}>
+        <div
+          className={styles.cardBoard}
+          onClick={() => handleClick('직업 카드')}
+        >
           <div className={styles.jobHeader}>
             <img
               src="/private_board_images/wood_board.svg"
@@ -345,7 +450,7 @@ export const Board = ({ playerIndex, isClickable, ShowPrivate, nicknames }) => {
             <div className={styles.jobText}>직업 카드</div>
           </div>
           <div className={styles.cardContainer}>
-            {playerState.job.map((card, index) => (
+            {playerValue.job.map((card, index) => (
               <img
                 key={index}
                 src={card}
@@ -356,7 +461,10 @@ export const Board = ({ playerIndex, isClickable, ShowPrivate, nicknames }) => {
           </div>
         </div>
         {/* 보조 설비 */}
-        <div className={styles.cardBoard} onClick={() => handleClick('보조 설비')}>
+        <div
+          className={styles.cardBoard}
+          onClick={() => handleClick('보조 설비')}
+        >
           <div className={styles.facilityHeader}>
             <img
               src="/private_board_images/wood_board.svg"
@@ -366,7 +474,7 @@ export const Board = ({ playerIndex, isClickable, ShowPrivate, nicknames }) => {
             <div className={styles.facilityText}>보조 설비</div>
           </div>
           <div className={styles.cardContainer}>
-            {playerState.facility.map((card, index) => (
+            {playerValue.facility.map((card, index) => (
               <img
                 key={index}
                 src={card}
@@ -378,18 +486,22 @@ export const Board = ({ playerIndex, isClickable, ShowPrivate, nicknames }) => {
         </div>
       </div>
       {selectedItem && (
-        <Modal item={selectedItem} onClose={handleCloseModal} onSelect={handleSelectItem} />
+        <Modal
+          item={selectedItem}
+          onClose={handleCloseModal}
+          onSelect={handleSelectItem}
+        />
       )}
       <JobCardModal
         isOpen={isJobModalOpen}
         onClose={handleCloseModal}
-        cards={playerState.job}
+        cards={playerValue.job}
         onCardClick={handleJobCardClick}
       />
       <FacilityCardModal
         isOpen={isFacilityModalOpen}
         onClose={handleCloseModal}
-        cards={playerState.facility}
+        cards={playerValue.facility}
         onCardClick={handleFacilityCardClick}
       />
     </div>

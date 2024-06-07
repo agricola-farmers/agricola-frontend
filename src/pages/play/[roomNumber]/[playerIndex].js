@@ -40,29 +40,30 @@ export default function Play() {
   }, [roomNumber, socket]);
 
   useEffect(() => {
-    const turnOrder = [2, 3, 0, 1];
+    socket.on('endTurn', (data) => {
+      setCurrentTurnIndex(data.currentTurnIndex);
+      setTurnCount(data.turnCount);
+      setTimer(60);
+    });
 
     const interval = setInterval(() => {
       setTimer((prevTimer) => {
-        if (prevTimer === 1) {
-          setCurrentTurnIndex((prevIndex) => {
-            const nextIndex = (prevIndex + 1) % turnOrder.length;
-            return nextIndex;
-          });
-          setTurnCount((prevCount) => {
-            const newCount = prevCount + 1;
-            console.log(`Turn Count: ${newCount}`);
-            return newCount;
-          });
-          return 60; // 타이머 리셋
+        if (prevTimer === 0) {
+          return 60;
         }
         return prevTimer - 1;
       });
-    }, 1000); // 1초마다 업데이트
+    }, 1000);
 
-    // return () => clearInterval(interval);
+    return () => clearInterval(interval);
   }, []);
 
+  useEffect(() => {
+    if (timer === 0) {
+      handleEndTurn();
+      // test();
+    }
+  }, [timer]);
 
   const ShowPrivate = (nickname, isChange) => {
     setSelectedNickname(nickname);
@@ -70,7 +71,7 @@ export default function Play() {
     setShowPrivateBoard(true);
   };
 
-  const handleEndTurn = () => {
+  const test = () => {
     setCurrentTurnIndex((prevIndex) => {
       const nextIndex = (prevIndex + 1) % players.length;
       return nextIndex;
@@ -80,9 +81,11 @@ export default function Play() {
       console.log(`Turn Count: ${newCount}`);
       return newCount;
     });
-    setTimer(60); // 타이머 리셋
   };
 
+  const handleEndTurn = () => {
+    socket.emit('endTurn', { currentTurnIndex, turnCount });
+  };
 
   return (
     <div className={styles.container}>
@@ -95,8 +98,19 @@ export default function Play() {
         />
       ) : (
         <>
-          <Board playerIndex={parseInt(playerIndex, 10)} isClickable={parseInt(playerIndex, 10) === currentTurnIndex} ShowPrivate={ShowPrivate} nicknames={players}/>
-          <SideBar ShowPrivate={ShowPrivate} nicknames={players} timer={timer} currentTurn={currentTurnIndex} onEndTurn={handleEndTurn}/>
+          <Board
+            playerIndex={parseInt(playerIndex, 10)}
+            isClickable={parseInt(playerIndex, 10) === currentTurnIndex}
+            ShowPrivate={ShowPrivate}
+            nicknames={players}
+          />
+          <SideBar
+            ShowPrivate={ShowPrivate}
+            nicknames={players}
+            timer={timer}
+            currentTurn={currentTurnIndex}
+            onEndTurn={handleEndTurn}
+          />
         </>
       )}
     </div>
