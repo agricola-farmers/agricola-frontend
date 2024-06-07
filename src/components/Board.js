@@ -13,13 +13,15 @@ export const Board = ({ playerIndex, isClickable, ShowPrivate, nicknames }) => {
   const socket = useContext(SocketContext);
   const index = parseInt(playerIndex, 10);
   if (isNaN(index) || index < 0 || index > 3) {
-    throw new Error("Invalid player index");
+    throw new Error('Invalid player index');
   }
 
   //const playerStates = [player1State, player2State, player3State, player4State];
   const playerStates = [new_Player1State, new_Player2State, new_Player3State, new_Player4State];
   const [playerState, setPlayerState] = useRecoilState(playerStates[index]);
-  const [playersPosition, setPlayersPosition] = useRecoilState(playersPositionState);
+  const playerValue = useRecoilValue(playerStates[index]);
+  const [playersPosition, setPlayersPosition] =
+    useRecoilState(playersPositionState);
   const [selectedItem, setSelectedItem] = useState(null);
   const [isJobModalOpen, setIsJobModalOpen] = useState(false);
   const [isFacilityModalOpen, setIsFacilityModalOpen] = useState(false);
@@ -37,11 +39,30 @@ export const Board = ({ playerIndex, isClickable, ShowPrivate, nicknames }) => {
   const [newBoard, setNewBoard] = useRecoilState(newBoardState);
   const [newFieldCard, setNewFieldCard] = useRecoilState(NewFieldCardState);
 
+  const [playerState1, setPlayerState1] = useRecoilState(player1State);
+  const [playerState2, setPlayerState2] = useRecoilState(player3State);
+  const [playerState3, setPlayerState3] = useRecoilState(player3State);
+  const [playerState4, setPlayerState4] = useRecoilState(player4State);
+
+  useEffect(() => {
+    socket.on('sync', (data) => {
+      if (data.playerNumber == 0) {
+        setPlayerState1(data.state);
+      } else if (data.playerNumber == 1) {
+        setPlayerState2(data.state);
+      } else if (data.playerNumber == 2) {
+        setPlayerState3(data.state);
+      } else if (data.playerNumber == 3) {
+        setPlayerState4(data.state);
+      }
+    });
+  }, []);
+
   const playerImages = [
-    "/private_board_images/orange_player.svg",
-    "/private_board_images/red_player.svg",
-    "/private_board_images/green_player.svg",
-    "/private_board_images/blue_player.svg",
+    '/private_board_images/orange_player.svg',
+    '/private_board_images/red_player.svg',
+    '/private_board_images/green_player.svg',
+    '/private_board_images/blue_player.svg',
   ];
 
   const handleClick = (item) => {
@@ -383,7 +404,11 @@ export const Board = ({ playerIndex, isClickable, ShowPrivate, nicknames }) => {
   }, [playersPosition]);
 
   const handleJobCardClick = (card) => {
-    if (playerIndex === 3 && card === "../../../images/player4_jobcard/jobcard_5.png" && isClickable) { 
+    if (
+      playerIndex === 3 &&
+      card === '../../../images/player4_jobcard/jobcard_5.png' &&
+      isClickable
+    ) {
       console.log(card);
       setPlayerState((prevState) => {
         const updatedJob = prevState.job.filter((jobCard) => jobCard !== card);
@@ -395,7 +420,11 @@ export const Board = ({ playerIndex, isClickable, ShowPrivate, nicknames }) => {
         };
       });
     }
-    if (playerIndex === 1 && card === "../../../images/player2_jobcard/jobcard_7.png" && isClickable) { 
+    if (
+      playerIndex === 1 &&
+      card === '../../../images/player2_jobcard/jobcard_7.png' &&
+      isClickable
+    ) {
       console.log(card);
       setPlayerState((prevState) => {
         const updatedJob = prevState.job.filter((jobCard) => jobCard !== card);
@@ -428,7 +457,6 @@ export const Board = ({ playerIndex, isClickable, ShowPrivate, nicknames }) => {
     return front ? `round_${round}` : `round${round}`;
   };
   
-
   return (
     <div style={{ width: '80%' }}>
       {/* top */}
@@ -498,7 +526,11 @@ export const Board = ({ playerIndex, isClickable, ShowPrivate, nicknames }) => {
           )}
         </div>
         <div className={styles.section1}>
-          <SectionImage ratio={100} image="farm_expansion" onClick={() => handleClick('농장 확장')} />
+          <SectionImage
+            ratio={100}
+            image="farm_expansion"
+            onClick={() => handleClick('농장 확장')}
+          />
         </div>
         <div className={styles.section3}>
           <SectionImage ratio={33} image="reed_field" onClick={() => handleClick('갈대')} />
@@ -578,9 +610,21 @@ export const Board = ({ playerIndex, isClickable, ShowPrivate, nicknames }) => {
           <SectionImage ratio={100} image={getImageForRound(4, newFieldCard.round4.front)} stone={newFieldCard.round4.stone} />
         </div>
         <div className={styles.section3}>
-          <SectionImage ratio={33} image="Resource_market" onClick={() => handleClick('자원 시장')} />
-          <SectionImage ratio={33} image="clay_mine" onClick={() => handleClick('점토 채굴장')} />
-          <SectionImage ratio={33} image="traveling_theater" onClick={() => handleClick('유랑 극단')} />
+          <SectionImage
+            ratio={33}
+            image="Resource_market"
+            onClick={() => handleClick('자원 시장')}
+          />
+          <SectionImage
+            ratio={33}
+            image="clay_mine"
+            onClick={() => handleClick('점토 채굴장')}
+          />
+          <SectionImage
+            ratio={33}
+            image="traveling_theater"
+            onClick={() => handleClick('유랑 극단')}
+          />
           {playersPosition[index].includes('Resource_market') && (
             <img
               src={playerImages[index]}
@@ -653,9 +697,21 @@ export const Board = ({ playerIndex, isClickable, ShowPrivate, nicknames }) => {
           )}
         </div>
         <div className={styles.section3}>
-          <SectionImage ratio={33} image="dirt_mine" onClick={() => handleClick('흙 채굴장')} />
-          <SectionImage ratio={33} image="delivery_seller" onClick={() => handleClick('날품 팔이')} />
-          <SectionImage ratio={33} image="grain_seed" onClick={() => handleClick('곡식 종자')} />
+          <SectionImage
+            ratio={33}
+            image="dirt_mine"
+            onClick={() => handleClick('흙 채굴장')}
+          />
+          <SectionImage
+            ratio={33}
+            image="delivery_seller"
+            onClick={() => handleClick('날품 팔이')}
+          />
+          <SectionImage
+            ratio={33}
+            image="grain_seed"
+            onClick={() => handleClick('곡식 종자')}
+          />
           {playersPosition[index].includes('delivery_seller') && (
             <img
               src={playerImages[index]}
@@ -664,7 +720,7 @@ export const Board = ({ playerIndex, isClickable, ShowPrivate, nicknames }) => {
               style={{
                 zIndex: 5,
               }}
-            /> 
+            />
           )}
           {playersPosition[index].includes('dirt_mine') && (
             <img
@@ -753,9 +809,21 @@ export const Board = ({ playerIndex, isClickable, ShowPrivate, nicknames }) => {
           )}
         </div>
         <div className={styles.section3}>
-          <SectionImage ratio={33} image="tutoring1" onClick={() => handleClick('교습1')} />
-          <SectionImage ratio={33} image="tutoring2" onClick={() => handleClick('교습2')} />
-          <SectionImage ratio={33} image="farmland" onClick={() => handleClick('농지')} />
+          <SectionImage
+            ratio={33}
+            image="tutoring1"
+            onClick={() => handleClick('교습1')}
+          />
+          <SectionImage
+            ratio={33}
+            image="tutoring2"
+            onClick={() => handleClick('교습2')}
+          />
+          <SectionImage
+            ratio={33}
+            image="farmland"
+            onClick={() => handleClick('농지')}
+          />
           {playersPosition[index].includes('tutoring1') && (
             <img
               src={playerImages[index]}
@@ -788,8 +856,16 @@ export const Board = ({ playerIndex, isClickable, ShowPrivate, nicknames }) => {
           )}
         </div>
         <div className={styles.section2} style={{ position: 'relative' }}>
-          <SectionImage ratio={50} image="meeting_place" onClick={() => handleClick('화합 장소')} />
-          <SectionImage ratio={50} image="forest" onClick={() => handleClick('숲')} />
+          <SectionImage
+            ratio={50}
+            image="meeting_place"
+            onClick={() => handleClick('화합 장소')}
+          />
+          <SectionImage
+            ratio={50}
+            image="forest"
+            onClick={() => handleClick('숲')}
+          />
           {playersPosition[index].includes('forest') && (
             <img
               src={playerImages[index]}
@@ -870,7 +946,10 @@ export const Board = ({ playerIndex, isClickable, ShowPrivate, nicknames }) => {
       {/* bottom */}
       <div className={styles.bottomContainer}>
         {/* 직업 카드 */}
-        <div className={styles.cardBoard} onClick={() => handleClick('직업 카드')}>
+        <div
+          className={styles.cardBoard}
+          onClick={() => handleClick('직업 카드')}
+        >
           <div className={styles.jobHeader}>
             <img
               src="/private_board_images/wood_board.svg"
@@ -892,7 +971,10 @@ export const Board = ({ playerIndex, isClickable, ShowPrivate, nicknames }) => {
           </div>
         </div>
         {/* 보조 설비 */}
-        <div className={styles.cardBoard} onClick={() => handleClick('보조 설비')}>
+        <div
+          className={styles.cardBoard}
+          onClick={() => handleClick('보조 설비')}
+        >
           <div className={styles.facilityHeader}>
             <img
               src="/private_board_images/wood_board.svg"
@@ -902,7 +984,7 @@ export const Board = ({ playerIndex, isClickable, ShowPrivate, nicknames }) => {
             <div className={styles.facilityText}>보조 설비</div>
           </div>
           <div className={styles.cardContainer}>
-            {playerState.facility.map((card, index) => (
+            {playerValue.facility.map((card, index) => (
               <img
                 key={index}
                 src={card}
@@ -923,7 +1005,7 @@ export const Board = ({ playerIndex, isClickable, ShowPrivate, nicknames }) => {
       <JobCardModal
         isOpen={isJobModalOpen}
         onClose={handleCloseModal}
-        cards={playerState.job}
+        cards={playerValue.job}
         onCardClick={handleJobCardClick}
       />
       <JobCardModal
