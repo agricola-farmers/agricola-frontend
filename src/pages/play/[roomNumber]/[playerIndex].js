@@ -16,7 +16,7 @@ export default function Play() {
   const [showPrivateBoard, setShowPrivateBoard] = useState(false);
   const [IsChange, setisChange] = useState(false);
   const [selectedNickname, setSelectedNickname] = useState('');
-  const [currentTurnIndex, setCurrentTurnIndex] = useState(2);
+  const [currentTurnIndex, setCurrentTurnIndex] = useState(0);
   const [timer, setTimer] = useState(60);
   const [turnCount, setTurnCount] = useState(0);
   const [animal, setAnimal] = useState(0);

@@ -6,13 +6,9 @@ import {
   player3State,
   player4State,
   playersPositionState,
-  newBoardState,
-  NewFieldCardState,
-  new_Player1State,
-  new_Player2State,
-  new_Player3State,
-  new_Player4State,
   onceClickState,
+  FieldCardState,
+  BoardState,
 } from '@/utils/atoms';
 import { SocketContext } from '@/context/socket';
 import styles from '../styles/Board.module.css';
@@ -29,13 +25,7 @@ export const Board = ({ playerIndex, isClickable, ShowPrivate, nicknames }) => {
     throw new Error('Invalid player index');
   }
 
-  //const playerStates = [player1State, player2State, player3State, player4State];
-  const playerStates = [
-    new_Player1State,
-    new_Player2State,
-    new_Player3State,
-    new_Player4State,
-  ];
+  const playerStates = [player1State, player2State, player3State, player4State];
   const [playerState, setPlayerState] = useRecoilState(playerStates[index]);
   const playerValue = useRecoilValue(playerStates[index]);
   const [playersPosition, setPlayersPosition] =
@@ -54,30 +44,51 @@ export const Board = ({ playerIndex, isClickable, ShowPrivate, nicknames }) => {
   const [selectedFacilityCard, setSelectedFacilityCard] = useState(null);
 
   const [onceClick, setOnceClick] = useRecoilState(onceClickState);
-  const [newBoard, setNewBoard] = useRecoilState(newBoardState);
-  const [newFieldCard, setNewFieldCard] = useRecoilState(NewFieldCardState);
+  const [board, setBoard] = useRecoilState(BoardState);
+  const [fieldCard, setFieldCard] = useRecoilState(FieldCardState);
 
-  const [playerState1, setPlayerState1] = useRecoilState(new_Player1State);
-  const [playerState2, setPlayerState2] = useRecoilState(new_Player2State);
-  const [playerState3, setPlayerState3] = useRecoilState(new_Player3State);
-  const [playerState4, setPlayerState4] = useRecoilState(new_Player4State);
-  const [changeBoardState, setChangeBoardState] = useRecoilState(newBoardState);
+  const [playerState1, setPlayerState1] = useRecoilState(player1State);
+  const [playerState2, setPlayerState2] = useRecoilState(player2State);
+  const [playerState3, setPlayerState3] = useRecoilState(player3State);
+  const [playerState4, setPlayerState4] = useRecoilState(player4State);
 
-  const bushPlayerIndex = playersPosition.findIndex(positionArray => positionArray.includes('bush'));
-  const forestPlayerIndex = playersPosition.findIndex(positionArray => positionArray.includes('forest'));
-  const resourcePlayerIndex = playersPosition.findIndex(positionArray => positionArray.includes('Resource_market'));
-  const clay_minePlayerIndex = playersPosition.findIndex(positionArray => positionArray.includes('clay_mine'));
-  const delivery_sellerPlayerIndex = playersPosition.findIndex(positionArray => positionArray.includes('delivery_seller'));
-  const grain_seedPlayerIndex = playersPosition.findIndex(positionArray => positionArray.includes('grain_seed'));
-  const boscagePlayerIndex = playersPosition.findIndex(positionArray => positionArray.includes('boscage'));
-  const traveling_theaterPlayerIndex = playersPosition.findIndex(positionArray => positionArray.includes('traveling_theater'));
-  const reed_fieldPlayerIndex = playersPosition.findIndex(positionArray => positionArray.includes('reed_field'));
-  const fishingPlayerIndex = playersPosition.findIndex(positionArray => positionArray.includes('fishing'));
-  const dirt_minePlayerIndex = playersPosition.findIndex(positionArray => positionArray.includes('dirt_mine'));
+  const bushPlayerIndex = playersPosition.findIndex((positionArray) =>
+    positionArray.includes('bush')
+  );
+  const forestPlayerIndex = playersPosition.findIndex((positionArray) =>
+    positionArray.includes('forest')
+  );
+  const resourcePlayerIndex = playersPosition.findIndex((positionArray) =>
+    positionArray.includes('Resource_market')
+  );
+  const clay_minePlayerIndex = playersPosition.findIndex((positionArray) =>
+    positionArray.includes('clay_mine')
+  );
+  const delivery_sellerPlayerIndex = playersPosition.findIndex(
+    (positionArray) => positionArray.includes('delivery_seller')
+  );
+  const grain_seedPlayerIndex = playersPosition.findIndex((positionArray) =>
+    positionArray.includes('grain_seed')
+  );
+  const boscagePlayerIndex = playersPosition.findIndex((positionArray) =>
+    positionArray.includes('boscage')
+  );
+  const traveling_theaterPlayerIndex = playersPosition.findIndex(
+    (positionArray) => positionArray.includes('traveling_theater')
+  );
+  const reed_fieldPlayerIndex = playersPosition.findIndex((positionArray) =>
+    positionArray.includes('reed_field')
+  );
+  const fishingPlayerIndex = playersPosition.findIndex((positionArray) =>
+    positionArray.includes('fishing')
+  );
+  const dirt_minePlayerIndex = playersPosition.findIndex((positionArray) =>
+    positionArray.includes('dirt_mine')
+  );
 
   useEffect(() => {
     socket.on('sync', (data) => {
-      setChangeBoardState(data.stateBoard);
+      setBoard(data.stateBoard);
       setPlayersPosition(data.position);
       if (data.playerNumber == 0) {
         setPlayerState1(data.state);
@@ -89,6 +100,7 @@ export const Board = ({ playerIndex, isClickable, ShowPrivate, nicknames }) => {
         setPlayerState4(data.state);
       }
     });
+    console.log(board, 'here!');
   }, []);
 
   const playerImages = [
@@ -146,34 +158,33 @@ export const Board = ({ playerIndex, isClickable, ShowPrivate, nicknames }) => {
       if (selectedItem === '숲') {
         const newPlayerState = {
           ...playerState, // 기존 playerState 복사
-          wood: playerState.wood + newBoard.forest,
+          wood: playerState.wood + board.forest,
         };
         setPlayerState(newPlayerState);
-        const changeBoardState = {
-          ...newBoard,
+
+        const newBoardState = {
+          ...board,
           forest: 0,
-        }
-        setChangeBoardState(changeBoardState);
+        };
+        setBoard(newBoardState);
 
         const newPositions = [...playersPosition];
         newPositions[index] = [...newPositions[index], 'forest'];
         setPlayersPosition(newPositions);
-          
+
         socket.emit('sync', {
           playerNumber: index,
           state: newPlayerState,
-          stateBoard: changeBoardState,
+          stateBoard: newBoardState,
           position: newPositions,
         });
-        
+
         setOnceClick(false);
-      }
-      else if (selectedItem === '교습1') {
+      } else if (selectedItem === '교습1') {
         setSelectedJobCard(item);
         setIsJobCardModalOpen(false);
         setSelectedItem('직업 카드');
-      }
-      else if (selectedItem === '자원 시장') {
+      } else if (selectedItem === '자원 시장') {
         const newPlayerState = {
           ...playerState, // 기존 playerState 복사
           food: playerState.food + 1,
@@ -185,69 +196,65 @@ export const Board = ({ playerIndex, isClickable, ShowPrivate, nicknames }) => {
         const newPositions = [...playersPosition];
         newPositions[index] = [...newPositions[index], 'Resource_market'];
         setPlayersPosition(newPositions);
-          
+
         socket.emit('sync', {
           playerNumber: index,
           state: newPlayerState,
-          stateBoard: changeBoardState,
+          stateBoard: board,
           position: newPositions,
         });
         setOnceClick(false);
-      }
-      else if (selectedItem === '교습2') {
+      } else if (selectedItem === '교습2') {
         setSelectedJobCard(item);
         setIsJobCardModalOpen(false);
         setSelectedItem('직업 카드');
-      }
-      else if (selectedItem === '점토 채굴장') {
+      } else if (selectedItem === '점토 채굴장') {
         const newPlayerState = {
           ...playerState, // 기존 playerState 복사
-          clay: playerState.clay + newBoard.clay_mine,
+          clay: playerState.clay + board.clay_mine,
         };
         setPlayerState(newPlayerState);
-        const changeBoardState = {
-          ...newBoard,
+        const newBoardState = {
+          ...board,
           clay_mine: 0,
-        }
-        setChangeBoardState(changeBoardState);
+        };
+        setBoard(newBoardState);
 
         const newPositions = [...playersPosition];
         newPositions[index] = [...newPositions[index], 'clay_mine'];
         setPlayersPosition(newPositions);
-          
+
         socket.emit('sync', {
           playerNumber: index,
           state: newPlayerState,
-          stateBoard: changeBoardState,
+          stateBoard: newBoardState,
           position: newPositions,
         });
         setOnceClick(false);
-      }
-      else if (selectedItem === '덤블') {
+      } else if (selectedItem === '덤블') {
         const newPlayerState = {
           ...playerState, // 기존 playerState 복사
-          wood: playerState.wood + newBoard.bush_1,
+          wood: playerState.wood + board.bush_1,
         };
         setPlayerState(newPlayerState);
-        const changeBoardState = {
-          ...newBoard,
+        const newBoardState = {
+          ...board,
           bush_1: 0,
-        }
-        setChangeBoardState(changeBoardState);
+        };
+        setBoard(newBoardState);
 
         const newPositions = [...playersPosition];
         newPositions[index] = [...newPositions[index], 'bush'];
         setPlayersPosition(newPositions);
-          
+
         socket.emit('sync', {
           playerNumber: index,
           state: newPlayerState,
-          stateBoard: changeBoardState,
+          stateBoard: newBoardState,
           position: newPositions,
         });
         setOnceClick(false);
-      }
-      else if (selectedItem === '날품 팔이') {
+      } else if (selectedItem === '날품 팔이') {
         const newPlayerState = {
           ...playerState, // 기존 playerState 복사
           food: playerState.food + 2,
@@ -257,16 +264,15 @@ export const Board = ({ playerIndex, isClickable, ShowPrivate, nicknames }) => {
         const newPositions = [...playersPosition];
         newPositions[index] = [...newPositions[index], 'delivery_seller'];
         setPlayersPosition(newPositions);
-          
+
         socket.emit('sync', {
           playerNumber: index,
           state: newPlayerState,
-          stateBoard: changeBoardState,
+          stateBoard: board,
           position: newPositions,
         });
         setOnceClick(false);
-      }
-      else if (selectedItem === '곡식 종자') {
+      } else if (selectedItem === '곡식 종자') {
         const newPlayerState = {
           ...playerState, // 기존 playerState 복사
           grain: playerState.grain + 1,
@@ -276,138 +282,130 @@ export const Board = ({ playerIndex, isClickable, ShowPrivate, nicknames }) => {
         const newPositions = [...playersPosition];
         newPositions[index] = [...newPositions[index], 'grain_seed'];
         setPlayersPosition(newPositions);
-          
+
         socket.emit('sync', {
           playerNumber: index,
           state: newPlayerState,
-          stateBoard: changeBoardState,
+          stateBoard: board,
           position: newPositions,
         });
         setOnceClick(false);
-      }
-      else if (selectedItem === '수풀') {
+      } else if (selectedItem === '수풀') {
         const newPlayerState = {
           ...playerState, // 기존 playerState 복사
-          wood: playerState.wood + newBoard.bush_2,
+          wood: playerState.wood + board.bush_2,
         };
         setPlayerState(newPlayerState);
-        const changeBoardState = {
-          ...newBoard,
+        const newBoardState = {
+          ...board,
           bush_2: 0,
-        }
-        setChangeBoardState(changeBoardState);
+        };
+        setBoard(newBoardState);
 
         const newPositions = [...playersPosition];
         newPositions[index] = [...newPositions[index], 'boscage'];
         setPlayersPosition(newPositions);
-          
+
         socket.emit('sync', {
           playerNumber: index,
           state: newPlayerState,
-          stateBoard: changeBoardState,
+          stateBoard: newBoardState,
           position: newPositions,
         });
         setOnceClick(false);
-      }
-      else if (selectedItem === '유랑 극단') {
-
+      } else if (selectedItem === '유랑 극단') {
         const newPlayerState = {
           ...playerState, // 기존 playerState 복사
-          food: playerState.food + newBoard.traveling_theater,
+          food: playerState.food + board.traveling_theater,
         };
         setPlayerState(newPlayerState);
-        const changeBoardState = {
-          ...newBoard,
+        const newBoardState = {
+          ...board,
           traveling_theater: 0,
-        }
-        setChangeBoardState(changeBoardState);
+        };
+        setBoard(newBoardState);
 
         const newPositions = [...playersPosition];
         newPositions[index] = [...newPositions[index], 'traveling_theater'];
         setPlayersPosition(newPositions);
-          
+
         socket.emit('sync', {
           playerNumber: index,
           state: newPlayerState,
-          stateBoard: changeBoardState,
+          stateBoard: newBoardState,
           position: newPositions,
         });
         setOnceClick(false);
-      }
-      else if (selectedItem === '갈대') {
+      } else if (selectedItem === '갈대') {
         const newPlayerState = {
           ...playerState, // 기존 playerState 복사
-          reed: playerState.reed + newBoard.reed,
+          reed: playerState.reed + board.reed,
         };
         setPlayerState(newPlayerState);
-        const changeBoardState = {
-          ...newBoard,
+        const newBoardState = {
+          ...board,
           reed: 0,
-        }
-        setChangeBoardState(changeBoardState);
+        };
+        setBoard(newBoardState);
 
         const newPositions = [...playersPosition];
         newPositions[index] = [...newPositions[index], 'reed_field'];
         setPlayersPosition(newPositions);
-          
+
         socket.emit('sync', {
           playerNumber: index,
           state: newPlayerState,
-          stateBoard: changeBoardState,
+          stateBoard: newBoardState,
           position: newPositions,
         });
         setOnceClick(false);
-      }
-      else if (selectedItem === '낚시') {
+      } else if (selectedItem === '낚시') {
         const newPlayerState = {
           ...playerState, // 기존 playerState 복사
-          food: playerState.food + newBoard.fishing,
+          food: playerState.food + board.fishing,
         };
         setPlayerState(newPlayerState);
-        const changeBoardState = {
-          ...newBoard,
+        const newBoardState = {
+          ...board,
           fishing: 0,
-        }
-        setChangeBoardState(changeBoardState);
+        };
+        setBoard(newBoardState);
 
         const newPositions = [...playersPosition];
         newPositions[index] = [...newPositions[index], 'fishing'];
         setPlayersPosition(newPositions);
-          
+
         socket.emit('sync', {
           playerNumber: index,
           state: newPlayerState,
-          stateBoard: changeBoardState,
+          stateBoard: newBoardState,
           position: newPositions,
         });
         setOnceClick(false);
-      }
-      else if (selectedItem === '흙 채굴장') {
-
+      } else if (selectedItem === '흙 채굴장') {
         const newPlayerState = {
           ...playerState, // 기존 playerState 복사
-          clay: playerState.clay + newBoard.dirt_mine,
+          clay: playerState.clay + board.dirt_mine,
         };
         setPlayerState(newPlayerState);
-        const changeBoardState = {
-          ...newBoard,
+        const newBoardState = {
+          ...board,
           dirt_mine: 0,
-        }
-        setChangeBoardState(changeBoardState);
+        };
+        setBoard(newBoardState);
 
         const newPositions = [...playersPosition];
         newPositions[index] = [...newPositions[index], 'dirt_mine'];
         setPlayersPosition(newPositions);
-          
+
         socket.emit('sync', {
           playerNumber: index,
           state: newPlayerState,
-          stateBoard: changeBoardState,
+          stateBoard: newBoardState,
           position: newPositions,
         });
         setOnceClick(false);
-      }
-      else if (selectedItem === '농지') {
+      } else if (selectedItem === '농지') {
         setPlayerState((prevState) => ({
           ...prevState,
         }));
@@ -416,16 +414,15 @@ export const Board = ({ playerIndex, isClickable, ShowPrivate, nicknames }) => {
         newPositions[index] = [...newPositions[index], 'farmland'];
         setPlayersPosition(newPositions);
         setOnceClick(false);
-      }
-      else if (selectedItem === '화합 장소') { // 플레이어 아이콘이 안생김
+      } else if (selectedItem === '화합 장소') {
+        // 플레이어 아이콘이 안생김
         setSelectedFacilityCard(facility);
         setIsFacilityCardModalOpen(false);
         setSelectedItem('보조 설비');
         const newPositions = [...playersPosition];
         newPositions[index] = [...newPositions[index], 'meeting_place'];
         setPlayersPosition(newPositions);
-      }
-      else if (selectedItem === '집 개조') {
+      } else if (selectedItem === '집 개조') {
         setPlayerState((prevState) => {
           let count = 0;
           const updatedFieldState = Object.fromEntries(
@@ -437,7 +434,7 @@ export const Board = ({ playerIndex, isClickable, ShowPrivate, nicknames }) => {
               return [key, value];
             })
           );
-      
+
           return {
             ...prevState,
             fieldState: updatedFieldState,
@@ -450,28 +447,24 @@ export const Board = ({ playerIndex, isClickable, ShowPrivate, nicknames }) => {
         newPositions[index] = [...newPositions[index], '집 개조'];
         setPlayersPosition(newPositions);
         setOnceClick(false);
-      }
-      else if (selectedItem === '급한 가족 늘리기') {
+      } else if (selectedItem === '급한 가족 늘리기') {
         const newPositions = [...playersPosition];
         newPositions[index] = [...newPositions[index], '급한 가족 늘리기'];
         setPlayersPosition(newPositions);
         setOnceClick(false);
-      }
-      else if (selectedItem === '돼지 시장') {
+      } else if (selectedItem === '돼지 시장') {
         ShowPrivate(nicknames[index], true, 1);
         const newPositions = [...playersPosition];
         newPositions[index] = [...newPositions[index], '돼지 시장'];
         setPlayersPosition(newPositions);
         setOnceClick(false);
-      }
-      else if (selectedItem === '소 시장') {
+      } else if (selectedItem === '소 시장') {
         ShowPrivate(nicknames[index], true, 3);
         const newPositions = [...playersPosition];
         newPositions[index] = [...newPositions[index], '소 시장'];
         setPlayersPosition(newPositions);
         setOnceClick(false);
-      }
-      else if (selectedItem === '채소 종자') {
+      } else if (selectedItem === '채소 종자') {
         setPlayerState((prevState) => ({
           ...prevState,
           vegetable: prevState.vegetable + 1,
@@ -538,18 +531,26 @@ export const Board = ({ playerIndex, isClickable, ShowPrivate, nicknames }) => {
     setIsJobCardModalOpen(false);
     setSelectedJobCard(card);
     setSelectedItem('직업 카드');
-  }
+  };
   const getImageForRound = (round, front) => {
     return front ? `round_${round}` : `round${round}`;
   };
-  
+
   return (
     <div style={{ width: '80%' }}>
       {/* top */}
       <div className={styles.container}>
         <div className={styles.section2}>
-          <SectionImage ratio={50} image="bush" onClick={() => handleClick('덤블')} />
-          <SectionImage ratio={50} image="boscage" onClick={() => handleClick('수풀')} />
+          <SectionImage
+            ratio={50}
+            image="bush"
+            onClick={() => handleClick('덤블')}
+          />
+          <SectionImage
+            ratio={50}
+            image="boscage"
+            onClick={() => handleClick('수풀')}
+          />
           {bushPlayerIndex !== -1 && (
             <img
               src={playerImages[bushPlayerIndex]}
@@ -570,45 +571,59 @@ export const Board = ({ playerIndex, isClickable, ShowPrivate, nicknames }) => {
               }}
             />
           )}
-          {newBoard.bush_1 > 0 && (
-            <><img
-              src={"/private_board_images/wood.svg"}
-              alt="Wood Icon"
-              style={{
-                position: 'absolute',
-                top: "17%",
-                left: "62%",
-                opacity: 0.7,
-                width: '20%',
-                height: '20%',
-              }} />
-              <span style={{
-                position: 'absolute',
-                color: 'black',
-                fontWeight: 'bold',
-                top: "22%",
-                left: "68%",
-              }}>{newBoard.bush_1}</span></>
+          {board.bush_1 > 0 && (
+            <>
+              <img
+                src={'/private_board_images/wood.svg'}
+                alt="Wood Icon"
+                style={{
+                  position: 'absolute',
+                  top: '17%',
+                  left: '62%',
+                  opacity: 0.7,
+                  width: '20%',
+                  height: '20%',
+                }}
+              />
+              <span
+                style={{
+                  position: 'absolute',
+                  color: 'black',
+                  fontWeight: 'bold',
+                  top: '22%',
+                  left: '68%',
+                }}
+              >
+                {board.bush_1}
+              </span>
+            </>
           )}
-          {newBoard.bush_2 > 0 && (
-            <><img
-              src={"/private_board_images/wood.svg"}
-              alt="Wood Icon"
-              style={{
-                position: 'absolute',
-                top: "67%",
-                left: "62%",
-                opacity: 0.7,
-                width: '20%',
-                height: '20%',
-              }} />
-              <span style={{
-                position: 'absolute',
-                color: 'black',
-                fontWeight: 'bold',
-                top: "72%",
-                left: "68%",
-              }}>{newBoard.bush_2}</span></>
+          {board.bush_2 > 0 && (
+            <>
+              <img
+                src={'/private_board_images/wood.svg'}
+                alt="Wood Icon"
+                style={{
+                  position: 'absolute',
+                  top: '67%',
+                  left: '62%',
+                  opacity: 0.7,
+                  width: '20%',
+                  height: '20%',
+                }}
+              />
+              <span
+                style={{
+                  position: 'absolute',
+                  color: 'black',
+                  fontWeight: 'bold',
+                  top: '72%',
+                  left: '68%',
+                }}
+              >
+                {board.bush_2}
+              </span>
+            </>
           )}
         </div>
         <div className={styles.section1}>
@@ -619,9 +634,21 @@ export const Board = ({ playerIndex, isClickable, ShowPrivate, nicknames }) => {
           />
         </div>
         <div className={styles.section3}>
-          <SectionImage ratio={33} image="reed_field" onClick={() => handleClick('갈대')} />
-          <SectionImage ratio={33} image="fishing" onClick={() => handleClick('낚시')} />
-          <SectionImage ratio={33} image="main_facility" onClick={() => handleClick('주요 설비')} />
+          <SectionImage
+            ratio={33}
+            image="reed_field"
+            onClick={() => handleClick('갈대')}
+          />
+          <SectionImage
+            ratio={33}
+            image="fishing"
+            onClick={() => handleClick('낚시')}
+          />
+          <SectionImage
+            ratio={33}
+            image="main_facility"
+            onClick={() => handleClick('주요 설비')}
+          />
           {reed_fieldPlayerIndex !== -1 && (
             <img
               src={playerImages[reed_fieldPlayerIndex]}
@@ -642,58 +669,88 @@ export const Board = ({ playerIndex, isClickable, ShowPrivate, nicknames }) => {
               }}
             />
           )}
-          {newBoard.reed > 0 && (
-            <><img
-              src={"/private_board_images/stone_2.svg"}
-              alt="Reed Icon"
-              style={{
-                position: 'absolute',
-                top: "8%",
-                left: "63%",
-                opacity: 0.7,
-                width: '20%',
-                height: '20%',
-              }} />
-              <span style={{
-                position: 'absolute',
-                color: 'black',
-                fontWeight: 'bold',
-                top: "13%",
-                left: "70%",
-              }}>{newBoard.reed}</span></>
+          {board.reed > 0 && (
+            <>
+              <img
+                src={'/private_board_images/stone_2.svg'}
+                alt="Reed Icon"
+                style={{
+                  position: 'absolute',
+                  top: '8%',
+                  left: '63%',
+                  opacity: 0.7,
+                  width: '20%',
+                  height: '20%',
+                }}
+              />
+              <span
+                style={{
+                  position: 'absolute',
+                  color: 'black',
+                  fontWeight: 'bold',
+                  top: '13%',
+                  left: '70%',
+                }}
+              >
+                {board.reed}
+              </span>
+            </>
           )}
-          {newBoard.fishing > 0 && (
-            <><img
-              src={"/private_board_images/coin_1.svg"}
-              alt="Food Icon"
-              style={{
-                position: 'absolute',
-                top: "40%",
-                left: "20%",
-                opacity: 0.7,
-                width: '20%',
-                height: '20%',
-              }} />
-              <span style={{
-                position: 'absolute',
-                color: 'black',
-                fontWeight: 'bold',
-                top: "46%",
-                left: "28%",
-              }}>{newBoard.fishing}</span></>
+          {board.fishing > 0 && (
+            <>
+              <img
+                src={'/private_board_images/coin_1.svg'}
+                alt="Food Icon"
+                style={{
+                  position: 'absolute',
+                  top: '40%',
+                  left: '20%',
+                  opacity: 0.7,
+                  width: '20%',
+                  height: '20%',
+                }}
+              />
+              <span
+                style={{
+                  position: 'absolute',
+                  color: 'black',
+                  fontWeight: 'bold',
+                  top: '46%',
+                  left: '28%',
+                }}
+              >
+                {board.fishing}
+              </span>
+            </>
           )}
         </div>
         <div className={styles.roundCard}>
-          <SectionImage ratio={100} image={getImageForRound(1, newFieldCard.round1.front)} stone={newFieldCard.round1.stone} />
+          <SectionImage
+            ratio={100}
+            image={getImageForRound(1, fieldCard.round1.front)}
+            stone={fieldCard.round1.stone}
+          />
         </div>
         <div className={styles.roundCard}>
-          <SectionImage ratio={100} image={getImageForRound(2, newFieldCard.round2.front)} stone={newFieldCard.round2.stone} />
+          <SectionImage
+            ratio={100}
+            image={getImageForRound(2, fieldCard.round2.front)}
+            stone={fieldCard.round2.stone}
+          />
         </div>
         <div className={styles.roundCard}>
-          <SectionImage ratio={100} image={getImageForRound(3, newFieldCard.round3.front)} stone={newFieldCard.round3.stone} />
+          <SectionImage
+            ratio={100}
+            image={getImageForRound(3, fieldCard.round3.front)}
+            stone={fieldCard.round3.stone}
+          />
         </div>
         <div className={styles.roundCard}>
-          <SectionImage ratio={100} image={getImageForRound(4, newFieldCard.round4.front)} stone={newFieldCard.round4.stone} />
+          <SectionImage
+            ratio={100}
+            image={getImageForRound(4, fieldCard.round4.front)}
+            stone={fieldCard.round4.stone}
+          />
         </div>
         <div className={styles.section3}>
           <SectionImage
@@ -741,45 +798,59 @@ export const Board = ({ playerIndex, isClickable, ShowPrivate, nicknames }) => {
               }}
             />
           )}
-          {newBoard.clay_mine > 0 && (
-            <><img
-              src={"/private_board_images/gold.svg"}
-              alt="Clay Icon"
-              style={{
-                position: 'absolute',
-                top: "42%",
-                left: "62%",
-                opacity: 0.7,
-                width: '20%',
-                height: '20%',
-              }} />
-              <span style={{
-                position: 'absolute',
-                color: 'black',
-                fontWeight: 'bold',
-                top: "47%",
-                left: "68%",
-              }}>{newBoard.clay_mine}</span></>
+          {board.clay_mine > 0 && (
+            <>
+              <img
+                src={'/private_board_images/gold.svg'}
+                alt="Clay Icon"
+                style={{
+                  position: 'absolute',
+                  top: '42%',
+                  left: '62%',
+                  opacity: 0.7,
+                  width: '20%',
+                  height: '20%',
+                }}
+              />
+              <span
+                style={{
+                  position: 'absolute',
+                  color: 'black',
+                  fontWeight: 'bold',
+                  top: '47%',
+                  left: '68%',
+                }}
+              >
+                {board.clay_mine}
+              </span>
+            </>
           )}
-          {newBoard.traveling_theater > 0 && (
-            <><img
-              src={"/private_board_images/coin_1.svg"}
-              alt="Food Icon"
-              style={{
-                position: 'absolute',
-                top: "74%",
-                left: "20%",
-                opacity: 0.7,
-                width: '20%',
-                height: '20%',
-              }} />
-              <span style={{
-                position: 'absolute',
-                color: 'black',
-                fontWeight: 'bold',
-                top: "80%",
-                left: "28%",
-              }}>{newBoard.traveling_theater}</span></>
+          {board.traveling_theater > 0 && (
+            <>
+              <img
+                src={'/private_board_images/coin_1.svg'}
+                alt="Food Icon"
+                style={{
+                  position: 'absolute',
+                  top: '74%',
+                  left: '20%',
+                  opacity: 0.7,
+                  width: '20%',
+                  height: '20%',
+                }}
+              />
+              <span
+                style={{
+                  position: 'absolute',
+                  color: 'black',
+                  fontWeight: 'bold',
+                  top: '80%',
+                  left: '28%',
+                }}
+              >
+                {board.traveling_theater}
+              </span>
+            </>
           )}
         </div>
         <div className={styles.section3}>
@@ -828,32 +899,48 @@ export const Board = ({ playerIndex, isClickable, ShowPrivate, nicknames }) => {
               }}
             />
           )}
-          {newBoard.dirt_mine > 0 && (
-            <><img
-              src={"/private_board_images/gold.svg"}
-              alt="Clay Icon"
-              style={{
-                position: 'absolute',
-                top: "8%",
-                left: "62%",
-                opacity: 0.7,
-                width: '20%',
-                height: '20%',
-              }} />
-              <span style={{
-                position: 'absolute',
-                color: 'black',
-                fontWeight: 'bold',
-                top: "14%",
-                left: "70%",
-              }}>{newBoard.dirt_mine}</span></>
+          {board.dirt_mine > 0 && (
+            <>
+              <img
+                src={'/private_board_images/gold.svg'}
+                alt="Clay Icon"
+                style={{
+                  position: 'absolute',
+                  top: '8%',
+                  left: '62%',
+                  opacity: 0.7,
+                  width: '20%',
+                  height: '20%',
+                }}
+              />
+              <span
+                style={{
+                  position: 'absolute',
+                  color: 'black',
+                  fontWeight: 'bold',
+                  top: '14%',
+                  left: '70%',
+                }}
+              >
+                {board.dirt_mine}
+              </span>
+            </>
           )}
         </div>
         <div className={styles.roundCard}>
-          <SectionImage ratio={100} image={getImageForRound(5, newFieldCard.round5.front)} stone={newFieldCard.round5.stone}/>
+          <SectionImage
+            ratio={100}
+            image={getImageForRound(5, fieldCard.round5.front)}
+            stone={fieldCard.round5.stone}
+          />
         </div>
         <div className={styles.roundCard}>
-          <SectionImage ratio={100} image={getImageForRound(6, newFieldCard.round6.front)} stone={newFieldCard.round6.stone} onClick={() => handleClick('집 개조')}/>
+          <SectionImage
+            ratio={100}
+            image={getImageForRound(6, fieldCard.round6.front)}
+            stone={fieldCard.round6.stone}
+            onClick={() => handleClick('집 개조')}
+          />
           {playersPosition[index].includes('집 개조') && (
             <img
               src={playerImages[index]}
@@ -866,10 +953,19 @@ export const Board = ({ playerIndex, isClickable, ShowPrivate, nicknames }) => {
           )}
         </div>
         <div className={styles.roundCard}>
-          <SectionImage ratio={100} image={getImageForRound(7, newFieldCard.round7.front)} stone={newFieldCard.round7.stone}/>
+          <SectionImage
+            ratio={100}
+            image={getImageForRound(7, fieldCard.round7.front)}
+            stone={fieldCard.round7.stone}
+          />
         </div>
         <div className={styles.roundCard}>
-          <SectionImage ratio={100} image={getImageForRound(8, newFieldCard.round8.front)} stone={newFieldCard.round8.stone} onClick={() => handleClick('돼지 시장')}/>
+          <SectionImage
+            ratio={100}
+            image={getImageForRound(8, fieldCard.round8.front)}
+            stone={fieldCard.round8.stone}
+            onClick={() => handleClick('돼지 시장')}
+          />
           {playersPosition[index].includes('돼지 시장') && (
             <img
               src={playerImages[index]}
@@ -882,7 +978,12 @@ export const Board = ({ playerIndex, isClickable, ShowPrivate, nicknames }) => {
           )}
         </div>
         <div className={styles.roundCard}>
-          <SectionImage ratio={100} image={getImageForRound(9, newFieldCard.round9.front)} stone={newFieldCard.round9.stone} onClick={() => handleClick('채소 종자')}/>
+          <SectionImage
+            ratio={100}
+            image={getImageForRound(9, fieldCard.round9.front)}
+            stone={fieldCard.round9.stone}
+            onClick={() => handleClick('채소 종자')}
+          />
           {playersPosition[index].includes('채소 종자') && (
             <img
               src={playerImages[index]}
@@ -972,29 +1073,41 @@ export const Board = ({ playerIndex, isClickable, ShowPrivate, nicknames }) => {
               }}
             />
           )}
-          {newBoard.forest > 0 && (
-            <><img
-              src={"/private_board_images/wood.svg"}
-              alt="Wood Icon"
-              style={{
-                position: 'absolute',
-                top: "65%",
-                left: "63%",
-                opacity: 0.7,
-                width: '20%',
-                height: '20%',
-              }} />
-              <span style={{
-                position: 'absolute',
-                color: 'black',
-                fontWeight: 'bold',
-                top: "70%",
-                left: "70%",
-              }}>{newBoard.forest}</span></>
+          {board.forest > 0 && (
+            <>
+              <img
+                src={'/private_board_images/wood.svg'}
+                alt="Wood Icon"
+                style={{
+                  position: 'absolute',
+                  top: '65%',
+                  left: '63%',
+                  opacity: 0.7,
+                  width: '20%',
+                  height: '20%',
+                }}
+              />
+              <span
+                style={{
+                  position: 'absolute',
+                  color: 'black',
+                  fontWeight: 'bold',
+                  top: '70%',
+                  left: '70%',
+                }}
+              >
+                {board.forest}
+              </span>
+            </>
           )}
         </div>
         <div className={styles.roundCard}>
-          <SectionImage ratio={100} image={getImageForRound(10, newFieldCard.round10.front)} stone={newFieldCard.round10.stone} onClick={() => handleClick('소 시장')}/>
+          <SectionImage
+            ratio={100}
+            image={getImageForRound(10, fieldCard.round10.front)}
+            stone={fieldCard.round10.stone}
+            onClick={() => handleClick('소 시장')}
+          />
           {playersPosition[index].includes('소 시장') && (
             <img
               src={playerImages[index]}
@@ -1007,10 +1120,19 @@ export const Board = ({ playerIndex, isClickable, ShowPrivate, nicknames }) => {
           )}
         </div>
         <div className={styles.roundCard}>
-          <SectionImage ratio={100} image={getImageForRound(11, newFieldCard.round11.front)} stone={newFieldCard.round11.stone}/>
+          <SectionImage
+            ratio={100}
+            image={getImageForRound(11, fieldCard.round11.front)}
+            stone={fieldCard.round11.stone}
+          />
         </div>
         <div className={styles.roundCard}>
-          <SectionImage ratio={100} image={getImageForRound(12, newFieldCard.round12.front)} stone={newFieldCard.round12.stone} onClick={() => handleClick('급한 가족 늘리기')}/>
+          <SectionImage
+            ratio={100}
+            image={getImageForRound(12, fieldCard.round12.front)}
+            stone={fieldCard.round12.stone}
+            onClick={() => handleClick('급한 가족 늘리기')}
+          />
           {playersPosition[index].includes('급한 가족 늘리기') && (
             <img
               src={playerImages[index]}
@@ -1023,10 +1145,18 @@ export const Board = ({ playerIndex, isClickable, ShowPrivate, nicknames }) => {
           )}
         </div>
         <div className={styles.roundCard}>
-          <SectionImage ratio={100} image={getImageForRound(13, newFieldCard.round13.front)} stone={newFieldCard.round13.stone}/>
+          <SectionImage
+            ratio={100}
+            image={getImageForRound(13, fieldCard.round13.front)}
+            stone={fieldCard.round13.stone}
+          />
         </div>
         <div className={styles.roundCard}>
-          <SectionImage ratio={100} image={getImageForRound(14, newFieldCard.round14.front)} stone={newFieldCard.round14.stone}/>
+          <SectionImage
+            ratio={100}
+            image={getImageForRound(14, fieldCard.round14.front)}
+            stone={fieldCard.round14.stone}
+          />
         </div>
       </div>
 
