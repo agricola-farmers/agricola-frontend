@@ -62,7 +62,6 @@ export default function Play() {
   useEffect(() => {
     if (timer === 0) {
       handleEndTurn();
-      // test();
     }
   }, [timer]);
 
@@ -72,18 +71,6 @@ export default function Play() {
     setShowPrivateBoard(true);
     setAnimal(animal);
     console.log(animal);
-  };
-
-  const test = () => {
-    setCurrentTurnIndex((prevIndex) => {
-      const nextIndex = (prevIndex + 1) % players.length;
-      return nextIndex;
-    });
-    setTurnCount((prevCount) => {
-      const newCount = prevCount + 1;
-      console.log(`Turn Count: ${newCount}`);
-      return newCount;
-    });
   };
 
   const handleEndTurn = () => {
@@ -98,7 +85,7 @@ export default function Play() {
           nickname={selectedNickname}
           index={players.indexOf(selectedNickname)}
           isChange={IsChange}
-          animal = {animal}
+          animal={animal}
         />
       ) : (
         <>
