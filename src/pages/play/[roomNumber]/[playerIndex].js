@@ -6,7 +6,18 @@ import { useRouter } from 'next/router';
 import { Board } from '@/components/Board';
 import { SideBar } from '@/components/SideBar';
 import { useRecoilState } from 'recoil';
-import { playersState } from '@/utils/atoms';
+import {
+  BoardState,
+  FieldCardState,
+  isFadeState,
+  player1State,
+  player2State,
+  player3State,
+  player4State,
+  playersPositionState,
+  playersState,
+} from '@/utils/atoms';
+import { updateData } from '@/utils/updateData';
 
 export default function Play() {
   const socket = useContext(SocketContext);
@@ -16,10 +27,30 @@ export default function Play() {
   const [showPrivateBoard, setShowPrivateBoard] = useState(false);
   const [IsChange, setisChange] = useState(false);
   const [selectedNickname, setSelectedNickname] = useState('');
-  const [currentTurnIndex, setCurrentTurnIndex] = useState(0);
+  const [currentTurnIndex, setCurrentTurnIndex] = useState(2);
   const [timer, setTimer] = useState(60);
   const [turnCount, setTurnCount] = useState(0);
   const [animal, setAnimal] = useState(0);
+  const [player1, setPlayer1] = useRecoilState(player1State);
+  const [player2, setPlayer2] = useRecoilState(player2State);
+  const [player3, setPlayer3] = useRecoilState(player3State);
+  const [player4, setPlayer4] = useRecoilState(player4State);
+  const [playerPosition, setPlayerPosition] =
+    useRecoilState(playersPositionState);
+  const [board, setBoard] = useRecoilState(BoardState);
+  const [fieldCard, setFieldCard] = useRecoilState(FieldCardState);
+
+  useEffect(() => {
+    if (turnCount === 8) {
+      setPlayer1(updateData.player1);
+      setPlayer2(updateData.player2);
+      setPlayer3(updateData.player3);
+      setPlayer4(updateData.player4);
+      setPlayerPosition([[], [], [], []]);
+      setBoard(updateData.board);
+      setFieldCard(updateData.fieldCard);
+    }
+  }, [turnCount]);
 
   useEffect(() => {
     if (roomNumber && socket) {
@@ -74,6 +105,7 @@ export default function Play() {
   };
 
   const handleEndTurn = () => {
+    console.log(turnCount);
     socket.emit('endTurn', { currentTurnIndex, turnCount });
   };
 
