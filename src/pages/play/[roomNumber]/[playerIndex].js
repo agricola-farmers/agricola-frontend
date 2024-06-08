@@ -9,7 +9,6 @@ import { useRecoilState } from 'recoil';
 import {
   BoardState,
   FieldCardState,
-  isFadeState,
   player1State,
   player2State,
   player3State,
@@ -39,9 +38,11 @@ export default function Play() {
     useRecoilState(playersPositionState);
   const [board, setBoard] = useRecoilState(BoardState);
   const [fieldCard, setFieldCard] = useRecoilState(FieldCardState);
+  const [familyMember, setFamilyMember] = useState([1, 1, 1, 1]);
 
   useEffect(() => {
     if (turnCount === 8) {
+      // 1 라운드 -> 14 라운드
       setPlayer1(updateData.player1);
       setPlayer2(updateData.player2);
       setPlayer3(updateData.player3);
@@ -50,7 +51,22 @@ export default function Play() {
       setBoard(updateData.board);
       setFieldCard(updateData.fieldCard);
     }
+
+    console.log('turnCount', turnCount);
+    console.log('currentTurnIndex', currentTurnIndex);
+    console.log('familyMember', familyMember);
   }, [turnCount]);
+
+  useEffect(() => {
+    if (turnCount === 8) {
+      setFamilyMember([
+        player1.family_member,
+        player2.family_member,
+        player3.family_member,
+        player4.family_member,
+      ]);
+    }
+  }, [player1, player2, player3, player4]);
 
   useEffect(() => {
     if (roomNumber && socket) {
@@ -73,9 +89,29 @@ export default function Play() {
 
   useEffect(() => {
     socket.on('endTurn', (data) => {
-      setCurrentTurnIndex(data.currentTurnIndex);
       setTurnCount(data.turnCount);
+      setCurrentTurnIndex(data.currentTurnIndex);
       setTimer(60);
+
+      if (
+        data.turnCount > 8 &&
+        familyMember[
+          data.currentTurnIndex === 0 ? 3 : data.currentTurnIndex - 1
+        ] > 0
+      ) {
+        console.log('familyMember', 'handleEndTurn');
+        setFamilyMember((prev) => {
+          const newFamilyMember = [...prev];
+
+          newFamilyMember[
+            data.currentTurnIndex === 0 ? 3 : data.currentTurnIndex - 1
+          ] !== 0 &&
+            (newFamilyMember[
+              data.currentTurnIndex === 0 ? 3 : data.currentTurnIndex - 1
+            ] -= 1);
+          return newFamilyMember;
+        });
+      }
     });
 
     const interval = setInterval(() => {
@@ -87,7 +123,10 @@ export default function Play() {
       });
     }, 1000);
 
-    return () => clearInterval(interval);
+    return () => {
+      clearInterval(interval);
+      socket.off('endTurn');
+    };
   }, []);
 
   useEffect(() => {
@@ -95,6 +134,16 @@ export default function Play() {
       handleEndTurn();
     }
   }, [timer]);
+
+  useEffect(() => {
+    if (turnCount > 8) {
+      if (familyMember.every((member) => member === 0)) {
+        socket.emit('harvest');
+      } else if (familyMember[currentTurnIndex] === 0) {
+        handleEndTurn();
+      }
+    }
+  }, [familyMember, currentTurnIndex, turnCount]);
 
   const ShowPrivate = (nickname, isChange, animal) => {
     setSelectedNickname(nickname);
@@ -105,7 +154,6 @@ export default function Play() {
   };
 
   const handleEndTurn = () => {
-    console.log(turnCount);
     socket.emit('endTurn', { currentTurnIndex, turnCount });
   };
 
