@@ -57,6 +57,7 @@ const JobCardsModal = ({ isOpen, onClose, cards, onCardClick }) => {
               cursor: "pointer",
             }}
             onClick={onClose}
+            
           >
             X
           </div>
@@ -85,6 +86,7 @@ const JobCardsModal = ({ isOpen, onClose, cards, onCardClick }) => {
                 transition: "transform 0.2s",
               }}
               onClick={() => onCardClick(card)}
+              onError={(e) => { e.target.style.display = 'none'; }}
             />
           ))}
         </div>
@@ -112,6 +114,7 @@ const JobCardsModal = ({ isOpen, onClose, cards, onCardClick }) => {
                 transition: "transform 0.2s",
               }}
               onClick={() => onCardClick(card)}
+              onError={(e) => { e.target.style.display = 'none'; }}
             />
           ))}
         </div>

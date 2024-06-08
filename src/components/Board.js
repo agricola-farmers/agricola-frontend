@@ -95,11 +95,33 @@ export const Board = ({ playerIndex, isClickable, ShowPrivate, nicknames }) => {
   const tutoring2PlayerIndex = playersPosition.findIndex((positionArray) =>
     positionArray.includes('tutoring2')
   );
+  const pigMarketPlayerIndex = playersPosition.findIndex((positionArray) =>
+    positionArray.includes('돼지 시장')
+  );
+  const cattleMarketPlayerIndex = playersPosition.findIndex((positionArray) =>
+    positionArray.includes('소 시장')
+  );
+  const vegetableSeedPlayerIndex = playersPosition.findIndex((positionArray) =>
+    positionArray.includes('채소 종자')
+  );
+  const houseFixPlayerIndex = playersPosition.findIndex((positionArray) =>
+    positionArray.includes('집 개조')
+  );
+  const RapidFamilyPlayerIndex = playersPosition.findIndex((positionArray) =>
+    positionArray.includes('급한 가족 늘리기')
+  );
+  const farmExpansionPlayerIndex = playersPosition.findIndex((positionArray) =>
+    positionArray.includes('농장 확장')
+  );
+  const farmRemodelingPlayerIndex = playersPosition.findIndex((positionArray) =>
+    positionArray.includes('농장 개조')
+  );
 
   useEffect(() => {
     socket.on('sync', (data) => {
       setBoard(data.stateBoard);
       setPlayersPosition(data.position);
+      setFieldCard(data.fieldCard);
       if (data.playerNumber == 0) {
         setPlayerState1(data.state);
       } else if (data.playerNumber == 1) {
@@ -191,6 +213,7 @@ export const Board = ({ playerIndex, isClickable, ShowPrivate, nicknames }) => {
           playerNumber: index,
           state: newPlayerState,
           stateBoard: newBoardState,
+          fieldCard: fieldCard,
           position: newPositions,
         });
 
@@ -210,6 +233,7 @@ export const Board = ({ playerIndex, isClickable, ShowPrivate, nicknames }) => {
           playerNumber: index,
           state: newPlayerState,
           stateBoard: board,
+          fieldCard: fieldCard,
           position: newPositions,
         });
         setOnceClick(false);
@@ -230,6 +254,7 @@ export const Board = ({ playerIndex, isClickable, ShowPrivate, nicknames }) => {
           playerNumber: index,
           state: newPlayerState,
           stateBoard: board,
+          fieldCard: fieldCard,
           position: newPositions,
         });
         setOnceClick(false);
@@ -251,6 +276,7 @@ export const Board = ({ playerIndex, isClickable, ShowPrivate, nicknames }) => {
           playerNumber: index,
           state: newPlayerState,
           stateBoard: board,
+          fieldCard: fieldCard,
           position: newPositions,
         });
         setOnceClick(false);
@@ -274,6 +300,7 @@ export const Board = ({ playerIndex, isClickable, ShowPrivate, nicknames }) => {
           playerNumber: index,
           state: newPlayerState,
           stateBoard: newBoardState,
+          fieldCard: fieldCard,
           position: newPositions,
         });
         setOnceClick(false);
@@ -297,6 +324,7 @@ export const Board = ({ playerIndex, isClickable, ShowPrivate, nicknames }) => {
           playerNumber: index,
           state: newPlayerState,
           stateBoard: newBoardState,
+          fieldCard: fieldCard,
           position: newPositions,
         });
         setOnceClick(false);
@@ -315,6 +343,7 @@ export const Board = ({ playerIndex, isClickable, ShowPrivate, nicknames }) => {
           playerNumber: index,
           state: newPlayerState,
           stateBoard: board,
+          fieldCard: fieldCard,
           position: newPositions,
         });
         setOnceClick(false);
@@ -333,6 +362,7 @@ export const Board = ({ playerIndex, isClickable, ShowPrivate, nicknames }) => {
           playerNumber: index,
           state: newPlayerState,
           stateBoard: board,
+          fieldCard: fieldCard,
           position: newPositions,
         });
         setOnceClick(false);
@@ -356,6 +386,7 @@ export const Board = ({ playerIndex, isClickable, ShowPrivate, nicknames }) => {
           playerNumber: index,
           state: newPlayerState,
           stateBoard: newBoardState,
+          fieldCard: fieldCard,
           position: newPositions,
         });
         setOnceClick(false);
@@ -379,6 +410,7 @@ export const Board = ({ playerIndex, isClickable, ShowPrivate, nicknames }) => {
           playerNumber: index,
           state: newPlayerState,
           stateBoard: newBoardState,
+          fieldCard: fieldCard,
           position: newPositions,
         });
         setOnceClick(false);
@@ -402,6 +434,7 @@ export const Board = ({ playerIndex, isClickable, ShowPrivate, nicknames }) => {
           playerNumber: index,
           state: newPlayerState,
           stateBoard: newBoardState,
+          fieldCard: fieldCard,
           position: newPositions,
         });
         setOnceClick(false);
@@ -425,6 +458,7 @@ export const Board = ({ playerIndex, isClickable, ShowPrivate, nicknames }) => {
           playerNumber: index,
           state: newPlayerState,
           stateBoard: newBoardState,
+          fieldCard: fieldCard,
           position: newPositions,
         });
         setOnceClick(false);
@@ -448,6 +482,7 @@ export const Board = ({ playerIndex, isClickable, ShowPrivate, nicknames }) => {
           playerNumber: index,
           state: newPlayerState,
           stateBoard: newBoardState,
+          fieldCard: fieldCard,
           position: newPositions,
         });
         setOnceClick(false);
@@ -461,73 +496,210 @@ export const Board = ({ playerIndex, isClickable, ShowPrivate, nicknames }) => {
           playerNumber: index,
           state: playerState,
           stateBoard: board,
+          fieldCard: fieldCard,
           position: newPositions,
         });
         setOnceClick(false);
-      } else if (selectedItem === '화합 장소') {
+      } else if (selectedItem === '여물통') {
 
+        const newPlayerState = {
+          ...playerState,
+          facility: playerState.facility.filter((facility) => facility !== '../../../images/player4_newFacilitycard/facilitycard_4.png'),
+          facility_active: [...playerState.facility_active, '../../../images/player4_newFacilitycard/facilitycard_4.png'],
+          wood: playerState.wood - 2,
+        };
+        setPlayerState(newPlayerState);
         const newPositions = [...playersPosition];
         newPositions[index] = [...newPositions[index], 'meeting_place'];
         setPlayersPosition(newPositions);
 
         socket.emit('sync', {
           playerNumber: index,
-          state: playerState,
+          state: newPlayerState,
           stateBoard: board,
+          fieldCard: fieldCard,
           position: newPositions,
         });
         setOnceClick(false);
       } else if (selectedItem === '집 개조') {
-        setPlayerState((prevState) => {
-          let count = 0;
-          const updatedFieldState = Object.fromEntries(
-            Object.entries(prevState.fieldState).map(([key, value]) => {
-              if (value.field === 2) {
-                count++;
-                return [key, { ...value, field: 3 }];
-              }
-              return [key, value];
-            })
-          );
 
-          return {
-            ...prevState,
-            fieldState: updatedFieldState,
-            clay: prevState.clay - count,
-            reed: prevState.reed - 1,
-          };
-        });
-        ShowPrivate(nicknames[index], false, 0);
+        let count = 0;
+        const updatedFieldState = Object.fromEntries(
+          Object.entries(playerState.fieldState).map(([key, value]) => {
+            if (value.field === 2) {
+              count++;
+              return [key, { ...value, field: 3 }];
+            }
+            return [key, value];
+          })
+        );
+
+        const newPlayerState = {
+          ...playerState,
+          fieldState: updatedFieldState,
+          clay: playerState.clay - count,
+          reed: playerState.reed - 1,
+        };
+        setPlayerState(newPlayerState);
+
         const newPositions = [...playersPosition];
         newPositions[index] = [...newPositions[index], '집 개조'];
         setPlayersPosition(newPositions);
+
+        socket.emit('sync', {
+          playerNumber: index,
+          state: newPlayerState,
+          stateBoard: board,
+          fieldCard: fieldCard,
+          position: newPositions,
+        });
+
         setOnceClick(false);
+
+        ShowPrivate(nicknames[index], false, 0);
+
       } else if (selectedItem === '급한 가족 늘리기') {
         const newPositions = [...playersPosition];
         newPositions[index] = [...newPositions[index], '급한 가족 늘리기'];
         setPlayersPosition(newPositions);
+
+        socket.emit('sync', {
+          playerNumber: index,
+          state: playerState,
+          stateBoard: board,
+          fieldCard: fieldCard,
+          position: newPositions,
+        });
         setOnceClick(false);
       } else if (selectedItem === '돼지 시장') {
         ShowPrivate(nicknames[index], true, 1);
         const newPositions = [...playersPosition];
         newPositions[index] = [...newPositions[index], '돼지 시장'];
         setPlayersPosition(newPositions);
+
+        const updatedFieldCard = {
+          ...fieldCard,
+          round8: {
+            ...fieldCard.round8,
+            stone: 0
+          }
+        };
+        setFieldCard(updatedFieldCard);
+    
+
+        socket.emit('sync', {
+          playerNumber: index,
+          state: playerState,
+          stateBoard: board,
+          fieldCard: updatedFieldCard,
+          position: newPositions,
+        });
         setOnceClick(false);
       } else if (selectedItem === '소 시장') {
         ShowPrivate(nicknames[index], true, 3);
         const newPositions = [...playersPosition];
         newPositions[index] = [...newPositions[index], '소 시장'];
         setPlayersPosition(newPositions);
+
+        const updatedFieldCard = {
+          ...fieldCard,
+          round10: {
+            ...fieldCard.round10,
+            stone: 0
+          }
+        };
+        setFieldCard(updatedFieldCard);
+
+        socket.emit('sync', {
+          playerNumber: index,
+          state: playerState,
+          stateBoard: board,
+          fieldCard: updatedFieldCard,
+          position: newPositions,
+        });
         setOnceClick(false);
       } else if (selectedItem === '채소 종자') {
-        setPlayerState((prevState) => ({
-          ...prevState,
-          vegetable: prevState.vegetable + 1,
-        }));
+
+        const newPlayerState = {
+          ...playerState, 
+          vegetable: playerState.vegetable + 1,
+        };
+        setPlayerState(newPlayerState);
+
         const newPositions = [...playersPosition];
         newPositions[index] = [...newPositions[index], '채소 종자'];
         setPlayersPosition(newPositions);
+
+        socket.emit('sync', {
+          playerNumber: index,
+          state: newPlayerState,
+          stateBoard: board,
+          fieldCard: fieldCard,
+          position: newPositions,
+        });
         setOnceClick(false);
+      }
+      else if (selectedItem === '농장 확장') {
+
+        const newPlayerState = {
+          ...playerState, 
+          reed: playerState.reed - 2,
+          clay: playerState.clay - 5,
+          house: playerState.house + 2, 
+        };
+        setPlayerState(newPlayerState);
+
+        const newPositions = [...playersPosition];
+        newPositions[index] = [...newPositions[index], '농장 확장'];
+        setPlayersPosition(newPositions);
+  
+        socket.emit('sync', {
+          playerNumber: index,
+          state: newPlayerState,
+          stateBoard: board,
+          fieldCard: fieldCard,
+          position: newPositions,
+        });
+        ShowPrivate(nicknames[index], true, 4);
+        setOnceClick(false);
+      }
+      else if (selectedItem === '농장 개조') {
+
+        let count = 0;
+        const updatedFieldState = Object.fromEntries(
+          Object.entries(playerState.fieldState).map(([key, value]) => {
+            if (value.field === 2) {
+              count++;
+              return [key, { ...value, field: 3 }];
+            }
+            return [key, value];
+          })
+        );
+
+        const newPlayerState = {
+          ...playerState,
+          fieldState: updatedFieldState,
+          clay: playerState.clay - count,
+          reed: playerState.reed - 1,
+        };
+        setPlayerState(newPlayerState);
+
+        const newPositions = [...playersPosition];
+        newPositions[index] = [...newPositions[index], '농장 개조'];
+        setPlayersPosition(newPositions);
+
+        socket.emit('sync', {
+          playerNumber: index,
+          state: newPlayerState,
+          stateBoard: board,
+          fieldCard: fieldCard,
+          position: newPositions,
+        });
+
+        setOnceClick(false);
+
+        ShowPrivate(nicknames[index], false, 10);
+
       }
       handleCloseModal();
     }
@@ -560,10 +732,15 @@ export const Board = ({ playerIndex, isClickable, ShowPrivate, nicknames }) => {
   };
 
   const handleFacilityCardClick = (card) => {
-    setIsFacilityModalOpen(false);
-    setIsFacilityCardModalOpen(false);
-    setSelectedFacilityCard(card);
-    setSelectedItem('보조 설비');
+    if (
+      playerIndex === 3 &&
+      card === '../../../images/player4_newFacilitycard/facilitycard_4.png' &&
+      isClickable
+    ) {
+      console.log(card);
+      setSelectedItem('여물통');
+      
+    }
   };
 
   const getImageForRound = (round, front) => {
@@ -666,6 +843,16 @@ export const Board = ({ playerIndex, isClickable, ShowPrivate, nicknames }) => {
             image="farm_expansion"
             onClick={() => handleClick('농장 확장')}
           />
+          {farmExpansionPlayerIndex !== -1 && (
+            <img
+              src={playerImages[farmExpansionPlayerIndex]}
+              alt="Player Icon"
+              className={styles.playerIconFarmExpansion}
+              style={{
+                zIndex: 5,
+              }}
+            />
+          )}
         </div>
         <div className={styles.section3}>
           <SectionImage
@@ -683,6 +870,7 @@ export const Board = ({ playerIndex, isClickable, ShowPrivate, nicknames }) => {
             image="main_facility"
             onClick={() => handleClick('주요 설비')}
           />
+          
           {reed_fieldPlayerIndex !== -1 && (
             <img
               src={playerImages[reed_fieldPlayerIndex]}
@@ -973,11 +1161,11 @@ export const Board = ({ playerIndex, isClickable, ShowPrivate, nicknames }) => {
             ratio={100}
             image={getImageForRound(6, fieldCard.round6.front)}
             stone={fieldCard.round6.stone}
-            onClick={() => handleClick('집 개조')}
+            onClick={fieldCard.round6.front ? () => handleClick('집 개조') : undefined}
           />
-          {playersPosition[index].includes('집 개조') && (
+          {houseFixPlayerIndex !== -1 && (
             <img
-              src={playerImages[index]}
+              src={playerImages[houseFixPlayerIndex]}
               alt="Player Icon"
               className={styles.playerIconHouseFix}
               style={{
@@ -998,11 +1186,11 @@ export const Board = ({ playerIndex, isClickable, ShowPrivate, nicknames }) => {
             ratio={100}
             image={getImageForRound(8, fieldCard.round8.front)}
             stone={fieldCard.round8.stone}
-            onClick={() => handleClick('돼지 시장')}
+            onClick={fieldCard.round8.front ? () => handleClick('돼지 시장') : undefined}
           />
-          {playersPosition[index].includes('돼지 시장') && (
+          {pigMarketPlayerIndex !== -1 && (
             <img
-              src={playerImages[index]}
+              src={playerImages[pigMarketPlayerIndex]}
               alt="Player Icon"
               className={styles.playerIconPigMarket}
               style={{
@@ -1016,11 +1204,11 @@ export const Board = ({ playerIndex, isClickable, ShowPrivate, nicknames }) => {
             ratio={100}
             image={getImageForRound(9, fieldCard.round9.front)}
             stone={fieldCard.round9.stone}
-            onClick={() => handleClick('채소 종자')}
+            onClick={fieldCard.round9.front ? () => handleClick('채소 종자') : undefined}
           />
-          {playersPosition[index].includes('채소 종자') && (
+          {vegetableSeedPlayerIndex !== -1 && (
             <img
-              src={playerImages[index]}
+              src={playerImages[vegetableSeedPlayerIndex]}
               alt="Player Icon"
               className={styles.playerIconVegetableSeed}
               style={{
@@ -1140,11 +1328,11 @@ export const Board = ({ playerIndex, isClickable, ShowPrivate, nicknames }) => {
             ratio={100}
             image={getImageForRound(10, fieldCard.round10.front)}
             stone={fieldCard.round10.stone}
-            onClick={() => handleClick('소 시장')}
+            onClick={fieldCard.round10.front ? () => handleClick('소 시장') : undefined}
           />
-          {playersPosition[index].includes('소 시장') && (
+          {cattleMarketPlayerIndex !== -1 && (
             <img
-              src={playerImages[index]}
+              src={playerImages[cattleMarketPlayerIndex]}
               alt="Player Icon"
               className={styles.playerIconCattleMarket}
               style={{
@@ -1165,11 +1353,11 @@ export const Board = ({ playerIndex, isClickable, ShowPrivate, nicknames }) => {
             ratio={100}
             image={getImageForRound(12, fieldCard.round12.front)}
             stone={fieldCard.round12.stone}
-            onClick={() => handleClick('급한 가족 늘리기')}
+            onClick={fieldCard.round12.front ? () => handleClick('급한 가족 늘리기') : undefined}
           />
-          {playersPosition[index].includes('급한 가족 늘리기') && (
+          {RapidFamilyPlayerIndex !== -1 && (
             <img
-              src={playerImages[index]}
+              src={playerImages[RapidFamilyPlayerIndex]}
               alt="Player Icon"
               className={styles.playerIconRapidFamily}
               style={{
@@ -1190,7 +1378,18 @@ export const Board = ({ playerIndex, isClickable, ShowPrivate, nicknames }) => {
             ratio={100}
             image={getImageForRound(14, fieldCard.round14.front)}
             stone={fieldCard.round14.stone}
+            onClick={fieldCard.round14.front ? () => handleClick('농장 개조') : undefined}
           />
+          {farmRemodelingPlayerIndex !== -1 && (
+            <img
+              src={playerImages[farmRemodelingPlayerIndex]}
+              alt="Player Icon"
+              className={styles.playerIconfarmRemodeling}
+              style={{
+                zIndex: 5,
+              }}
+            />
+          )}
         </div>
       </div>
 
