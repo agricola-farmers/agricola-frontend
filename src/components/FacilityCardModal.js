@@ -85,6 +85,7 @@ const FacilityCardModal = ({ isOpen, onClose, cards, onCardClick }) => {
                 transition: "transform 0.2s",
               }}
               onClick={() => onCardClick(card)}
+              onError={(e) => { e.target.style.display = 'none'; }}
             />
           ))}
         </div>
@@ -112,6 +113,7 @@ const FacilityCardModal = ({ isOpen, onClose, cards, onCardClick }) => {
                 transition: "transform 0.2s",
               }}
               onClick={() => onCardClick(card)}
+              onError={(e) => { e.target.style.display = 'none'; }}
             />
           ))}
         </div>
