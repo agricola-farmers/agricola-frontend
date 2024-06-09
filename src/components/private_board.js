@@ -11,7 +11,7 @@ import JobCardModal from './JobCardModal';
 import FacilityCardModal from './FacilityCardModal';
 import { SocketContext } from '@/context/socket';
 
-const PrivateBoard = ({ onClose, nickname, index, isChange, animal }) => {
+const PrivateBoard = ({ onClose, nickname, index, isChange, animal, test }) => {
   const socket = useContext(SocketContext);
   const router = useRouter();
   const { playerIndex } = router.query;
@@ -48,7 +48,7 @@ const PrivateBoard = ({ onClose, nickname, index, isChange, animal }) => {
         setPlayerState4(data.state);
       }
     });
-    console.log("fieldUpdate");
+    console.log('fieldUpdate');
   }, []);
 
   if (index === 1) {
@@ -95,11 +95,11 @@ const PrivateBoard = ({ onClose, nickname, index, isChange, animal }) => {
   };
 
   const handleHouseClick = () => {
-    if(index === parseInt(playerIndex, 10) && playerState.house > 0){
+    if (index === parseInt(playerIndex, 10) && playerState.house > 0) {
       setcardchange(true);
       setCardClick(5);
     }
-  }
+  };
 
   const handleJobCardClick = (card) => {
     if (
@@ -113,6 +113,17 @@ const PrivateBoard = ({ onClose, nickname, index, isChange, animal }) => {
   };
 
   const handleFacilityCardClick = (card) => {
+    if (
+      playerIndex === '1' &&
+      card ===
+        '../../../images/player2_newFacilitycard_active/facilitycard_1.png'
+    ) {
+      // privateBoard를 닫고,
+      handleArrowClick();
+      // socket.emit('endTurn', { currentTurnIndex-1, turnCount }); 만 하면 됨
+      test();
+      console.log('after test');
+    }
     console.log(card);
     setIsFacilityModalOpen(false);
   };
@@ -151,8 +162,7 @@ const PrivateBoard = ({ onClose, nickname, index, isChange, animal }) => {
           playerNumber: playerIndex,
           state: newPlayerState,
         });
-      }
-      else if (cardClick === 5) {
+      } else if (cardClick === 5) {
         const animalKey = 'house';
 
         // animal 상태 업데이트
@@ -164,17 +174,17 @@ const PrivateBoard = ({ onClose, nickname, index, isChange, animal }) => {
         const newPlayerState = {
           ...playerState,
           fieldState: updatedFieldState,
-          wood: playerState.wood -2,
+          wood: playerState.wood - 2,
           [animalKey]: playerState[animalKey] - 1,
         };
-        
+
         socket.emit('fieldSync', {
           playerNumber: playerIndex,
           state: newPlayerState,
         });
-      }
-      else {
-        const animalKey = cardClick === 1 ? 'pig' : cardClick === 2 ? 'sheep' : 'cattle';
+      } else {
+        const animalKey =
+          cardClick === 1 ? 'pig' : cardClick === 2 ? 'sheep' : 'cattle';
 
         // animal 상태 업데이트
         updatedFieldState[forest_index] = {
@@ -187,12 +197,11 @@ const PrivateBoard = ({ onClose, nickname, index, isChange, animal }) => {
           fieldState: updatedFieldState,
           [animalKey]: playerState[animalKey] + 1,
         };
-        
+
         socket.emit('fieldSync', {
           playerNumber: playerIndex,
           state: newPlayerState,
         });
-
       }
 
       setcardchange(false);
@@ -341,8 +350,6 @@ const PrivateBoard = ({ onClose, nickname, index, isChange, animal }) => {
     event.target.style.display = 'none';
   };
 
-  
-
   const handleImageClick = (index) => {
     const updatedFenceArray = [...playerState.fence_array];
     updatedFenceArray[index] = 1;
@@ -364,11 +371,10 @@ const PrivateBoard = ({ onClose, nickname, index, isChange, animal }) => {
   };
 
   const handleButtonClick = () => {
-    if(index === parseInt(playerIndex, 10) && cardClick === 10){
-      if(fenceShow){
+    if (index === parseInt(playerIndex, 10) && cardClick === 10) {
+      if (fenceShow) {
         setFenceShow(false);
-      }
-      else{
+      } else {
         setFenceShow(true);
       }
     }
@@ -500,21 +506,20 @@ const PrivateBoard = ({ onClose, nickname, index, isChange, animal }) => {
                 width: '10%',
               }}
             >
-            {playerState.fence_array[0] === 1 ? (
-              <img
-                src={farm_fence_col}
-                alt="fence0"
-                style={{ width: '100%', height: '100%' }}
-              />
+              {playerState.fence_array[0] === 1 ? (
+                <img
+                  src={farm_fence_col}
+                  alt="fence0"
+                  style={{ width: '100%', height: '100%' }}
+                />
               ) : fenceShow ? (
-              <img
-                src={"/private_board_images/farm_fence_col_click.svg"}
-                alt="fence0_click"
-                style={{ width: '100%', height: '100%' }}
-                onClick={() => handleImageClick(0)}
-              />
-              ) : null
-            }
+                <img
+                  src={'/private_board_images/farm_fence_col_click.svg'}
+                  alt="fence0_click"
+                  style={{ width: '100%', height: '100%' }}
+                  onClick={() => handleImageClick(0)}
+                />
+              ) : null}
             </div>
             <div
               style={{
@@ -525,20 +530,19 @@ const PrivateBoard = ({ onClose, nickname, index, isChange, animal }) => {
               }}
             >
               {playerState.fence_array[1] === 1 ? (
-              <img
-                src={farm_fence_col}
-                alt="fence1"
-                style={{ width: '100%', height: '100%' }}
-              />
+                <img
+                  src={farm_fence_col}
+                  alt="fence1"
+                  style={{ width: '100%', height: '100%' }}
+                />
               ) : fenceShow ? (
-              <img
-                src={"/private_board_images/farm_fence_col_click.svg"}
-                alt="fence1_click"
-                style={{ width: '100%', height: '100%' }}
-                onClick={() => handleImageClick(1)}
-              />
-              ) : null
-            }
+                <img
+                  src={'/private_board_images/farm_fence_col_click.svg'}
+                  alt="fence1_click"
+                  style={{ width: '100%', height: '100%' }}
+                  onClick={() => handleImageClick(1)}
+                />
+              ) : null}
             </div>
             <div
               style={{
@@ -549,20 +553,19 @@ const PrivateBoard = ({ onClose, nickname, index, isChange, animal }) => {
               }}
             >
               {playerState.fence_array[2] === 1 ? (
-              <img
-                src={farm_fence_col}
-                alt="fence2"
-                style={{ width: '100%', height: '100%' }}
-              />
+                <img
+                  src={farm_fence_col}
+                  alt="fence2"
+                  style={{ width: '100%', height: '100%' }}
+                />
               ) : fenceShow ? (
-              <img
-                src={"/private_board_images/farm_fence_col_click.svg"}
-                alt="fence2_click"
-                style={{ width: '100%', height: '100%' }}
-                onClick={() => handleImageClick(2)}
-              />
-              ) : null
-            }
+                <img
+                  src={'/private_board_images/farm_fence_col_click.svg'}
+                  alt="fence2_click"
+                  style={{ width: '100%', height: '100%' }}
+                  onClick={() => handleImageClick(2)}
+                />
+              ) : null}
             </div>
             <div
               style={{
@@ -573,20 +576,19 @@ const PrivateBoard = ({ onClose, nickname, index, isChange, animal }) => {
               }}
             >
               {playerState.fence_array[3] === 1 ? (
-              <img
-                src={farm_fence_col}
-                alt="fence3"
-                style={{ width: '100%', height: '100%' }}
-              />
+                <img
+                  src={farm_fence_col}
+                  alt="fence3"
+                  style={{ width: '100%', height: '100%' }}
+                />
               ) : fenceShow ? (
-              <img
-                src={"/private_board_images/farm_fence_col_click.svg"}
-                alt="fence3_click"
-                style={{ width: '100%', height: '100%' }}
-                onClick={() => handleImageClick(3)}
-              />
-              ) : null
-            }
+                <img
+                  src={'/private_board_images/farm_fence_col_click.svg'}
+                  alt="fence3_click"
+                  style={{ width: '100%', height: '100%' }}
+                  onClick={() => handleImageClick(3)}
+                />
+              ) : null}
             </div>
             <div
               style={{
@@ -597,20 +599,19 @@ const PrivateBoard = ({ onClose, nickname, index, isChange, animal }) => {
               }}
             >
               {playerState.fence_array[4] === 1 ? (
-              <img
-                src={farm_fence_col}
-                alt="fence4"
-                style={{ width: '100%', height: '100%' }}
-              />
+                <img
+                  src={farm_fence_col}
+                  alt="fence4"
+                  style={{ width: '100%', height: '100%' }}
+                />
               ) : fenceShow ? (
-              <img
-                src={"/private_board_images/farm_fence_col_click.svg"}
-                alt="fence4_click"
-                style={{ width: '100%', height: '100%' }}
-                onClick={() => handleImageClick(4)}
-              />
-              ) : null
-            }
+                <img
+                  src={'/private_board_images/farm_fence_col_click.svg'}
+                  alt="fence4_click"
+                  style={{ width: '100%', height: '100%' }}
+                  onClick={() => handleImageClick(4)}
+                />
+              ) : null}
             </div>
             <div
               style={{
@@ -621,20 +622,19 @@ const PrivateBoard = ({ onClose, nickname, index, isChange, animal }) => {
               }}
             >
               {playerState.fence_array[5] === 1 ? (
-              <img
-                src={farm_fence_row}
-                alt="fence5"
-                style={{ width: '100%', height: '100%' }}
-              />
+                <img
+                  src={farm_fence_row}
+                  alt="fence5"
+                  style={{ width: '100%', height: '100%' }}
+                />
               ) : fenceShow ? (
-              <img
-                src={"/private_board_images/farm_fence_row_click.svg"}
-                alt="fence5_click"
-                style={{ width: '100%', height: '100%' }}
-                onClick={() => handleImageClick(5)}
-              />
-              ) : null
-            }
+                <img
+                  src={'/private_board_images/farm_fence_row_click.svg'}
+                  alt="fence5_click"
+                  style={{ width: '100%', height: '100%' }}
+                  onClick={() => handleImageClick(5)}
+                />
+              ) : null}
             </div>
             <div
               style={{
@@ -645,20 +645,19 @@ const PrivateBoard = ({ onClose, nickname, index, isChange, animal }) => {
               }}
             >
               {playerState.fence_array[6] === 1 ? (
-              <img
-                src={farm_fence_row}
-                alt="fence6"
-                style={{ width: '100%', height: '100%' }}
-              />
+                <img
+                  src={farm_fence_row}
+                  alt="fence6"
+                  style={{ width: '100%', height: '100%' }}
+                />
               ) : fenceShow ? (
-              <img
-                src={"/private_board_images/farm_fence_row_click.svg"}
-                alt="fence6_click"
-                style={{ width: '100%', height: '100%' }}
-                onClick={() => handleImageClick(6)}
-              />
-              ) : null
-            }
+                <img
+                  src={'/private_board_images/farm_fence_row_click.svg'}
+                  alt="fence6_click"
+                  style={{ width: '100%', height: '100%' }}
+                  onClick={() => handleImageClick(6)}
+                />
+              ) : null}
             </div>
             <div
               style={{
@@ -669,20 +668,19 @@ const PrivateBoard = ({ onClose, nickname, index, isChange, animal }) => {
               }}
             >
               {playerState.fence_array[7] === 1 ? (
-              <img
-                src={farm_fence_row}
-                alt="fence7"
-                style={{ width: '100%', height: '100%' }}
-              />
+                <img
+                  src={farm_fence_row}
+                  alt="fence7"
+                  style={{ width: '100%', height: '100%' }}
+                />
               ) : fenceShow ? (
-              <img
-                src={"/private_board_images/farm_fence_row_click.svg"}
-                alt="fence7_click"
-                style={{ width: '100%', height: '100%' }}
-                onClick={() => handleImageClick(7)}
-              />
-              ) : null
-            }
+                <img
+                  src={'/private_board_images/farm_fence_row_click.svg'}
+                  alt="fence7_click"
+                  style={{ width: '100%', height: '100%' }}
+                  onClick={() => handleImageClick(7)}
+                />
+              ) : null}
             </div>
             <div
               style={{
@@ -693,20 +691,19 @@ const PrivateBoard = ({ onClose, nickname, index, isChange, animal }) => {
               }}
             >
               {playerState.fence_array[8] === 1 ? (
-              <img
-                src={farm_fence_row}
-                alt="fence8"
-                style={{ width: '100%', height: '100%' }}
-              />
+                <img
+                  src={farm_fence_row}
+                  alt="fence8"
+                  style={{ width: '100%', height: '100%' }}
+                />
               ) : fenceShow ? (
-              <img
-                src={"/private_board_images/farm_fence_row_click.svg"}
-                alt="fence8_click"
-                style={{ width: '100%', height: '100%' }}
-                onClick={() => handleImageClick(8)}
-              />
-              ) : null
-            }
+                <img
+                  src={'/private_board_images/farm_fence_row_click.svg'}
+                  alt="fence8_click"
+                  style={{ width: '100%', height: '100%' }}
+                  onClick={() => handleImageClick(8)}
+                />
+              ) : null}
             </div>
             <div
               style={{
@@ -717,20 +714,19 @@ const PrivateBoard = ({ onClose, nickname, index, isChange, animal }) => {
               }}
             >
               {playerState.fence_array[9] === 1 ? (
-              <img
-                src={farm_fence_row}
-                alt="fence9"
-                style={{ width: '100%', height: '100%' }}
-              />
+                <img
+                  src={farm_fence_row}
+                  alt="fence9"
+                  style={{ width: '100%', height: '100%' }}
+                />
               ) : fenceShow ? (
-              <img
-                src={"/private_board_images/farm_fence_row_click.svg"}
-                alt="fence9_click"
-                style={{ width: '100%', height: '100%' }}
-                onClick={() => handleImageClick(9)}
-              />
-              ) : null
-            }
+                <img
+                  src={'/private_board_images/farm_fence_row_click.svg'}
+                  alt="fence9_click"
+                  style={{ width: '100%', height: '100%' }}
+                  onClick={() => handleImageClick(9)}
+                />
+              ) : null}
             </div>
             <div
               style={{
@@ -741,20 +737,19 @@ const PrivateBoard = ({ onClose, nickname, index, isChange, animal }) => {
               }}
             >
               {playerState.fence_array[10] === 1 ? (
-              <img
-                src={farm_fence_row}
-                alt="fence10"
-                style={{ width: '100%', height: '100%' }}
-              />
+                <img
+                  src={farm_fence_row}
+                  alt="fence10"
+                  style={{ width: '100%', height: '100%' }}
+                />
               ) : fenceShow ? (
-              <img
-                src={"/private_board_images/farm_fence_row_click.svg"}
-                alt="fence10_click"
-                style={{ width: '100%', height: '100%' }}
-                onClick={() => handleImageClick(10)}
-              />
-              ) : null
-            }
+                <img
+                  src={'/private_board_images/farm_fence_row_click.svg'}
+                  alt="fence10_click"
+                  style={{ width: '100%', height: '100%' }}
+                  onClick={() => handleImageClick(10)}
+                />
+              ) : null}
             </div>
             <div
               style={{
@@ -765,20 +760,19 @@ const PrivateBoard = ({ onClose, nickname, index, isChange, animal }) => {
               }}
             >
               {playerState.fence_array[11] === 1 ? (
-              <img
-                src={farm_fence_col}
-                alt="fence11"
-                style={{ width: '100%', height: '100%' }}
-              />
+                <img
+                  src={farm_fence_col}
+                  alt="fence11"
+                  style={{ width: '100%', height: '100%' }}
+                />
               ) : fenceShow ? (
-              <img
-                src={"/private_board_images/farm_fence_col_click.svg"}
-                alt="fence11_click"
-                style={{ width: '100%', height: '100%' }}
-                onClick={() => handleImageClick(11)}
-              />
-              ) : null
-            }
+                <img
+                  src={'/private_board_images/farm_fence_col_click.svg'}
+                  alt="fence11_click"
+                  style={{ width: '100%', height: '100%' }}
+                  onClick={() => handleImageClick(11)}
+                />
+              ) : null}
             </div>
             <div
               style={{
@@ -789,20 +783,19 @@ const PrivateBoard = ({ onClose, nickname, index, isChange, animal }) => {
               }}
             >
               {playerState.fence_array[12] === 1 ? (
-              <img
-                src={farm_fence_col}
-                alt="fence12"
-                style={{ width: '100%', height: '100%' }}
-              />
+                <img
+                  src={farm_fence_col}
+                  alt="fence12"
+                  style={{ width: '100%', height: '100%' }}
+                />
               ) : fenceShow ? (
-              <img
-                src={"/private_board_images/farm_fence_col_click.svg"}
-                alt="fence12_click"
-                style={{ width: '100%', height: '100%' }}
-                onClick={() => handleImageClick(12)}
-              />
-              ) : null
-            }
+                <img
+                  src={'/private_board_images/farm_fence_col_click.svg'}
+                  alt="fence12_click"
+                  style={{ width: '100%', height: '100%' }}
+                  onClick={() => handleImageClick(12)}
+                />
+              ) : null}
             </div>
             <div
               style={{
@@ -813,20 +806,19 @@ const PrivateBoard = ({ onClose, nickname, index, isChange, animal }) => {
               }}
             >
               {playerState.fence_array[13] === 1 ? (
-              <img
-                src={farm_fence_col}
-                alt="fence13"
-                style={{ width: '100%', height: '100%' }}
-              />
+                <img
+                  src={farm_fence_col}
+                  alt="fence13"
+                  style={{ width: '100%', height: '100%' }}
+                />
               ) : fenceShow ? (
-              <img
-                src={"/private_board_images/farm_fence_col_click.svg"}
-                alt="fence13_click"
-                style={{ width: '100%', height: '100%' }}
-                onClick={() => handleImageClick(13)}
-              />
-              ) : null
-            }
+                <img
+                  src={'/private_board_images/farm_fence_col_click.svg'}
+                  alt="fence13_click"
+                  style={{ width: '100%', height: '100%' }}
+                  onClick={() => handleImageClick(13)}
+                />
+              ) : null}
             </div>
             <div
               style={{
@@ -837,20 +829,19 @@ const PrivateBoard = ({ onClose, nickname, index, isChange, animal }) => {
               }}
             >
               {playerState.fence_array[14] === 1 ? (
-              <img
-                src={farm_fence_col}
-                alt="fence14"
-                style={{ width: '100%', height: '100%' }}
-              />
+                <img
+                  src={farm_fence_col}
+                  alt="fence14"
+                  style={{ width: '100%', height: '100%' }}
+                />
               ) : fenceShow ? (
-              <img
-                src={"/private_board_images/farm_fence_col_click.svg"}
-                alt="fence14_click"
-                style={{ width: '100%', height: '100%' }}
-                onClick={() => handleImageClick(14)}
-              />
-              ) : null
-            }
+                <img
+                  src={'/private_board_images/farm_fence_col_click.svg'}
+                  alt="fence14_click"
+                  style={{ width: '100%', height: '100%' }}
+                  onClick={() => handleImageClick(14)}
+                />
+              ) : null}
             </div>
             <div
               style={{
@@ -861,20 +852,19 @@ const PrivateBoard = ({ onClose, nickname, index, isChange, animal }) => {
               }}
             >
               {playerState.fence_array[15] === 1 ? (
-              <img
-                src={farm_fence_col}
-                alt="fence15"
-                style={{ width: '100%', height: '100%' }}
-              />
+                <img
+                  src={farm_fence_col}
+                  alt="fence15"
+                  style={{ width: '100%', height: '100%' }}
+                />
               ) : fenceShow ? (
-              <img
-                src={"/private_board_images/farm_fence_col_click.svg"}
-                alt="fence15_click"
-                style={{ width: '100%', height: '100%' }}
-                onClick={() => handleImageClick(15)}
-              />
-              ) : null
-            }
+                <img
+                  src={'/private_board_images/farm_fence_col_click.svg'}
+                  alt="fence15_click"
+                  style={{ width: '100%', height: '100%' }}
+                  onClick={() => handleImageClick(15)}
+                />
+              ) : null}
             </div>
             <div
               style={{
@@ -885,20 +875,19 @@ const PrivateBoard = ({ onClose, nickname, index, isChange, animal }) => {
               }}
             >
               {playerState.fence_array[16] === 1 ? (
-              <img
-                src={farm_fence_row}
-                alt="fence16"
-                style={{ width: '100%', height: '100%' }}
-              />
+                <img
+                  src={farm_fence_row}
+                  alt="fence16"
+                  style={{ width: '100%', height: '100%' }}
+                />
               ) : fenceShow ? (
-              <img
-                src={"/private_board_images/farm_fence_row_click.svg"}
-                alt="fence16_click"
-                style={{ width: '100%', height: '100%' }}
-                onClick={() => handleImageClick(16)}
-              />
-              ) : null
-            }
+                <img
+                  src={'/private_board_images/farm_fence_row_click.svg'}
+                  alt="fence16_click"
+                  style={{ width: '100%', height: '100%' }}
+                  onClick={() => handleImageClick(16)}
+                />
+              ) : null}
             </div>
             <div
               style={{
@@ -909,20 +898,19 @@ const PrivateBoard = ({ onClose, nickname, index, isChange, animal }) => {
               }}
             >
               {playerState.fence_array[17] === 1 ? (
-              <img
-                src={farm_fence_row}
-                alt="fence17"
-                style={{ width: '100%', height: '100%' }}
-              />
+                <img
+                  src={farm_fence_row}
+                  alt="fence17"
+                  style={{ width: '100%', height: '100%' }}
+                />
               ) : fenceShow ? (
-              <img
-                src={"/private_board_images/farm_fence_row_click.svg"}
-                alt="fence17_click"
-                style={{ width: '100%', height: '100%' }}
-                onClick={() => handleImageClick(17)}
-              />
-              ) : null
-            }
+                <img
+                  src={'/private_board_images/farm_fence_row_click.svg'}
+                  alt="fence17_click"
+                  style={{ width: '100%', height: '100%' }}
+                  onClick={() => handleImageClick(17)}
+                />
+              ) : null}
             </div>
             <div
               style={{
@@ -933,20 +921,19 @@ const PrivateBoard = ({ onClose, nickname, index, isChange, animal }) => {
               }}
             >
               {playerState.fence_array[18] === 1 ? (
-              <img
-                src={farm_fence_row}
-                alt="fence18"
-                style={{ width: '100%', height: '100%' }}
-              />
+                <img
+                  src={farm_fence_row}
+                  alt="fence18"
+                  style={{ width: '100%', height: '100%' }}
+                />
               ) : fenceShow ? (
-              <img
-                src={"/private_board_images/farm_fence_row_click.svg"}
-                alt="fence18_click"
-                style={{ width: '100%', height: '100%' }}
-                onClick={() => handleImageClick(18)}
-              />
-              ) : null
-            }
+                <img
+                  src={'/private_board_images/farm_fence_row_click.svg'}
+                  alt="fence18_click"
+                  style={{ width: '100%', height: '100%' }}
+                  onClick={() => handleImageClick(18)}
+                />
+              ) : null}
             </div>
             <div
               style={{
@@ -957,20 +944,19 @@ const PrivateBoard = ({ onClose, nickname, index, isChange, animal }) => {
               }}
             >
               {playerState.fence_array[19] === 1 ? (
-              <img
-                src={farm_fence_row}
-                alt="fence19"
-                style={{ width: '100%', height: '100%' }}
-              />
+                <img
+                  src={farm_fence_row}
+                  alt="fence19"
+                  style={{ width: '100%', height: '100%' }}
+                />
               ) : fenceShow ? (
-              <img
-                src={"/private_board_images/farm_fence_row_click.svg"}
-                alt="fence19_click"
-                style={{ width: '100%', height: '100%' }}
-                onClick={() => handleImageClick(19)}
-              />
-              ) : null
-            }
+                <img
+                  src={'/private_board_images/farm_fence_row_click.svg'}
+                  alt="fence19_click"
+                  style={{ width: '100%', height: '100%' }}
+                  onClick={() => handleImageClick(19)}
+                />
+              ) : null}
             </div>
             <div
               style={{
@@ -981,20 +967,19 @@ const PrivateBoard = ({ onClose, nickname, index, isChange, animal }) => {
               }}
             >
               {playerState.fence_array[20] === 1 ? (
-              <img
-                src={farm_fence_row}
-                alt="fence20"
-                style={{ width: '100%', height: '100%' }}
-              />
+                <img
+                  src={farm_fence_row}
+                  alt="fence20"
+                  style={{ width: '100%', height: '100%' }}
+                />
               ) : fenceShow ? (
-              <img
-                src={"/private_board_images/farm_fence_row_click.svg"}
-                alt="fence20_click"
-                style={{ width: '100%', height: '100%' }}
-                onClick={() => handleImageClick(20)}
-              />
-              ) : null
-            }
+                <img
+                  src={'/private_board_images/farm_fence_row_click.svg'}
+                  alt="fence20_click"
+                  style={{ width: '100%', height: '100%' }}
+                  onClick={() => handleImageClick(20)}
+                />
+              ) : null}
             </div>
             <div
               style={{
@@ -1005,20 +990,19 @@ const PrivateBoard = ({ onClose, nickname, index, isChange, animal }) => {
               }}
             >
               {playerState.fence_array[21] === 1 ? (
-              <img
-                src={farm_fence_col}
-                alt="fence21"
-                style={{ width: '100%', height: '100%' }}
-              />
+                <img
+                  src={farm_fence_col}
+                  alt="fence21"
+                  style={{ width: '100%', height: '100%' }}
+                />
               ) : fenceShow ? (
-              <img
-                src={"/private_board_images/farm_fence_col_click.svg"}
-                alt="fence21_click"
-                style={{ width: '100%', height: '100%' }}
-                onClick={() => handleImageClick(21)}
-              />
-              ) : null
-            }
+                <img
+                  src={'/private_board_images/farm_fence_col_click.svg'}
+                  alt="fence21_click"
+                  style={{ width: '100%', height: '100%' }}
+                  onClick={() => handleImageClick(21)}
+                />
+              ) : null}
             </div>
             <div
               style={{
@@ -1029,20 +1013,19 @@ const PrivateBoard = ({ onClose, nickname, index, isChange, animal }) => {
               }}
             >
               {playerState.fence_array[22] === 1 ? (
-              <img
-                src={farm_fence_col}
-                alt="fence22"
-                style={{ width: '100%', height: '100%' }}
-              />
+                <img
+                  src={farm_fence_col}
+                  alt="fence22"
+                  style={{ width: '100%', height: '100%' }}
+                />
               ) : fenceShow ? (
-              <img
-                src={"/private_board_images/farm_fence_col_click.svg"}
-                alt="fence22_click"
-                style={{ width: '100%', height: '100%' }}
-                onClick={() => handleImageClick(22)}
-              />
-              ) : null
-            }
+                <img
+                  src={'/private_board_images/farm_fence_col_click.svg'}
+                  alt="fence22_click"
+                  style={{ width: '100%', height: '100%' }}
+                  onClick={() => handleImageClick(22)}
+                />
+              ) : null}
             </div>
             <div
               style={{
@@ -1053,20 +1036,19 @@ const PrivateBoard = ({ onClose, nickname, index, isChange, animal }) => {
               }}
             >
               {playerState.fence_array[23] === 1 ? (
-              <img
-                src={farm_fence_col}
-                alt="fence23"
-                style={{ width: '100%', height: '100%' }}
-              />
+                <img
+                  src={farm_fence_col}
+                  alt="fence23"
+                  style={{ width: '100%', height: '100%' }}
+                />
               ) : fenceShow ? (
-              <img
-                src={"/private_board_images/farm_fence_col_click.svg"}
-                alt="fence23_click"
-                style={{ width: '100%', height: '100%' }}
-                onClick={() => handleImageClick(23)}
-              />
-              ) : null
-            }
+                <img
+                  src={'/private_board_images/farm_fence_col_click.svg'}
+                  alt="fence23_click"
+                  style={{ width: '100%', height: '100%' }}
+                  onClick={() => handleImageClick(23)}
+                />
+              ) : null}
             </div>
             <div
               style={{
@@ -1077,20 +1059,19 @@ const PrivateBoard = ({ onClose, nickname, index, isChange, animal }) => {
               }}
             >
               {playerState.fence_array[24] === 1 ? (
-              <img
-                src={farm_fence_col}
-                alt="fence24"
-                style={{ width: '100%', height: '100%' }}
-              />
+                <img
+                  src={farm_fence_col}
+                  alt="fence24"
+                  style={{ width: '100%', height: '100%' }}
+                />
               ) : fenceShow ? (
-              <img
-                src={"/private_board_images/farm_fence_col_click.svg"}
-                alt="fence24_click"
-                style={{ width: '100%', height: '100%' }}
-                onClick={() => handleImageClick(24)}
-              />
-              ) : null
-            }
+                <img
+                  src={'/private_board_images/farm_fence_col_click.svg'}
+                  alt="fence24_click"
+                  style={{ width: '100%', height: '100%' }}
+                  onClick={() => handleImageClick(24)}
+                />
+              ) : null}
             </div>
             <div
               style={{
@@ -1101,20 +1082,19 @@ const PrivateBoard = ({ onClose, nickname, index, isChange, animal }) => {
               }}
             >
               {playerState.fence_array[25] === 1 ? (
-              <img
-                src={farm_fence_row}
-                alt="fence25"
-                style={{ width: '100%', height: '100%' }}
-              />
+                <img
+                  src={farm_fence_row}
+                  alt="fence25"
+                  style={{ width: '100%', height: '100%' }}
+                />
               ) : fenceShow ? (
-              <img
-                src={"/private_board_images/farm_fence_row_click.svg"}
-                alt="fence25_click"
-                style={{ width: '100%', height: '100%' }}
-                onClick={() => handleImageClick(25)}
-              />
-              ) : null
-            }
+                <img
+                  src={'/private_board_images/farm_fence_row_click.svg'}
+                  alt="fence25_click"
+                  style={{ width: '100%', height: '100%' }}
+                  onClick={() => handleImageClick(25)}
+                />
+              ) : null}
             </div>
             <div
               style={{
@@ -1125,20 +1105,19 @@ const PrivateBoard = ({ onClose, nickname, index, isChange, animal }) => {
               }}
             >
               {playerState.fence_array[26] === 1 ? (
-              <img
-                src={farm_fence_row}
-                alt="fence26"
-                style={{ width: '100%', height: '100%' }}
-              />
+                <img
+                  src={farm_fence_row}
+                  alt="fence26"
+                  style={{ width: '100%', height: '100%' }}
+                />
               ) : fenceShow ? (
-              <img
-                src={"/private_board_images/farm_fence_row_click.svg"}
-                alt="fence26_click"
-                style={{ width: '100%', height: '100%' }}
-                onClick={() => handleImageClick(26)}
-              />
-              ) : null
-            }
+                <img
+                  src={'/private_board_images/farm_fence_row_click.svg'}
+                  alt="fence26_click"
+                  style={{ width: '100%', height: '100%' }}
+                  onClick={() => handleImageClick(26)}
+                />
+              ) : null}
             </div>
             <div
               style={{
@@ -1149,20 +1128,19 @@ const PrivateBoard = ({ onClose, nickname, index, isChange, animal }) => {
               }}
             >
               {playerState.fence_array[27] === 1 ? (
-              <img
-                src={farm_fence_row}
-                alt="fence27"
-                style={{ width: '100%', height: '100%' }}
-              />
+                <img
+                  src={farm_fence_row}
+                  alt="fence27"
+                  style={{ width: '100%', height: '100%' }}
+                />
               ) : fenceShow ? (
-              <img
-                src={"/private_board_images/farm_fence_row_click.svg"}
-                alt="fence27_click"
-                style={{ width: '100%', height: '100%' }}
-                onClick={() => handleImageClick(27)}
-              />
-              ) : null
-            }
+                <img
+                  src={'/private_board_images/farm_fence_row_click.svg'}
+                  alt="fence27_click"
+                  style={{ width: '100%', height: '100%' }}
+                  onClick={() => handleImageClick(27)}
+                />
+              ) : null}
             </div>
             <div
               style={{
@@ -1173,20 +1151,19 @@ const PrivateBoard = ({ onClose, nickname, index, isChange, animal }) => {
               }}
             >
               {playerState.fence_array[28] === 1 ? (
-              <img
-                src={farm_fence_row}
-                alt="fence28"
-                style={{ width: '100%', height: '100%' }}
-              />
+                <img
+                  src={farm_fence_row}
+                  alt="fence28"
+                  style={{ width: '100%', height: '100%' }}
+                />
               ) : fenceShow ? (
-              <img
-                src={"/private_board_images/farm_fence_row_click.svg"}
-                alt="fence28_click"
-                style={{ width: '100%', height: '100%' }}
-                onClick={() => handleImageClick(28)}
-              />
-              ) : null
-            }
+                <img
+                  src={'/private_board_images/farm_fence_row_click.svg'}
+                  alt="fence28_click"
+                  style={{ width: '100%', height: '100%' }}
+                  onClick={() => handleImageClick(28)}
+                />
+              ) : null}
             </div>
             <div
               style={{
@@ -1197,20 +1174,19 @@ const PrivateBoard = ({ onClose, nickname, index, isChange, animal }) => {
               }}
             >
               {playerState.fence_array[29] === 1 ? (
-              <img
-                src={farm_fence_row}
-                alt="fence29"
-                style={{ width: '100%', height: '100%' }}
-              />
+                <img
+                  src={farm_fence_row}
+                  alt="fence29"
+                  style={{ width: '100%', height: '100%' }}
+                />
               ) : fenceShow ? (
-              <img
-                src={"/private_board_images/farm_fence_row_click.svg"}
-                alt="fence29_click"
-                style={{ width: '100%', height: '100%' }}
-                onClick={() => handleImageClick(29)}
-              />
-              ) : null
-            }
+                <img
+                  src={'/private_board_images/farm_fence_row_click.svg'}
+                  alt="fence29_click"
+                  style={{ width: '100%', height: '100%' }}
+                  onClick={() => handleImageClick(29)}
+                />
+              ) : null}
             </div>
             <div
               style={{
@@ -1221,20 +1197,19 @@ const PrivateBoard = ({ onClose, nickname, index, isChange, animal }) => {
               }}
             >
               {playerState.fence_array[30] === 1 ? (
-              <img
-                src={farm_fence_col}
-                alt="fence30"
-                style={{ width: '100%', height: '100%' }}
-              />
+                <img
+                  src={farm_fence_col}
+                  alt="fence30"
+                  style={{ width: '100%', height: '100%' }}
+                />
               ) : fenceShow ? (
-              <img
-                src={"/private_board_images/farm_fence_col_click.svg"}
-                alt="fence30_click"
-                style={{ width: '100%', height: '100%' }}
-                onClick={() => handleImageClick(30)}
-              />
-              ) : null
-            }
+                <img
+                  src={'/private_board_images/farm_fence_col_click.svg'}
+                  alt="fence30_click"
+                  style={{ width: '100%', height: '100%' }}
+                  onClick={() => handleImageClick(30)}
+                />
+              ) : null}
             </div>
             <div
               style={{
@@ -1245,20 +1220,19 @@ const PrivateBoard = ({ onClose, nickname, index, isChange, animal }) => {
               }}
             >
               {playerState.fence_array[31] === 1 ? (
-              <img
-                src={farm_fence_col}
-                alt="fence31"
-                style={{ width: '100%', height: '100%' }}
-              />
+                <img
+                  src={farm_fence_col}
+                  alt="fence31"
+                  style={{ width: '100%', height: '100%' }}
+                />
               ) : fenceShow ? (
-              <img
-                src={"/private_board_images/farm_fence_col_click.svg"}
-                alt="fence31_click"
-                style={{ width: '100%', height: '100%' }}
-                onClick={() => handleImageClick(31)}
-              />
-              ) : null
-            }
+                <img
+                  src={'/private_board_images/farm_fence_col_click.svg'}
+                  alt="fence31_click"
+                  style={{ width: '100%', height: '100%' }}
+                  onClick={() => handleImageClick(31)}
+                />
+              ) : null}
             </div>
             <div
               style={{
@@ -1269,20 +1243,19 @@ const PrivateBoard = ({ onClose, nickname, index, isChange, animal }) => {
               }}
             >
               {playerState.fence_array[32] === 1 ? (
-              <img
-                src={farm_fence_col}
-                alt="fence32"
-                style={{ width: '100%', height: '100%' }}
-              />
+                <img
+                  src={farm_fence_col}
+                  alt="fence32"
+                  style={{ width: '100%', height: '100%' }}
+                />
               ) : fenceShow ? (
-              <img
-                src={"/private_board_images/farm_fence_col_click.svg"}
-                alt="fence32_click"
-                style={{ width: '100%', height: '100%' }}
-                onClick={() => handleImageClick(32)}
-              />
-              ) : null
-            }
+                <img
+                  src={'/private_board_images/farm_fence_col_click.svg'}
+                  alt="fence32_click"
+                  style={{ width: '100%', height: '100%' }}
+                  onClick={() => handleImageClick(32)}
+                />
+              ) : null}
             </div>
             <div
               style={{
@@ -1293,20 +1266,19 @@ const PrivateBoard = ({ onClose, nickname, index, isChange, animal }) => {
               }}
             >
               {playerState.fence_array[33] === 1 ? (
-              <img
-                src={farm_fence_col}
-                alt="fence33"
-                style={{ width: '100%', height: '100%' }}
-              />
+                <img
+                  src={farm_fence_col}
+                  alt="fence33"
+                  style={{ width: '100%', height: '100%' }}
+                />
               ) : fenceShow ? (
-              <img
-                src={"/private_board_images/farm_fence_col_click.svg"}
-                alt="fence33_click"
-                style={{ width: '100%', height: '100%' }}
-                onClick={() => handleImageClick(33)}
-              />
-              ) : null
-            }
+                <img
+                  src={'/private_board_images/farm_fence_col_click.svg'}
+                  alt="fence33_click"
+                  style={{ width: '100%', height: '100%' }}
+                  onClick={() => handleImageClick(33)}
+                />
+              ) : null}
             </div>
             <div
               style={{
