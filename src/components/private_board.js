@@ -11,7 +11,14 @@ import JobCardModal from './JobCardModal';
 import FacilityCardModal from './FacilityCardModal';
 import { SocketContext } from '@/context/socket';
 
-const PrivateBoard = ({ onClose, nickname, index, isChange, animal, test }) => {
+const PrivateBoard = ({
+  onClose,
+  nickname,
+  index,
+  isChange,
+  animal,
+  nooseRope,
+}) => {
   const socket = useContext(SocketContext);
   const router = useRouter();
   const { playerIndex } = router.query;
@@ -48,7 +55,6 @@ const PrivateBoard = ({ onClose, nickname, index, isChange, animal, test }) => {
         setPlayerState4(data.state);
       }
     });
-    console.log('fieldUpdate');
   }, []);
 
   if (index === 1) {
@@ -121,10 +127,8 @@ const PrivateBoard = ({ onClose, nickname, index, isChange, animal, test }) => {
       // privateBoard를 닫고,
       handleArrowClick();
       // socket.emit('endTurn', { currentTurnIndex-1, turnCount }); 만 하면 됨
-      test();
-      console.log('after test');
+      nooseRope();
     }
-    console.log(card);
     setIsFacilityModalOpen(false);
   };
 

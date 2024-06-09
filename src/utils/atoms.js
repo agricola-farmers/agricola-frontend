@@ -44,6 +44,7 @@ export const player1State = atom({
   default: {
     isActive: false,
     family_member: 2,
+    baby: 0,
     stables: 0,
     fences: 0,
     fence_array: [
@@ -98,6 +99,7 @@ export const player2State = atom({
   default: {
     isActive: false,
     family_member: 2,
+    baby: 0,
     stables: 0,
     fences: 0,
     fence_array: [
@@ -152,6 +154,7 @@ export const player3State = atom({
   default: {
     isActive: false,
     family_member: 2,
+    baby: 0,
     stables: 0,
     fences: 0,
     fence_array: [
@@ -206,6 +209,7 @@ export const player4State = atom({
   default: {
     isActive: false,
     family_member: 2,
+    baby: 0,
     stables: 0,
     fences: 0,
     fence_array: [

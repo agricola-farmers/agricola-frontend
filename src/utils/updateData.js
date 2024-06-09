@@ -2,6 +2,7 @@ export const updateData = {
   player1: {
     isActive: false,
     family_member: 4,
+    baby: 0,
     stables: 0,
     fence_array: [
       0, 0, 0, 1, 1, 0, 0, 0, 1, 1, 1, 0, 0, 1, 1, 1, 0, 1, 0, 0, 1, 0, 0, 0, 0,
@@ -62,6 +63,7 @@ export const updateData = {
   player2: {
     isActive: false,
     family_member: 3,
+    baby: 0,
     stables: 0,
     fence_array: [
       0, 0, 0, 1, 1, 0, 0, 0, 1, 0, 1, 0, 0, 1, 1, 1, 0, 1, 0, 0, 1, 0, 0, 0, 0,
@@ -122,6 +124,7 @@ export const updateData = {
   player3: {
     isActive: false,
     family_member: 2,
+    baby: 0,
     stables: 0,
     fence_array: [
       0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 1, 0, 1, 0, 0, 0, 0,
@@ -182,6 +185,7 @@ export const updateData = {
   player4: {
     isActive: false,
     family_member: 4,
+    baby: 0,
     stables: 0,
     fence_array: [
       0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 1, 0, 0, 1, 0, 0, 1, 1,

@@ -19,7 +19,6 @@ export default function Play() {
   useEffect(() => {
     if (roomNumber && socket) {
       socket.emit('join_room', roomNumber);
-      console.log('Joining room', roomNumber);
 
       socket.on('room_info', (roomData) => {
         const combinedNicknames = [
@@ -34,10 +33,6 @@ export default function Play() {
       };
     }
   }, [roomNumber, socket]);
-
-  useEffect(() => {
-    console.log('Player Index:', playerIndex);
-  }, [playerIndex]);
 
   const ShowPrivate = (nickname) => {
     setSelectedNickname(nickname);

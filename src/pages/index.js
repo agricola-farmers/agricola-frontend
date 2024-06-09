@@ -5,18 +5,6 @@ import RoomManager from '@/components/room_manager';
 import JoinToGame from '@/components/join_to_game';
 
 export default function Home() {
-  // const socket = useContext(SocketContext);
-
-  // useEffect(() => {
-  //   socket.on('dataFromServer', (data) => {
-  //     console.log(data);
-  //   });
-  // }, []);
-
-  // const onChange = () => {
-  //   socket.emit('dataFromClient', 'Hello, world!');
-  // };
-
   const [showRoomManager, setShowRoomManager] = useState(false);
   const [showJoinToGame, setShowJoinToGame] = useState(false);
 
