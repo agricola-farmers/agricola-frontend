@@ -2,13 +2,12 @@ import React from 'react';
 import styles from '../styles/Modal.module.css';
 import { useRecoilValue } from 'recoil';
 import { mainFacilities, subFacilities } from '../models/Facility';
-import { itemNumberSelector } from '../utils/atoms';
+import { BoardState } from '../utils/atoms';
 
 const getItemImage = (item) => {
-  // 설비
   const allFacilities = [...mainFacilities, ...subFacilities];
   const facility = allFacilities.find((fac) => fac.name === item);
-
+  
   if (facility) {
     return facility.image;
   }
@@ -72,9 +71,7 @@ const Modal = ({ item, onClose, onSelect, onSelectQuantity }) => {
 
     
 
-    const isMainFacility = mainFacilities.some(facility => facility.name === item);
-
-    
+    const isMainFacility = mainFacilities.some(facility => facility.name === item)
 
     return (
         <div className={styles.modalOverlay}>
