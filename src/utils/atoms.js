@@ -46,7 +46,6 @@ export const player1State = atom({
     family_member: 2,
     baby: 0,
     stables: 0,
-    fences: 0,
     fence_array: [
       0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
       0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -101,7 +100,6 @@ export const player2State = atom({
     family_member: 2,
     baby: 0,
     stables: 0,
-    fences: 0,
     fence_array: [
       0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
       0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -156,7 +154,6 @@ export const player3State = atom({
     family_member: 2,
     baby: 0,
     stables: 0,
-    fences: 0,
     fence_array: [
       0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
       0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -211,7 +208,6 @@ export const player4State = atom({
     family_member: 2,
     baby: 0,
     stables: 0,
-    fences: 0,
     fence_array: [
       0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
       0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -264,35 +260,6 @@ export const playersPositionState = atom({
   default: [[], [], [], []],
 });
 
-export const itemNumbersState = atom({
-  key: 'itemNumbersState',
-  default: {
-    덤불: 1,
-    수풀: 2,
-    숲: 3,
-    '날품 팔이': 2,
-    '곡식 종자': 1,
-    '자원 시장': [1, 1, 1],
-    '흙 채굴장': 2,
-    '점토 채굴장': 2,
-    '유랑 극단': 1,
-    낚시: 1,
-    갈대: 1,
-  },
-});
-
-export const itemNumberSelector = selector({
-  key: 'itemNumberSelector',
-  get: ({ get }) => get(itemNumbersState),
-  set: ({ set, get }, newValue) => {
-    const currentNumbers = get(itemNumbersState);
-    set(itemNumbersState, {
-      ...currentNumbers,
-      ...newValue,
-    });
-  },
-});
-
 export const onceClickState = atom({
   key: 'onceClickState',
   default: true,
@@ -322,4 +289,20 @@ export const harvestState = atom({
     isHarvest: false,
     harvestType: '농장 단계',
   },
+});
+
+export const mainFacilitieState = atom({
+  key: 'mainFacilitieState',
+  default: [
+      { id: 1, name: '화로', image: '/images/mainfacility/brazier2.png', player: 10 },
+      { id: 2, name: '화로', image: '/images/mainfacility/brazier3.png', player: 10 },
+      { id: 3, name: '화덕', image: '/images/mainfacility/fire_pit4.png', player: 10 },
+      { id: 4, name: '화덕', image: '/images/mainfacility/fire_pit5.png', player: 10 },
+      { id: 5, name: '흙가마', image: '/images/mainfacility/dirt_kiln.png', player: 10 },
+      { id: 6, name: '돌가마', image: '/images/mainfacility/stone_kiln.png', player: 10 },
+      { id: 7, name: '가구 제작소', image: '/images/mainfacility/furniture_factory.png', player: 10 },
+      { id: 8, name: '그릇 제작소', image: '/images/mainfacility/bowl_factory.png', player: 10 },
+      { id: 9, name: '바구니 제작소', image: '/images/mainfacility/basket_factory.png', player: 10 },
+      { id: 10, name: '우물', image: '/images/mainfacility/well.png', player: 10 },
+    ],
 });

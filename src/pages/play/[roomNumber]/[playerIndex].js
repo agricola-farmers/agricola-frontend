@@ -16,6 +16,7 @@ import {
   player4State,
   playersPositionState,
   playersState,
+  mainFacilitieState,
 } from '@/utils/atoms';
 import { updateData } from '@/utils/updateData';
 
@@ -42,6 +43,8 @@ export default function Play() {
   const [familyMember, setFamilyMember] = useState([1, 1, 1, 1]);
   const [harvest, setHarvest] = useRecoilState(harvestState);
   const prevTurnIndexRef = useRef(currentTurnIndex);
+  const [mainFacilities, setMainFacilities] = useRecoilState(mainFacilitieState);
+
 
   useEffect(() => {
     if (turnCount === 8) {
@@ -53,6 +56,7 @@ export default function Play() {
       setPlayerPosition([[], [], [], []]);
       setBoard(updateData.board);
       setFieldCard(updateData.fieldCard);
+      setMainFacilities(updateData.mainFacilities);
     }
 
     const idx =

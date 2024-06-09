@@ -30,6 +30,7 @@ const PrivateBoard = ({
   const [cardClick, setCardClick] = useState(animal);
   const [clickedIndex, setClickedIndex] = useState(null);
   const [fenceShow, setFenceShow] = useState(false);
+  const [fenceQuantity, setFenceQuantity] = useState(0);
 
   const [playerState1, setPlayerState1] = useRecoilState(player1State);
   const [playerState2, setPlayerState2] = useRecoilState(player2State);
@@ -56,6 +57,11 @@ const PrivateBoard = ({
       }
     });
   }, []);
+
+  useEffect(() => {
+    const countFences = playerState.fence_array.reduce((count, fence) => count + (fence === 1 ? 1 : 0), 0);
+    setFenceQuantity(countFences);
+  }, [playerState.fence_array]);
 
   if (index === 1) {
     playerImage = '/private_board_images/red_player.svg';
@@ -1835,7 +1841,7 @@ const PrivateBoard = ({
                     fontWeight: 'bold',
                   }}
                 >
-                  <span>{playerState.fences}</span>
+                  <span>{fenceQuantity}</span>
                   <span>/15</span>
                 </div>
                 <div
