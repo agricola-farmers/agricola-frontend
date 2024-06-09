@@ -3,18 +3,27 @@ import styles from '../styles/SideBar.module.css';
 import { HelpManager } from './help_manager';
 import { ScoreManager } from './score_manager';
 import { useRouter } from 'next/router';
+import { useRecoilState } from 'recoil';
+import { harvestState } from '@/utils/atoms';
 
-export const SideBar = ({ ShowPrivate, nicknames, timer, currentTurn, onEndTurn }) => {
+export const SideBar = ({
+  ShowPrivate,
+  nicknames,
+  timer,
+  currentTurn,
+  onEndTurn,
+}) => {
   const { showHelp, toggleHelp, HelpModalComponent } = HelpManager();
   const { showScore, toggleScore, ScoreModalComponent } = ScoreManager();
   const router = useRouter();
   const { playerIndex } = router.query;
+  const [harvest, setHarvest] = useRecoilState(harvestState);
 
   const playerImages = [
-    "/private_board_images/orange_player.svg",
-    "/private_board_images/red_player.svg",
-    "/private_board_images/green_player.svg",
-    "/private_board_images/blue_player.svg",
+    '/private_board_images/orange_player.svg',
+    '/private_board_images/red_player.svg',
+    '/private_board_images/green_player.svg',
+    '/private_board_images/blue_player.svg',
   ];
 
   const playerColors = ['#EA7B30', '#98312D', '#04741B', '#121E54'];
@@ -73,7 +82,7 @@ export const SideBar = ({ ShowPrivate, nicknames, timer, currentTurn, onEndTurn 
                 </div>
                 {currentTurn === index && (
                   <div className={styles.myTurnIcon}>
-                    <img src="/images/myturn.svg" alt="My Turn"/>
+                    <img src="/images/myturn.svg" alt="My Turn" />
                   </div>
                 )}
               </div>
@@ -86,8 +95,13 @@ export const SideBar = ({ ShowPrivate, nicknames, timer, currentTurn, onEndTurn 
         <div className={styles.timerInnerContainer}>
           <div className={styles.timerContent}>
             <div style={{ width: '50%' }}>
-              <img src="/images/hourglass.svg" alt="Hourglass" className={styles.hourglass} />
-              {playerIndex === currentTurn.toString() && (
+              <img
+                src="/images/hourglass.svg"
+                alt="Hourglass"
+                className={styles.hourglass}
+              />
+              {(harvest.isHarvest ||
+                playerIndex === currentTurn.toString()) && (
                 <button className={styles.endTurnButton} onClick={onEndTurn}>
                   턴 종료
                 </button>
@@ -96,12 +110,20 @@ export const SideBar = ({ ShowPrivate, nicknames, timer, currentTurn, onEndTurn 
             <div className={styles.textSection}>
               <div
                 className={styles.playerTurn}
-                style={{ color: playerColors[currentTurn % 4] }}
+                style={{
+                  color: harvest.isHarvest
+                    ? '#71B743'
+                    : playerColors[currentTurn % 4],
+                }}
               >
-                {nicknames[currentTurn]}
+                {harvest.isHarvest ? '수확 단계' : nicknames[currentTurn]}
               </div>
-              <div className={styles.gameStatus}>게임 진행 중</div>
-              <div className={styles.timer}>{timer}</div>
+              <div className={styles.gameStatus}>
+                {harvest.isHarvest ? `${harvest.harvestType}` : '게임 진행 중'}
+              </div>
+              <div className={styles.timer}>
+                {harvest.harvestType === '종료' ? '' : timer}
+              </div>
             </div>
           </div>
         </div>

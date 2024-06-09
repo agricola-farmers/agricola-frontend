@@ -9,6 +9,7 @@ import { useRecoilState } from 'recoil';
 import {
   BoardState,
   FieldCardState,
+  harvestState,
   player1State,
   player2State,
   player3State,
@@ -39,6 +40,7 @@ export default function Play() {
   const [board, setBoard] = useRecoilState(BoardState);
   const [fieldCard, setFieldCard] = useRecoilState(FieldCardState);
   const [familyMember, setFamilyMember] = useState([1, 1, 1, 1]);
+  const [harvest, setHarvest] = useRecoilState(harvestState);
 
   useEffect(() => {
     if (turnCount === 8) {
@@ -114,6 +116,14 @@ export default function Play() {
       }
     });
 
+    socket.on('harvest', (data) => {
+      console.log('harvest', data);
+      setHarvest({
+        isHarvest: true,
+        harvestType: data.harvestType,
+      });
+    });
+
     const interval = setInterval(() => {
       setTimer((prevTimer) => {
         if (prevTimer === 0) {
@@ -126,8 +136,13 @@ export default function Play() {
     return () => {
       clearInterval(interval);
       socket.off('endTurn');
+      socket.off('harvest');
     };
   }, []);
+
+  useEffect(() => {
+    setTimer(60);
+  }, [harvest.harvestType]);
 
   useEffect(() => {
     if (timer === 0) {
@@ -138,7 +153,10 @@ export default function Play() {
   useEffect(() => {
     if (turnCount > 8) {
       if (familyMember.every((member) => member === 0)) {
-        socket.emit('harvest');
+        socket.emit('harvest', {
+          playerIndex: -1,
+          harvestType: harvest.harvestType,
+        });
       } else if (familyMember[currentTurnIndex] === 0) {
         handleEndTurn();
       }
@@ -154,7 +172,15 @@ export default function Play() {
   };
 
   const handleEndTurn = () => {
-    socket.emit('endTurn', { currentTurnIndex, turnCount });
+    console.log(harvest.isHarvest);
+    if (!harvest.isHarvest) {
+      socket.emit('endTurn', { currentTurnIndex, turnCount });
+    } else {
+      socket.emit('harvest', {
+        playerIndex: parseInt(playerIndex, 10),
+        harvestType: harvest.harvestType,
+      });
+    }
   };
 
   return (
