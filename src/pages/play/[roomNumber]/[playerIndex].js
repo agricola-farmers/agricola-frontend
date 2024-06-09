@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import styles from '../../../styles/Play.module.css';
 import PrivateBoard from '@/components/private_board';
 import { SocketContext } from '@/context/socket';
@@ -16,6 +16,7 @@ import {
   player4State,
   playersPositionState,
   playersState,
+  mainFacilitieState,
 } from '@/utils/atoms';
 import { updateData } from '@/utils/updateData';
 
@@ -41,6 +42,9 @@ export default function Play() {
   const [fieldCard, setFieldCard] = useRecoilState(FieldCardState);
   const [familyMember, setFamilyMember] = useState([1, 1, 1, 1]);
   const [harvest, setHarvest] = useRecoilState(harvestState);
+  const prevTurnIndexRef = useRef(currentTurnIndex);
+  const [mainFacilities, setMainFacilities] = useRecoilState(mainFacilitieState);
+
 
   useEffect(() => {
     if (turnCount === 8) {
@@ -52,11 +56,26 @@ export default function Play() {
       setPlayerPosition([[], [], [], []]);
       setBoard(updateData.board);
       setFieldCard(updateData.fieldCard);
+      setMainFacilities(updateData.mainFacilities);
     }
 
-    console.log('turnCount', turnCount);
-    console.log('currentTurnIndex', currentTurnIndex);
-    console.log('familyMember', familyMember);
+    const idx =
+      currentTurnIndex === prevTurnIndexRef.current // 이전 값과 비교
+        ? currentTurnIndex
+        : currentTurnIndex === 0
+        ? 3
+        : currentTurnIndex - 1;
+
+    if (turnCount > 8 && familyMember[idx] > 0) {
+      setFamilyMember((prev) => {
+        const newFamilyMember = [...prev];
+        newFamilyMember[idx] !== 0 && (newFamilyMember[idx] -= 1);
+        return newFamilyMember;
+      });
+    }
+
+    // 현재 currentTurnIndex 값을 이전 값으로 저장
+    prevTurnIndexRef.current = currentTurnIndex;
   }, [turnCount]);
 
   useEffect(() => {
@@ -73,7 +92,6 @@ export default function Play() {
   useEffect(() => {
     if (roomNumber && socket) {
       socket.emit('join_room', roomNumber);
-      console.log('Joining room', roomNumber);
 
       socket.on('room_info', (roomData) => {
         const combinedNicknames = [
@@ -94,30 +112,9 @@ export default function Play() {
       setTurnCount(data.turnCount);
       setCurrentTurnIndex(data.currentTurnIndex);
       setTimer(60);
-
-      if (
-        data.turnCount > 8 &&
-        familyMember[
-          data.currentTurnIndex === 0 ? 3 : data.currentTurnIndex - 1
-        ] > 0
-      ) {
-        console.log('familyMember', 'handleEndTurn');
-        setFamilyMember((prev) => {
-          const newFamilyMember = [...prev];
-
-          newFamilyMember[
-            data.currentTurnIndex === 0 ? 3 : data.currentTurnIndex - 1
-          ] !== 0 &&
-            (newFamilyMember[
-              data.currentTurnIndex === 0 ? 3 : data.currentTurnIndex - 1
-            ] -= 1);
-          return newFamilyMember;
-        });
-      }
     });
 
     socket.on('harvest', (data) => {
-      console.log('harvest', data);
       setHarvest({
         isHarvest: true,
         harvestType: data.harvestType,
@@ -142,7 +139,40 @@ export default function Play() {
 
   useEffect(() => {
     setTimer(60);
+    if (harvest.harvestType === '가족 먹여 살리기') {
+      updatePlayerFood(setPlayer1, player1);
+      updatePlayerFood(setPlayer2, player2);
+      updatePlayerFood(setPlayer3, player3);
+      updatePlayerFood(setPlayer4, player4);
+    } else if (harvest.harvestType === '번식 단계') {
+      updateAnimalCounts(setPlayer1, player1);
+      updateAnimalCounts(setPlayer2, player2);
+      updateAnimalCounts(setPlayer3, player3);
+      updateAnimalCounts(setPlayer4, player4);
+    }
   }, [harvest.harvestType]);
+
+  function updatePlayerFood(setPlayer, playerData) {
+    setPlayer((prev) => ({
+      ...prev,
+      food: playerData.food - playerData.family_member * 2 - playerData.baby,
+    }));
+  }
+
+  function updateAnimalCounts(setPlayer, playerData) {
+    const animalCounts = { sheep: 0, pig: 0, cattle: 0 };
+    for (const field in playerData.fieldState) {
+      animalCounts.sheep += playerData.fieldState[field].sheep || 0;
+      animalCounts.pig += playerData.fieldState[field].pig || 0;
+      animalCounts.cattle += playerData.fieldState[field].cattle || 0;
+    }
+    setPlayer((prev) => ({
+      ...prev,
+      sheep: animalCounts.sheep >= 2 ? prev.sheep + 1 : prev.sheep,
+      pig: animalCounts.pig >= 2 ? prev.pig + 1 : prev.pig,
+      cattle: animalCounts.cattle >= 2 ? prev.cattle + 1 : prev.cattle,
+    }));
+  }
 
   useEffect(() => {
     if (timer === 0) {
@@ -168,11 +198,9 @@ export default function Play() {
     setisChange(isChange);
     setShowPrivateBoard(true);
     setAnimal(animal);
-    console.log(animal);
   };
 
   const handleEndTurn = () => {
-    console.log(harvest.isHarvest);
     if (!harvest.isHarvest) {
       socket.emit('endTurn', { currentTurnIndex, turnCount });
     } else {
@@ -181,6 +209,13 @@ export default function Play() {
         harvestType: harvest.harvestType,
       });
     }
+  };
+
+  const nooseRope = () => {
+    socket.emit('endTurn', {
+      currentTurnIndex: parseInt(currentTurnIndex, 10) - 1,
+      turnCount,
+    });
   };
 
   return (
@@ -192,6 +227,7 @@ export default function Play() {
           index={players.indexOf(selectedNickname)}
           isChange={IsChange}
           animal={animal}
+          nooseRope={nooseRope}
         />
       ) : (
         <>

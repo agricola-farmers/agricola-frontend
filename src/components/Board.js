@@ -36,6 +36,7 @@ export const Board = ({ playerIndex, isClickable, ShowPrivate, nicknames }) => {
   const [isFacilityCardModalOpen, setIsFacilityCardModalOpen] = useState(false);
   // isFacilityCardModalOpen 은 행동 칸에서 열리는 설비 모달을 관리하기 위해 만듬.
   const [isJobCardModalOpen, setIsJobCardModalOpen] = useState(false);
+  const [selectedQuantity, setSelectedQuantity] = useState(0);
 
   const [facilityType, setFacilityType] = useState(null);
   const [isMainFacility, setIsMainFacility] = useState(null);
@@ -132,8 +133,6 @@ export const Board = ({ playerIndex, isClickable, ShowPrivate, nicknames }) => {
         setPlayerState4(data.state);
       }
     });
-    console.log(board, 'here!');
-    console.log(playerState.job_active);
   }, []);
 
   const playerImages = [
@@ -153,7 +152,6 @@ export const Board = ({ playerIndex, isClickable, ShowPrivate, nicknames }) => {
       setFacilityType('main');
     } else {
       if (isClickable) {
-        console.log(nicknames[index]);
         if (onceClick) {
           if (item === '화합 장소') {
             setIsFacilityCardModalOpen(true);
@@ -161,8 +159,47 @@ export const Board = ({ playerIndex, isClickable, ShowPrivate, nicknames }) => {
             setIsJobCardModalOpen(true);
           } else if (item === '교습2') {
             setIsJobCardModalOpen(true);
+          } else if (item === '수풀') {
+            setSelectedQuantity(board.bush_2);
+            setSelectedItem(item);
           }
-          else{
+          else if (item === '덤블') {
+            setSelectedQuantity(board.bush_1);
+            setSelectedItem(item);
+          }
+          else if (item === '날품 팔이') {
+            setSelectedQuantity(2);
+            setSelectedItem(item);
+          }
+          else if (item === '곡식 종자') {
+            setSelectedQuantity(1);
+            setSelectedItem(item);
+          }
+          else if (item === '유랑 극단') {
+            setSelectedQuantity(board.traveling_theater);
+            setSelectedItem(item);
+          }
+          else if (item === '갈대') {
+            setSelectedQuantity(board.reed);
+            setSelectedItem(item);
+          }
+          else if (item === '낚시') {
+            setSelectedQuantity(board.fishing);
+            setSelectedItem(item);
+          }
+          else if (item === '흙 채굴장') {
+            setSelectedQuantity(board.dirt_mine);
+            setSelectedItem(item);
+          }
+          else if (item === '점토 채굴장') {
+            setSelectedQuantity(board.clay_mine);
+            setSelectedItem(item);
+          }
+          else if (item === '숲') {
+            setSelectedQuantity(board.forest);
+            setSelectedItem(item);
+          }
+          else {
             setSelectedItem(item);
           }
         }
@@ -221,8 +258,14 @@ export const Board = ({ playerIndex, isClickable, ShowPrivate, nicknames }) => {
       } else if (selectedItem === '보조경작자') {
         const newPlayerState = {
           ...playerState,
-          job: playerState.job.filter((jobCard) => jobCard !== '../../../images/player4_jobcard/jobcard_5.png'),
-          job_active: [...playerState.job_active, '../../../images/player4_jobcard/jobcard_5.png'],
+          job: playerState.job.filter(
+            (jobCard) =>
+              jobCard !== '../../../images/player4_jobcard/jobcard_5.png'
+          ),
+          job_active: [
+            ...playerState.job_active,
+            '../../../images/player4_jobcard/jobcard_5.png',
+          ],
         };
         setPlayerState(newPlayerState);
         const newPositions = [...playersPosition];
@@ -259,11 +302,16 @@ export const Board = ({ playerIndex, isClickable, ShowPrivate, nicknames }) => {
         });
         setOnceClick(false);
       } else if (selectedItem === '양의친구') {
-        console.log("tjsxor!");
         const newPlayerState = {
           ...playerState,
-          job: playerState.job.filter((jobCard) => jobCard !== '../../../images/player2_jobcard/jobcard_7.png'),
-          job_active: [...playerState.job_active, '../../../images/player2_jobcard/jobcard_7.png'],
+          job: playerState.job.filter(
+            (jobCard) =>
+              jobCard !== '../../../images/player2_jobcard/jobcard_7.png'
+          ),
+          job_active: [
+            ...playerState.job_active,
+            '../../../images/player2_jobcard/jobcard_7.png',
+          ],
           food: playerState.food - 1,
         };
         setPlayerState(newPlayerState);
@@ -501,11 +549,17 @@ export const Board = ({ playerIndex, isClickable, ShowPrivate, nicknames }) => {
         });
         setOnceClick(false);
       } else if (selectedItem === '여물통') {
-
         const newPlayerState = {
           ...playerState,
-          facility: playerState.facility.filter((facility) => facility !== '../../../images/player4_newFacilitycard/facilitycard_4.png'),
-          facility_active: [...playerState.facility_active, '../../../images/player4_newFacilitycard/facilitycard_4.png'],
+          facility: playerState.facility.filter(
+            (facility) =>
+              facility !==
+              '../../../images/player4_newFacilitycard/facilitycard_4.png'
+          ),
+          facility_active: [
+            ...playerState.facility_active,
+            '../../../images/player4_newFacilitycard/facilitycard_4.png',
+          ],
           wood: playerState.wood - 2,
         };
         setPlayerState(newPlayerState);
@@ -522,7 +576,6 @@ export const Board = ({ playerIndex, isClickable, ShowPrivate, nicknames }) => {
         });
         setOnceClick(false);
       } else if (selectedItem === '집 개조') {
-
         let count = 0;
         const updatedFieldState = Object.fromEntries(
           Object.entries(playerState.fieldState).map(([key, value]) => {
@@ -557,7 +610,6 @@ export const Board = ({ playerIndex, isClickable, ShowPrivate, nicknames }) => {
         setOnceClick(false);
 
         ShowPrivate(nicknames[index], false, 0);
-
       } else if (selectedItem === '급한 가족 늘리기') {
         const newPositions = [...playersPosition];
         newPositions[index] = [...newPositions[index], '급한 가족 늘리기'];
@@ -581,11 +633,10 @@ export const Board = ({ playerIndex, isClickable, ShowPrivate, nicknames }) => {
           ...fieldCard,
           round8: {
             ...fieldCard.round8,
-            stone: 0
-          }
+            stone: 0,
+          },
         };
         setFieldCard(updatedFieldCard);
-    
 
         socket.emit('sync', {
           playerNumber: index,
@@ -605,8 +656,8 @@ export const Board = ({ playerIndex, isClickable, ShowPrivate, nicknames }) => {
           ...fieldCard,
           round10: {
             ...fieldCard.round10,
-            stone: 0
-          }
+            stone: 0,
+          },
         };
         setFieldCard(updatedFieldCard);
 
@@ -619,9 +670,8 @@ export const Board = ({ playerIndex, isClickable, ShowPrivate, nicknames }) => {
         });
         setOnceClick(false);
       } else if (selectedItem === '채소 종자') {
-
         const newPlayerState = {
-          ...playerState, 
+          ...playerState,
           vegetable: playerState.vegetable + 1,
         };
         setPlayerState(newPlayerState);
@@ -638,21 +688,19 @@ export const Board = ({ playerIndex, isClickable, ShowPrivate, nicknames }) => {
           position: newPositions,
         });
         setOnceClick(false);
-      }
-      else if (selectedItem === '농장 확장') {
-
+      } else if (selectedItem === '농장 확장') {
         const newPlayerState = {
-          ...playerState, 
+          ...playerState,
           reed: playerState.reed - 2,
           clay: playerState.clay - 5,
-          house: playerState.house + 2, 
+          house: playerState.house + 2,
         };
         setPlayerState(newPlayerState);
 
         const newPositions = [...playersPosition];
         newPositions[index] = [...newPositions[index], '농장 확장'];
         setPlayersPosition(newPositions);
-  
+
         socket.emit('sync', {
           playerNumber: index,
           state: newPlayerState,
@@ -662,9 +710,7 @@ export const Board = ({ playerIndex, isClickable, ShowPrivate, nicknames }) => {
         });
         ShowPrivate(nicknames[index], true, 4);
         setOnceClick(false);
-      }
-      else if (selectedItem === '농장 개조') {
-
+      } else if (selectedItem === '농장 개조') {
         let count = 0;
         const updatedFieldState = Object.fromEntries(
           Object.entries(playerState.fieldState).map(([key, value]) => {
@@ -699,16 +745,10 @@ export const Board = ({ playerIndex, isClickable, ShowPrivate, nicknames }) => {
         setOnceClick(false);
 
         ShowPrivate(nicknames[index], false, 10);
-
       }
       handleCloseModal();
     }
   };
-
-  useEffect(() => {
-    console.log('playersPosition이 업데이트되었습니다:', playersPosition);
-    //console.log(playerState.job_active);
-  }, [playersPosition]);
 
   const handleJobCardClick = (card) => {
     if (
@@ -716,7 +756,6 @@ export const Board = ({ playerIndex, isClickable, ShowPrivate, nicknames }) => {
       card === '../../../images/player4_jobcard/jobcard_5.png' &&
       isClickable
     ) {
-      console.log(card);
       setSelectedItem('보조경작자');
     }
     if (
@@ -724,9 +763,7 @@ export const Board = ({ playerIndex, isClickable, ShowPrivate, nicknames }) => {
       card === '../../../images/player2_jobcard/jobcard_7.png' &&
       isClickable
     ) {
-      console.log(card);
       setSelectedItem('양의친구');
-      
     }
     setIsJobModalOpen(false);
   };
@@ -737,9 +774,7 @@ export const Board = ({ playerIndex, isClickable, ShowPrivate, nicknames }) => {
       card === '../../../images/player4_newFacilitycard/facilitycard_4.png' &&
       isClickable
     ) {
-      console.log(card);
       setSelectedItem('여물통');
-      
     }
   };
 
@@ -870,7 +905,7 @@ export const Board = ({ playerIndex, isClickable, ShowPrivate, nicknames }) => {
             image="main_facility"
             onClick={() => handleClick('주요 설비')}
           />
-          
+
           {reed_fieldPlayerIndex !== -1 && (
             <img
               src={playerImages[reed_fieldPlayerIndex]}
@@ -1161,7 +1196,9 @@ export const Board = ({ playerIndex, isClickable, ShowPrivate, nicknames }) => {
             ratio={100}
             image={getImageForRound(6, fieldCard.round6.front)}
             stone={fieldCard.round6.stone}
-            onClick={fieldCard.round6.front ? () => handleClick('집 개조') : undefined}
+            onClick={
+              fieldCard.round6.front ? () => handleClick('집 개조') : undefined
+            }
           />
           {houseFixPlayerIndex !== -1 && (
             <img
@@ -1186,7 +1223,11 @@ export const Board = ({ playerIndex, isClickable, ShowPrivate, nicknames }) => {
             ratio={100}
             image={getImageForRound(8, fieldCard.round8.front)}
             stone={fieldCard.round8.stone}
-            onClick={fieldCard.round8.front ? () => handleClick('돼지 시장') : undefined}
+            onClick={
+              fieldCard.round8.front
+                ? () => handleClick('돼지 시장')
+                : undefined
+            }
           />
           {pigMarketPlayerIndex !== -1 && (
             <img
@@ -1204,7 +1245,11 @@ export const Board = ({ playerIndex, isClickable, ShowPrivate, nicknames }) => {
             ratio={100}
             image={getImageForRound(9, fieldCard.round9.front)}
             stone={fieldCard.round9.stone}
-            onClick={fieldCard.round9.front ? () => handleClick('채소 종자') : undefined}
+            onClick={
+              fieldCard.round9.front
+                ? () => handleClick('채소 종자')
+                : undefined
+            }
           />
           {vegetableSeedPlayerIndex !== -1 && (
             <img
@@ -1328,7 +1373,9 @@ export const Board = ({ playerIndex, isClickable, ShowPrivate, nicknames }) => {
             ratio={100}
             image={getImageForRound(10, fieldCard.round10.front)}
             stone={fieldCard.round10.stone}
-            onClick={fieldCard.round10.front ? () => handleClick('소 시장') : undefined}
+            onClick={
+              fieldCard.round10.front ? () => handleClick('소 시장') : undefined
+            }
           />
           {cattleMarketPlayerIndex !== -1 && (
             <img
@@ -1353,7 +1400,11 @@ export const Board = ({ playerIndex, isClickable, ShowPrivate, nicknames }) => {
             ratio={100}
             image={getImageForRound(12, fieldCard.round12.front)}
             stone={fieldCard.round12.stone}
-            onClick={fieldCard.round12.front ? () => handleClick('급한 가족 늘리기') : undefined}
+            onClick={
+              fieldCard.round12.front
+                ? () => handleClick('급한 가족 늘리기')
+                : undefined
+            }
           />
           {RapidFamilyPlayerIndex !== -1 && (
             <img
@@ -1378,7 +1429,11 @@ export const Board = ({ playerIndex, isClickable, ShowPrivate, nicknames }) => {
             ratio={100}
             image={getImageForRound(14, fieldCard.round14.front)}
             stone={fieldCard.round14.stone}
-            onClick={fieldCard.round14.front ? () => handleClick('농장 개조') : undefined}
+            onClick={
+              fieldCard.round14.front
+                ? () => handleClick('농장 개조')
+                : undefined
+            }
           />
           {farmRemodelingPlayerIndex !== -1 && (
             <img
@@ -1468,7 +1523,6 @@ export const Board = ({ playerIndex, isClickable, ShowPrivate, nicknames }) => {
       <FacilityModal
         type={facilityType}
         onClose={handleCloseModal}
-        onSelect={handleSelectItem}
         isOpen={isFacilityModalOpen}
         playerIndex={index}
       />
