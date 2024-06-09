@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import styles from '../../../styles/Play.module.css';
 import PrivateBoard from '@/components/private_board';
 import { SocketContext } from '@/context/socket';
@@ -41,6 +41,7 @@ export default function Play() {
   const [fieldCard, setFieldCard] = useRecoilState(FieldCardState);
   const [familyMember, setFamilyMember] = useState([1, 1, 1, 1]);
   const [harvest, setHarvest] = useRecoilState(harvestState);
+  const prevTurnIndexRef = useRef(currentTurnIndex);
 
   useEffect(() => {
     if (turnCount === 8) {
@@ -54,9 +55,26 @@ export default function Play() {
       setFieldCard(updateData.fieldCard);
     }
 
-    console.log('turnCount', turnCount);
-    console.log('currentTurnIndex', currentTurnIndex);
-    console.log('familyMember', familyMember);
+    const idx =
+      currentTurnIndex === prevTurnIndexRef.current // 이전 값과 비교
+        ? currentTurnIndex
+        : currentTurnIndex === 0
+        ? 3
+        : currentTurnIndex - 1;
+
+    if (turnCount > 8 && familyMember[idx] > 0) {
+      console.log('familyMember', 'handleEndTurn');
+      setFamilyMember((prev) => {
+        const newFamilyMember = [...prev];
+        console.log(newFamilyMember, idx, newFamilyMember[idx]);
+        newFamilyMember[idx] !== 0 && (newFamilyMember[idx] -= 1);
+        console.log('newFamilyMember:', newFamilyMember, '!@#$');
+        return newFamilyMember;
+      });
+    }
+
+    // 현재 currentTurnIndex 값을 이전 값으로 저장
+    prevTurnIndexRef.current = currentTurnIndex;
   }, [turnCount]);
 
   useEffect(() => {
@@ -91,29 +109,28 @@ export default function Play() {
 
   useEffect(() => {
     socket.on('endTurn', (data) => {
+      console.log(data.turnCount, data.currentTurnIndex);
       setTurnCount(data.turnCount);
       setCurrentTurnIndex(data.currentTurnIndex);
       setTimer(60);
 
-      if (
-        data.turnCount > 8 &&
-        familyMember[
-          data.currentTurnIndex === 0 ? 3 : data.currentTurnIndex - 1
-        ] > 0
-      ) {
-        console.log('familyMember', 'handleEndTurn');
-        setFamilyMember((prev) => {
-          const newFamilyMember = [...prev];
+      // const idx =
+      //   data.currentTurnIndex === currentTurnIndex
+      //     ? data.currentTurnIndex
+      //     : data.currentTurnIndex === 0
+      //     ? 3
+      //     : data.currentTurnIndex - 1;
 
-          newFamilyMember[
-            data.currentTurnIndex === 0 ? 3 : data.currentTurnIndex - 1
-          ] !== 0 &&
-            (newFamilyMember[
-              data.currentTurnIndex === 0 ? 3 : data.currentTurnIndex - 1
-            ] -= 1);
-          return newFamilyMember;
-        });
-      }
+      // if (data.turnCount > 8 && familyMember[idx] > 0) {
+      //   console.log('familyMember', 'handleEndTurn');
+      //   setFamilyMember((prev) => {
+      //     const newFamilyMember = [...prev];
+
+      //     newFamilyMember[idx] !== 0 && (newFamilyMember[idx] -= 1);
+      //     console.log('newFamilyMember:', newFamilyMember);
+      //     return newFamilyMember;
+      //   });
+      // }
     });
 
     socket.on('harvest', (data) => {
@@ -183,6 +200,14 @@ export default function Play() {
     }
   };
 
+  const test = () => {
+    console.log('testtest');
+    socket.emit('endTurn', {
+      currentTurnIndex: parseInt(currentTurnIndex, 10) - 1,
+      turnCount,
+    });
+  };
+
   return (
     <div className={styles.container}>
       {showPrivateBoard ? (
@@ -192,6 +217,7 @@ export default function Play() {
           index={players.indexOf(selectedNickname)}
           isChange={IsChange}
           animal={animal}
+          test={test}
         />
       ) : (
         <>
