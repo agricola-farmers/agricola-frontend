@@ -59,64 +59,58 @@ const getItemImage = (item) => {
   }
 };
 
-const Modal = ({ item, onClose, onSelect }) => {
-  const itemImages = Array.isArray(getItemImage(item))
-    ? getItemImage(item)
-    : [getItemImage(item)];
-  const itemNumbers = useRecoilValue(itemNumberSelector);
+const Modal = ({ item, onClose, onSelect, onSelectQuantity }) => {
 
-  const isMainFacility = mainFacilities.some(
-    (facility) => facility.name === item
-  );
+    const itemImages = Array.isArray(getItemImage(item)) ? getItemImage(item) : [getItemImage(item)];
+    let itemNumbers = onSelectQuantity;
+    if (item === '자원 시장') {
+        itemNumbers = [1, 1, 1];
+    }
+    else if(item === '농지' || item === '돼지 시장' || item === '소 시장' || item === '채소 종자'){
+        itemNumbers = [];
+    }
 
-  return (
-    <div className={styles.modalOverlay}>
-      <div className={styles.modalContent}>
-        <div className={styles.modalBody}>
-          <div className={styles.speechBubble}>
-            <p>
-              <strong>
-                {item === '주요 설비' ||
-                item === '보조 설비' ||
-                item === '직업 카드' ||
-                item === 'homeRenovation' ||
-                item === '여물통' ||
-                item === '보조경작자' ||
-                item === '양의친구'
-                  ? `해당 ${item}를 선택하시겠습니까?`
-                  : `“${item}”을 선택하시겠습니까?`}
-              </strong>
-            </p>
-            {!isMainFacility && (
-              <div className={styles.itemImagesContainer}>
-                {itemImages.map((src, index) => (
-                  <div key={index} className={styles.itemImageWrapper}>
-                    <span className={styles.itemNumber}>
-                      {Array.isArray(itemNumbers[item])
-                        ? itemNumbers[item][index]
-                        : itemNumbers[item]}
-                    </span>
-                    <img src={src} alt={item} className={styles.itemImage} />
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-          <div className={styles.buttonContainer}>
-            <button
-              onClick={() => onSelect(item)}
-              className={styles.selectButton}
-            >
-              선택하기
-            </button>
-            <button onClick={onClose} className={styles.backButton}>
-              뒤로가기
-            </button>
-          </div>
+    
+
+    const isMainFacility = mainFacilities.some(facility => facility.name === item);
+
+    
+
+    return (
+        <div className={styles.modalOverlay}>
+            <div className={styles.modalContent}>
+                <div className={styles.modalBody}>
+                    <div className={styles.speechBubble}>
+                        <p>
+                            <strong>
+                                {item === "주요 설비" || item === "보조 설비" || item === '직업 카드' || item === 'homeRenovation' || item === '여물통' || item === '보조경작자' || item === '양의친구'
+                                    ? `해당 ${item}를 선택하시겠습니까?`
+                                    : `“${item}”을 선택하시겠습니까?`}
+                            </strong>
+                        </p>
+                        {!isMainFacility && (
+                            <div className={styles.itemImagesContainer}>
+                                {itemImages.map((src, index) => (
+                                    <div key={index} className={styles.itemImageWrapper}>
+                                        <span className={styles.itemNumber}>
+                                            {Array.isArray(itemNumbers)
+                                                ? itemNumbers[index]
+                                                : itemNumbers}
+                                        </span>
+                                        <img src={src} alt={item} className={styles.itemImage} />
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+                    </div>
+                    <div className={styles.buttonContainer}>
+                        <button onClick={() => onSelect(item)} className={styles.selectButton}>선택하기</button>
+                        <button onClick={onClose} className={styles.backButton}>뒤로가기</button>
+                    </div>
+                </div>
+            </div>
         </div>
-      </div>
-    </div>
-  );
+    );
 };
 
 export default Modal;

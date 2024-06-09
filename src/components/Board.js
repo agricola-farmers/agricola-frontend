@@ -36,6 +36,7 @@ export const Board = ({ playerIndex, isClickable, ShowPrivate, nicknames }) => {
   const [isFacilityCardModalOpen, setIsFacilityCardModalOpen] = useState(false);
   // isFacilityCardModalOpen 은 행동 칸에서 열리는 설비 모달을 관리하기 위해 만듬.
   const [isJobCardModalOpen, setIsJobCardModalOpen] = useState(false);
+  const [selectedQuantity, setSelectedQuantity] = useState(0);
 
   const [facilityType, setFacilityType] = useState(null);
   const [isMainFacility, setIsMainFacility] = useState(null);
@@ -158,7 +159,47 @@ export const Board = ({ playerIndex, isClickable, ShowPrivate, nicknames }) => {
             setIsJobCardModalOpen(true);
           } else if (item === '교습2') {
             setIsJobCardModalOpen(true);
-          } else {
+          } else if (item === '수풀') {
+            setSelectedQuantity(board.bush_2);
+            setSelectedItem(item);
+          }
+          else if (item === '덤블') {
+            setSelectedQuantity(board.bush_1);
+            setSelectedItem(item);
+          }
+          else if (item === '날품 팔이') {
+            setSelectedQuantity(2);
+            setSelectedItem(item);
+          }
+          else if (item === '곡식 종자') {
+            setSelectedQuantity(1);
+            setSelectedItem(item);
+          }
+          else if (item === '유랑 극단') {
+            setSelectedQuantity(board.traveling_theater);
+            setSelectedItem(item);
+          }
+          else if (item === '갈대') {
+            setSelectedQuantity(board.reed);
+            setSelectedItem(item);
+          }
+          else if (item === '낚시') {
+            setSelectedQuantity(board.fishing);
+            setSelectedItem(item);
+          }
+          else if (item === '흙 채굴장') {
+            setSelectedQuantity(board.dirt_mine);
+            setSelectedItem(item);
+          }
+          else if (item === '점토 채굴장') {
+            setSelectedQuantity(board.clay_mine);
+            setSelectedItem(item);
+          }
+          else if (item === '숲') {
+            setSelectedQuantity(board.forest);
+            setSelectedItem(item);
+          }
+          else {
             setSelectedItem(item);
           }
         }
@@ -1482,7 +1523,6 @@ export const Board = ({ playerIndex, isClickable, ShowPrivate, nicknames }) => {
       <FacilityModal
         type={facilityType}
         onClose={handleCloseModal}
-        onSelect={handleSelectItem}
         isOpen={isFacilityModalOpen}
         playerIndex={index}
       />
