@@ -2,10 +2,9 @@ import React from 'react';
 import styles from '../styles/Modal.module.css';
 import { useRecoilValue } from 'recoil';
 import { mainFacilities, subFacilities } from '../models/Facility';
-import { itemNumberSelector } from '../utils/atoms';
+import { BoardState } from '../utils/atoms';
 
 const getItemImage = (item) => {
-    // 설비
     const allFacilities = [...mainFacilities, ...subFacilities];
     const facility = allFacilities.find(fac => fac.name === item);
 
@@ -13,9 +12,8 @@ const getItemImage = (item) => {
         return facility.image;
     }
 
-    // 설비, 직업 외
     switch (item) {
-        case '덤불':
+        case '덤블':
         case '수풀':
         case '숲':
             return ['/images/resource/wood.png'];
@@ -30,7 +28,6 @@ const getItemImage = (item) => {
             return ['/images/resource/reed.png'];
         case '자원 시장':
             return ['/images/resource/stone.png', '/images/resource/food.png', '/images/resource/reed.png'];
-    
         case '서부 채석장':
         case '동부 채석장':
             return ['/images/resource/stone.png'];
@@ -55,15 +52,49 @@ const getItemImage = (item) => {
     }
 };
 
+const mapItemToBoardStateKey = (item) => {
+    switch (item) {
+        case '덤블':
+            return 'bush_1';
+        case '수풀':
+            return 'bush_2';
+        case '점토 채굴장':
+            return 'clay_mine';
+        case '유랑 극단':
+            return 'traveling_theater';
+        case '흙 채굴장':
+            return 'dirt_mine';
+        case '숲':
+            return 'forest';
+        case '갈대':
+            return 'reed';
+        case '낚시':
+            return 'fishing';
+        case '소 시장':
+        case '돼지 시장':
+        case '채소 종자':
+        case '곡식 종자':
+            return 1;
+        case '날품 팔이':
+            return 2;
+        case '자원 시장':
+            return [1, 1, 1]; // Add 1 to each item in the array later in the rendering
+        default:
+            return null;
+    }
+};
+
 const Modal = ({ item, onClose, onSelect }) => {
     const itemImages = Array.isArray(getItemImage(item)) ? getItemImage(item) : [getItemImage(item)];
-    const itemNumbers = useRecoilValue(itemNumberSelector);
+    const boardState = useRecoilValue(BoardState);
+    const itemKey = mapItemToBoardStateKey(item);
+    const itemNumber = typeof itemKey === 'string' ? boardState[itemKey] : itemKey;
 
     const isMainFacility = mainFacilities.some(facility => facility.name === item);
 
     console.log("item", item);
     console.log("itemImages:", itemImages);
-    console.log("itemNumbers:", itemNumbers[item]);
+    console.log("itemNumber:", itemNumber);
 
     return (
         <div className={styles.modalOverlay}>
@@ -82,9 +113,9 @@ const Modal = ({ item, onClose, onSelect }) => {
                                 {itemImages.map((src, index) => (
                                     <div key={index} className={styles.itemImageWrapper}>
                                         <span className={styles.itemNumber}>
-                                            {Array.isArray(itemNumbers[item])
-                                                ? itemNumbers[item][index]
-                                                : itemNumbers[item]}
+                                            {Array.isArray(itemNumber)
+                                                ? itemNumber[index]  // Add 1 to each number in '자원 시장'
+                                                : itemNumber}
                                         </span>
                                         <img src={src} alt={item} className={styles.itemImage} />
                                     </div>
