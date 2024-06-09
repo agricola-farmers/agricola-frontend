@@ -78,7 +78,7 @@ const mapItemToBoardStateKey = (item) => {
         case '날품 팔이':
             return 2;
         case '자원 시장':
-            return [1, 1, 1]; // Add 1 to each item in the array later in the rendering
+            return [1, 1, 1];
         default:
             return null;
     }
@@ -114,7 +114,7 @@ const Modal = ({ item, onClose, onSelect }) => {
                                     <div key={index} className={styles.itemImageWrapper}>
                                         <span className={styles.itemNumber}>
                                             {Array.isArray(itemNumber)
-                                                ? itemNumber[index]  // Add 1 to each number in '자원 시장'
+                                                ? itemNumber[index] 
                                                 : itemNumber}
                                         </span>
                                         <img src={src} alt={item} className={styles.itemImage} />
