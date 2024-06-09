@@ -14,14 +14,16 @@ const RoomManagerWait = ({ nicknamevalue, isManager, onClose }) => {
     });
 
     socket.on('game_start', () => {
-      console.log("방에 들어갑니다");
-      if (roomInfo.roomNumber && roomInfo.nickname && roomInfo.players && roomInfo.players.length === 3) {
+      if (
+        roomInfo.roomNumber &&
+        roomInfo.nickname &&
+        roomInfo.players &&
+        roomInfo.players.length === 3
+      ) {
         const playerIndex = getPlayerIndex(roomInfo, nicknamevalue);
         router.push({
           pathname: `/play/${roomInfo.roomNumber}/${playerIndex}`,
         });
-      } else {
-        console.log("방 정보가 아직 로드되지 않았습니다.");
       }
     });
 
@@ -61,10 +63,8 @@ const RoomManagerWait = ({ nicknamevalue, isManager, onClose }) => {
 
   const handleStartClick = () => {
     if (roomInfo.players.length < 3) {
-      console.log(roomInfo.players.length);
       alert('아직 방이 차지 않았습니다.');
     } else {
-      console.log('게임 시작');
       socket.emit('game_start', roomInfo.roomNumber);
     }
   };
@@ -91,7 +91,8 @@ const RoomManagerWait = ({ nicknamevalue, isManager, onClose }) => {
           color: '#3C300F',
         }}
       >
-        코드 번호 : &nbsp;<span style={{ fontWeight: 'bold' }}>{roomInfo.roomNumber}</span>
+        코드 번호 : &nbsp;
+        <span style={{ fontWeight: 'bold' }}>{roomInfo.roomNumber}</span>
       </div>
       <div
         style={{
@@ -118,7 +119,9 @@ const RoomManagerWait = ({ nicknamevalue, isManager, onClose }) => {
           }}
         >
           <div style={{ marginLeft: '20px' }}>User 01.</div>
-          <div style={{ flex: '1', textAlign: 'center' }}>{roomInfo.nickname}</div>
+          <div style={{ flex: '1', textAlign: 'center' }}>
+            {roomInfo.nickname}
+          </div>
         </div>
       </div>
       {[...Array(3)].map((_, index) => (
@@ -149,7 +152,9 @@ const RoomManagerWait = ({ nicknamevalue, isManager, onClose }) => {
           >
             <div style={{ marginLeft: '20px' }}>User {index + 2}.</div>
             {roomInfo.players && roomInfo.players[index] ? (
-              <div style={{ flex: '1', textAlign: 'center' }}>{roomInfo.players[index]}</div>
+              <div style={{ flex: '1', textAlign: 'center' }}>
+                {roomInfo.players[index]}
+              </div>
             ) : (
               <img
                 src="/gear.svg"

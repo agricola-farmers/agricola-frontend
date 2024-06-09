@@ -15,7 +15,6 @@ const JoinToGame = ({ onClose }) => {
   useEffect(() => {
     const handleSuccess = (data) => {
       setRoomManagerWait(true);
-      console.log(data);
     };
 
     const handleFail = (data) => {
@@ -51,7 +50,6 @@ const JoinToGame = ({ onClose }) => {
     if (nickname.trim() === '') {
       alert('닉네임을 입력해주세요.');
     } else {
-      console.log(nickname);
       socket.emit('player', EnterCode, nickname);
       setMyNickname(nickname);
     }
