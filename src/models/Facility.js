@@ -1,8 +1,9 @@
 class Facility {
-    constructor(id, name, image){
+    constructor(id, name, image, player = null) {
         this.id = id;
         this.name = name;
         this.image = image;
+        this.player = player;
     }
 }
 

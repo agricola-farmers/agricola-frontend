@@ -75,9 +75,6 @@ const Modal = ({ item, onClose, onSelect }) => {
                                 {item === "주요 설비" || item === "보조 설비" || item === '직업 카드' || item === 'homeRenovation' || item === '여물통' || item === '보조경작자' || item === '양의친구'
                                     ? `해당 ${item}를 선택하시겠습니까?`
                                     : `“${item}”을 선택하시겠습니까?`}
-                                {isMainFacility
-                                    ? `해당 주요 설비를 선택하시겠습니까?`
-                                    : `“${item}”을 선택하시겠습니까?`}
                             </strong>
                         </p>
                         {!isMainFacility && (

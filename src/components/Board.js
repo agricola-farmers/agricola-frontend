@@ -1453,13 +1453,6 @@ export const Board = ({ playerIndex, isClickable, ShowPrivate, nicknames }) => {
           onSelect={handleSelectItem}
         />
       )}
-      {isMainFacility && (
-        <Modal
-          item="주요 설비"
-          onClose={handleCloseModal}
-          onSelect={handleSelectItem}
-        />
-      )}
       <JobCardModal
         isOpen={isJobModalOpen}
         onClose={handleCloseModal}
@@ -1473,10 +1466,11 @@ export const Board = ({ playerIndex, isClickable, ShowPrivate, nicknames }) => {
         onCardClick={handleJobCardClick}
       />
       <FacilityModal
-        isOpen={isFacilityModalOpen}
-        onClose={handleCloseModal}
         type={facilityType}
+        onClose={handleCloseModal}
         onSelect={handleSelectItem}
+        isOpen={isFacilityModalOpen}
+        playerIndex={index}
       />
       <FacilityCardModal
         isOpen={isFacilityCardModalOpen}
