@@ -311,3 +311,11 @@ export const myNicknameState = atom({
   key: 'myNicknameState',
   default: '',
 });
+
+export const harvestState = atom({
+  key: 'harvestState',
+  default: {
+    isHarvest: false,
+    harvestType: '농장 단계',
+  },
+});
