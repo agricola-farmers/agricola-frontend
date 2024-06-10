@@ -162,6 +162,12 @@ export default function Play() {
           grain: player1.grain + 2,
         };
       });
+      setPlayer3((prev) => {
+        return {
+          ...prev,
+          baby: player3.baby + 1,
+        };
+      });
     }
   }, [harvest.isHarvest]);
 

@@ -118,7 +118,7 @@ const RoomManagerWait = ({ nicknamevalue, isManager, onClose }) => {
             alignItems: 'center',
           }}
         >
-          <div style={{ marginLeft: '20px' }}>User 01.</div>
+          <div style={{ marginLeft: '20px' }}>User 1.</div>
           <div style={{ flex: '1', textAlign: 'center' }}>
             {roomInfo.nickname}
           </div>
