@@ -28,7 +28,7 @@
    ![img](https://srs-agricola.web.app/img/f_02g.27167e06.gif)
 
    방장이 방 만들기 기능을 통해 방을 만들고 4명이 모이게 되면 게임을 시작한다.
-   \_ 방마다 입장 코드가 주어지며, 나머지 사용자는 코드를 입력해 방에 입장할 수 있다.
+   방마다 입장 코드가 주어지며, 나머지 사용자는 코드를 입력해 방에 입장할 수 있다.
 
 3. 타이머 기능
 
@@ -43,11 +43,10 @@
 1. npm start
 
 /* agricola-frontend */
-2. npm run build
-3. npm run start
+2. npm run dev
 
 /* Web */
-4. http://localhost:3000/
+3. http://localhost:3000/
 ```
 
 ## 저작권 및 사용권 정보
