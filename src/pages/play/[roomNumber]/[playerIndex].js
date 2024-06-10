@@ -43,8 +43,8 @@ export default function Play() {
   const [familyMember, setFamilyMember] = useState([1, 1, 1, 1]);
   const [harvest, setHarvest] = useRecoilState(harvestState);
   const prevTurnIndexRef = useRef(currentTurnIndex);
-  const [mainFacilities, setMainFacilities] = useRecoilState(mainFacilitieState);
-
+  const [mainFacilities, setMainFacilities] =
+    useRecoilState(mainFacilitieState);
 
   useEffect(() => {
     if (turnCount === 8) {
@@ -151,6 +151,19 @@ export default function Play() {
       updateAnimalCounts(setPlayer4, player4);
     }
   }, [harvest.harvestType]);
+
+  useEffect(() => {
+    if (harvest.isHarvest) {
+      // A 농장 단계
+      setPlayer1((prev) => {
+        return {
+          ...prev,
+          vegetable: player1.vegetable + 1,
+          grain: player1.grain + 2,
+        };
+      });
+    }
+  }, [harvest.isHarvest]);
 
   function updatePlayerFood(setPlayer, playerData) {
     setPlayer((prev) => ({
