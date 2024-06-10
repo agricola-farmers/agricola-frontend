@@ -1506,6 +1506,7 @@ export const Board = ({ playerIndex, isClickable, ShowPrivate, nicknames }) => {
           item={selectedItem}
           onClose={handleCloseModal}
           onSelect={handleSelectItem}
+          onSelectQuantity={selectedQuantity}
         />
       )}
       <JobCardModal
